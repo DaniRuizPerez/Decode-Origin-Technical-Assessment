@@ -1,0 +1,23 @@
+{
+  "release": {
+    "project": "fastapi/fastapi",
+    "baseRef": "0.136.0",
+    "headRef": "0.137.2",
+    "name": "0.137.2"
+  },
+  "_note": "Hand-curated PRIMARY ground truth for documentation-recommendation accuracy. Real inputs (the harvested release), human-judged labels (single annotator — see DESIGN). Kept outside data/mocks/ so re-harvesting never overwrites it. Each label ties a doc to the substantive change that should trigger its update.",
+  "impactedDocs": [
+    {
+      "docPath": "tutorial__bigger-applications.md",
+      "rationale": "Primary guide for APIRouter / include_router. The routing-internals refactor (FAPI-1003 / PR #15745) changes include_router semantics and makes router.routes a tree rather than a flat list, so the examples and explanation need updating."
+    },
+    {
+      "docPath": "advanced__openapi-callbacks.md",
+      "rationale": "Uses router.routes directly in an example. FAPI-1006 adds iter_route_contexts() as the supported replacement for iterating routes, so this example should be migrated."
+    },
+    {
+      "docPath": "tutorial__header-params.md",
+      "rationale": "Documents convert_underscores for header parameters. FAPI-1002 changes underscore-header handling (no longer accepting underscore headers by default), so the behavior note must be updated."
+    }
+  ]
+}
