@@ -339,3 +339,40 @@ export const CuratedGoldSchema = z.object({
   ),
 });
 export type CuratedGold = z.infer<typeof CuratedGoldSchema>;
+
+/* ============================================================================
+ * 8. PROVIDER CONTRACT (the AI boundary)
+ *
+ * The LLM provider interface lives in the shared contract (not in lib/llm) so
+ * every consumer — the agents and the grounding loop — depends on the same
+ * boundary type and can be built and tested independently of the concrete
+ * implementation. Implemented in lib/llm as MockProvider / AnthropicProvider.
+ * ========================================================================== */
+
+/**
+ * One structured-generation request. The calling agent supplies a deterministic,
+ * grounded `fallback` (its extractive-baseline output); the offline MockProvider
+ * returns that fallback, while the AnthropicProvider ignores it and generates
+ * abstractively. Either way the result is validated against `schema`.
+ */
+export interface CompletionRequest<T> {
+  /** Stage name, for the observability trace (e.g. "writer", "doc-reviewer"). */
+  agent: string;
+  system: string;
+  prompt: string;
+  /** Output schema; the returned value is parsed/validated against it. */
+  schema: z.ZodType<T>;
+  /** Deterministic grounded fallback, returned when no LLM is configured. */
+  fallback: T;
+}
+
+export interface CompletionResult<T> {
+  value: T;
+  trace: AgentCallTrace;
+}
+
+/** The swappable AI boundary. `name` is "mock" | "anthropic". */
+export interface LLMProvider {
+  readonly name: string;
+  complete<T>(req: CompletionRequest<T>): Promise<CompletionResult<T>>;
+}
