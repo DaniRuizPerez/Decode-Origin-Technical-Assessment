@@ -1,0 +1,6 @@
+{
+  "project": "fastapi/fastapi",
+  "baseRef": "0.136.0",
+  "headRef": "0.137.2",
+  "name": "0.137.2"
+}

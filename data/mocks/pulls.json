@@ -1,0 +1,2408 @@
+[
+  {
+    "id": "pr:13583",
+    "number": 13583,
+    "title": "Speed up test suite via caching and fixture scopes to make it ~24% faster",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "8b647e340567ab0817aad3e1073553d4bce02f48"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:14781",
+    "number": 14781,
+    "title": "Update `docs/en/docs/tutorial/security/oauth2-jwt.md`",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "21c46919fc14f6541397ff5bdc77d9c806e7b33e"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15101",
+    "number": 15101,
+    "title": "⬆️ Update Pydantic v2 code to address deprecations",
+    "body": "When running `ty` on the code base (cf #15091), we got two valid deprecation warnings:\r\n\r\n### eval_type_lenient\r\n\r\n- `eval_type_lenient` has been deprecated since [pydantic#1053](https://github.com/pydantic/pydantic/pull/10530), which was released as part of [v2.10.0b1](https://github.com/pydantic/pydantic/releases/tag/v2.10.0b1).\r\n\r\n### color \r\n- `pydantic.color.Color` has been deprecated since [pydantic#6003](https://github.com/pydantic/pydantic/pull/6003), which was released as part of [v2.0b3](https://github.com/pydantic/pydantic/releases/tag/v2.0b3).\r\n- This PR updates `ENCODERS_BY_TYPE` to also cover the new `pydantic_extra_types.color.Color`. The added unit test fails on `master`.\r\n\r\n\r\n## Open question\r\n\r\n~~As Pydantic updates & makes older functionality deprecated, we could (also in the future) be tempted to update the methods (especially when `ty` tells us to), without realizing we might be breaking older versions that we still support according to our `pyproject.toml`. For this reason, I'd want to add a specific test CLI run with Pydantic 2.7.0 to ensure it keeps working as expected. Aye? Nay?~~\r\n\r\nUPDATE: cf https://github.com/fastapi/fastapi/pull/15139!",
+    "author": "svlandeg",
+    "mergedAt": "2026-04-23T16:40:29Z",
+    "labels": [
+      "upgrade"
+    ],
+    "files": [
+      "fastapi/_compat/__init__.py",
+      "fastapi/_compat/v2.py",
+      "fastapi/dependencies/utils.py",
+      "fastapi/encoders.py",
+      "tests/test_jsonable_encoder.py"
+    ],
+    "commitShas": [],
+    "ticketKeys": [
+      "FAPI-1000"
+    ]
+  },
+  {
+    "id": "pr:15174",
+    "number": 15174,
+    "title": "Tweak translation script",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15263",
+    "number": 15263,
+    "title": "Bump pygments from 2.19.2 to 2.20.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15282",
+    "number": 15282,
+    "title": "Bump aiohttp from 3.13.3 to 3.13.4",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15316",
+    "number": 15316,
+    "title": "Add zizmor and fix audit findings",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15333",
+    "number": 15333,
+    "title": "Bump pillow from 12.1.1 to 12.2.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15334",
+    "number": 15334,
+    "title": "Bump pytest from 9.0.2 to 9.0.3",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15360",
+    "number": 15360,
+    "title": "Bump python-multipart from 0.0.22 to 0.0.26",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15368",
+    "number": 15368,
+    "title": "Update sponsors: remove Speakeasy",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15369",
+    "number": 15369,
+    "title": "Update sponsors: remove Zuplo",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15373",
+    "number": 15373,
+    "title": "Bump authlib from 1.6.9 to 1.6.11",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15374",
+    "number": 15374,
+    "title": "Bump actions/upload-artifact from 7.0.0 to 7.0.1",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15385",
+    "number": 15385,
+    "title": "Bump actions/cache from 5.0.4 to 5.0.5",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15391",
+    "number": 15391,
+    "title": "Bump pymdown-extensions from 10.20.1 to 10.21.2",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15393",
+    "number": 15393,
+    "title": "Bump pyjwt from 2.12.0 to 2.12.1",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15394",
+    "number": 15394,
+    "title": "Bump zizmor from 1.23.1 to 1.24.1",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15395",
+    "number": 15395,
+    "title": "Bump strawberry-graphql from 0.312.3 to 0.314.3",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15396",
+    "number": 15396,
+    "title": "Bump pygithub from 2.8.1 to 2.9.1",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15397",
+    "number": 15397,
+    "title": "Bump starlette from 0.52.1 to 1.0.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15400",
+    "number": 15400,
+    "title": "Bump python-dotenv from 1.2.1 to 1.2.2",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15405",
+    "number": 15405,
+    "title": "Bump cloudflare/wrangler-action from 3.14.1 to 3.15.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15406",
+    "number": 15406,
+    "title": "Bump pytest-cov from 7.0.0 to 7.1.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15407",
+    "number": 15407,
+    "title": "Bump pytest-codspeed from 4.3.0 to 4.4.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15408",
+    "number": 15408,
+    "title": "Bump mkdocs-material from 9.7.1 to 9.7.6",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15409",
+    "number": 15409,
+    "title": "Bump inline-snapshot from 0.31.1 to 0.32.6",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15410",
+    "number": 15410,
+    "title": "Bump mypy from 1.19.1 to 1.20.1",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15415",
+    "number": 15415,
+    "title": "Bump astral-sh/setup-uv from 7.6.0 to 8.1.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15417",
+    "number": 15417,
+    "title": "Bump pydantic-ai from 1.63.0 to 1.83.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15418",
+    "number": 15418,
+    "title": "Bump prek from 0.3.2 to 0.3.9",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15419",
+    "number": 15419,
+    "title": "Bump fastar from 0.9.0 to 0.11.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15436",
+    "number": 15436,
+    "title": "Bump CodSpeedHQ/action from 4.12.1 to 4.14.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15437",
+    "number": 15437,
+    "title": "Bump sqlmodel from 0.0.32 to 0.0.38",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15439",
+    "number": 15439,
+    "title": "Bump pydantic from 2.12.5 to 2.13.2",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15443",
+    "number": 15443,
+    "title": "Bump ty from 0.0.21 to 0.0.34",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "5d5666bec590c2d9740362ab65506aae0d128bd0"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15444",
+    "number": 15444,
+    "title": "Bump pydantic from 2.13.2 to 2.13.3",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "3ec959abc7e93f90034ce63f0987f787a881463a"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15456",
+    "number": 15456,
+    "title": "Improve translation consistency in `‎docs/pt/docs/advanced/generate-clients.md‎`",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "74d735d5181911a3f1b639563d91716258028ef1"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15457",
+    "number": 15457,
+    "title": "Add FastAPI Conf '26 announcement to docs",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "a217d2ff2a46475d6d33fcb8245d132f057d1cce"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15458",
+    "number": 15458,
+    "title": "Refactor opinions section with interactive tabs and new logos",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "aff0b7cd43ddce84b2f80780e199e208ef85e6fa"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15462",
+    "number": 15462,
+    "title": "Improve layout and styling",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "b363a1d0023b25fba9231c17ae371c9d44c65c68"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15463",
+    "number": 15463,
+    "title": "Fix Azkaban spelling typo in `virtual-environments.md‎`",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "810fd2a888b03cfde5670118608c35684a870dc7"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15464",
+    "number": 15464,
+    "title": "Document `--entrypoint` CLI option",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "7b57e42986bb4d40c9eb6580537d13fb8e76097e"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15467",
+    "number": 15467,
+    "title": "Update FastAPI People - Contributors and Translators",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "bc8b1d101caf6316b2a4e8214ff384c7ee5487a0"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15468",
+    "number": 15468,
+    "title": "Fix missing credentials issue in `translate` workflow",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "33ed5aecdf978bc2802bde4505d368f96f3c279f"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15470",
+    "number": 15470,
+    "title": "Update FastAPI GitHub topic repositories",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "9ccaab154add00216c58e45917f40669fae74a2d"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15471",
+    "number": 15471,
+    "title": "Update FastAPI People - Experts",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "8da79ec2fe9f80c66e957745fb04a19a452aaa05"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15472",
+    "number": 15472,
+    "title": "Fix typos in Spanish LLM-prompt",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "f8cbeabf81afba89f24bed790f73432b67941450"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15475",
+    "number": 15475,
+    "title": "Remove \"NGINX Unit\" from the list of ASGI-servers in docs",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "7baefe7144bbe6f83f3d4c0f33f09dacc3abbeca"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15482",
+    "number": 15482,
+    "title": "Add pre-commit to check typos",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "fb7429378d14bd2d868abf145e1f18724b15e25d"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15490",
+    "number": 15490,
+    "title": "Bump actions/add-to-project from 1.0.2 to 2.0.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "6939bf8bb75f200567285d3a2f321c1a72a8c8b4"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15502",
+    "number": 15502,
+    "title": "Bump urllib3 from 2.6.3 to 2.7.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "c99e215ed8a1d2dc82c683a5e46e07286a40f167"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15507",
+    "number": 15507,
+    "title": "Bump actions/labeler from 6.0.1 to 6.1.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "a0f42dd7d533f4fb0cdd7074efa87e1cf4f9baad"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15512",
+    "number": 15512,
+    "title": "Bump authlib from 1.6.11 to 1.7.2",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "99a1b1edee76b1ff23eb818a889493c3c5e00aaa"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15513",
+    "number": 15513,
+    "title": "Bump CodSpeedHQ/action from 4.14.0 to 4.15.1",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "2a1506d167adfb4a0483e78e6a8c712f5b5ad634"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15520",
+    "number": 15520,
+    "title": "Update translations for zh (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "eff8bc4e66dd8651059134a1d6404fce766f1aff"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15521",
+    "number": 15521,
+    "title": "Update translations for ru (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "72f127ddadd4f1789efb2d418d1b188869f5b89c"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15522",
+    "number": 15522,
+    "title": "Update translations for fr (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "e6edf14a27cf59590ec57ee1dd53f7cb689b79bb"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15523",
+    "number": 15523,
+    "title": "Update translations for es (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "6163cc79967796fb103e152ea68fe251e665a2a4"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15524",
+    "number": 15524,
+    "title": "Update translations for zh-hant (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "f0c3d87da2902e18097244004bc3e6fd7fd0e7be"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15525",
+    "number": 15525,
+    "title": "Update translations for ko (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "5cfd983e1ddf5662eee01bcfedcbb9170d24f238"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15526",
+    "number": 15526,
+    "title": "Update translations for tr (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "f3963927ec830dfc1081a1bf27f5955ebefbc60c"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15527",
+    "number": 15527,
+    "title": "Update translations for de (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "f343905934d99411159780033bc83f028d20ae69"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15528",
+    "number": 15528,
+    "title": "Update translations for pt (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "628ff21528037c768e02f31a0a56669876489692"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15529",
+    "number": 15529,
+    "title": "Update translations for uk (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "3780ba547260220753ac9156aec7977e23c02511"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15530",
+    "number": 15530,
+    "title": "Update translations for ja (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "ff6a38a434f49fcea27daa8e32d46fabc29b2679"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15531",
+    "number": 15531,
+    "title": "Add sponsor: TalorData",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "2c26191e305da47362510506d6e5f7b6cef3085f"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15532",
+    "number": 15532,
+    "title": "Update sponsors badge",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "b71da659cf19e4d8f0af8cc7cfc633c79288c3e3"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15533",
+    "number": 15533,
+    "title": "Remove Ruff ignored rule for tabs",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "b6abc93bffd0ed5d14fa245d8110bb587d026741"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15534",
+    "number": 15534,
+    "title": "Fix image URLs in `index.md`",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "3e2ef69479875b056b63d88f01603ea51ad125a9"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15548",
+    "number": 15548,
+    "title": "Only allow team members to modify dependencies",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "622dcdc99c9561bacce7f292bc0b38f49ec8fd57"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15553",
+    "number": 15553,
+    "title": "Update docs, simplify usage of admonitions, only default ones",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "99812444ab99526d3c961837b138dfdc7bda23f5"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15560",
+    "number": 15560,
+    "title": "Configure Dependabot to group updates and update weekly",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "3fdc54edab2401824303ad5c2dee0407ba6a07d6"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15562",
+    "number": 15562,
+    "title": "Update sponsors: TalorData image",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "2b5cd26248cebb5dfbf58ea747671114e3e178be"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15563",
+    "number": 15563,
+    "title": "Migrate docs from MkDocs to Zensical",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "31ced9d49e253f1cdc78ab56a314ef1ad7d8d7ee"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15565",
+    "number": 15565,
+    "title": "Bump idna from 3.11 to 3.15",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "87d1daeeead69289dab2ce3496ff33530304cb47"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15569",
+    "number": 15569,
+    "title": "Bump pymdown-extensions from 10.21.2 to 10.21.3",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "dcac2f0d957ab69b176e6ca55562e0adede5ed6c"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15571",
+    "number": 15571,
+    "title": "Bump cloudflare/wrangler-action from 3.15.0 to 4.0.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "a314e3be3bd4a944e780f5daa0f4a56253577892"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15577",
+    "number": 15577,
+    "title": "Update security policy",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "3969ae8f38dce5ce6ba42d227eae6a699721c435"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15580",
+    "number": 15580,
+    "title": "Add docs references to central contributing docs",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "55a9ff2e5e53942ed0deff1a926692a1ac98c920"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15583",
+    "number": 15583,
+    "title": "Update and simplify docs about help and management",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "c347875c9c1b8135fc3c59ad547ceaf6da246c22"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15585",
+    "number": 15585,
+    "title": "Remove config files now in central GitHub repo",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "973230c78293e627104b681c22850a234e074fe3"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15587",
+    "number": 15587,
+    "title": "Update tests, don't double dispose the engine",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "00f805cec94c0bf48c1f9a563535a3ab2e6f90ab"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15588",
+    "number": 15588,
+    "title": "♻️ Validate Server Sent Event fields to avoid applications from sending broken data",
+    "body": "## Pull Request\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n♻️ Validate Server Sent Event fields to avoid applications from sending broken data\r\n\r\nThis was reported multiple times as a \"vulnerability\" by users probably using automated AI tools, with the argument that if input was taken from the request and passed directly to an event unfiltered, it could break the client.\r\n\r\nIf an app sets an `id` or `event` with multi-line content, I would consider that app broken, and probably the app itself vulnerable to something, not FastAPI. With this change, if any app sets invalid multi-line values (sourced from unfiltered input or in any other way), FastAPI will make it a server error (which it is, as the app is sending invalid data).\r\n\r\nI don't think the code before this PR has a bug, less a vulnerability. This change is mainly a quality of life improvement to prevent badly written apps from shooting themselves in the foot by passing unsanitized data directly to a SSE.\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\nCodex with GPT-5.5\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [x] I added tests for the change.\r\n- [x] The new or updated tests fail on the main branch and pass on this PR.\r\n- [x] Coverage stays at 100%.\r\n- [x] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-05-23T17:23:05Z",
+    "labels": [
+      "refactor"
+    ],
+    "files": [
+      "fastapi/sse.py",
+      "tests/test_sse.py"
+    ],
+    "commitShas": [
+      "c7fb7851b3389f24c51701d705458989be53ccbb"
+    ],
+    "ticketKeys": [
+      "FAPI-1001"
+    ]
+  },
+  {
+    "id": "pr:15589",
+    "number": 15589,
+    "title": "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)",
+    "body": "## Pull Request\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)\r\n\r\nThis means it would only accept header names separated with hyphens by default, and to accept header names separated with underscores, an app would need to explicitly set `convert_underscores=False`.\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-05-23T18:35:06Z",
+    "labels": [
+      "refactor"
+    ],
+    "files": [
+      "fastapi/dependencies/utils.py",
+      "tests/test_query_cookie_header_model_extra_params.py"
+    ],
+    "commitShas": [
+      "063b5bf582d31fb155cc6bc6f88cf512329d0fd5"
+    ],
+    "ticketKeys": [
+      "FAPI-1002"
+    ]
+  },
+  {
+    "id": "pr:15591",
+    "number": 15591,
+    "title": "Use `Annotated` in inline example in `docs/en/docs/tutorial/body-multiple-params.md`",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "3e3d38930efbf9cd60fa35fa8c94bd0f2bf25bb4"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15594",
+    "number": 15594,
+    "title": "Bump the python-packages group with 15 updates",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "1464678ba6df508d64df75211e0b6d0d010287b5"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15595",
+    "number": 15595,
+    "title": "Bump python-multipart from 0.0.26 to 0.0.29",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "4a5f0cd370f6e8266eec0d4fe55d8e8df7a1e6fb"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15603",
+    "number": 15603,
+    "title": "Add `httpx2` test dependency to avoid deprecation warning",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "59d4a80fcf8a7b3a46b2560f75dc0d171e7ea8ff"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15607",
+    "number": 15607,
+    "title": "Improve GitHub actions security",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "a3558be5f81235569114d50fdf24575ac0bc82b5"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15610",
+    "number": 15610,
+    "title": "Remove ruff and coverage ignores for non-existing files",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "a53efbcae9a354d6187c1fa6f474d526693e3461"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15616",
+    "number": 15616,
+    "title": "Use custom `changing_dir` instead of `CLIRunner.isolated_filesystem` to set working dir",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "57535ef85b97d95862ec3de443c648e1c6aee139"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15649",
+    "number": 15649,
+    "title": "Remove slim package stub, deprecated for a while",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "1990ecb446d4db044e8f2be26758aa42b2c62fa8"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15661",
+    "number": 15661,
+    "title": "Automate release preparation",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "b4d58fddee0d9830ccf790f7ad728f7b9aa958e2"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15662",
+    "number": 15662,
+    "title": "Update FastAPI People - Contributors and Translators",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "37c92a87ffff168f807fa5188fc8b09efae14cb5"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15664",
+    "number": 15664,
+    "title": "Update translations for ko (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "502d20c4416fc54a5de012a6aa5e4ebc47a15925"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15665",
+    "number": 15665,
+    "title": "Update translations for zh (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "d822aefc8a9fb55aae1588e600b51c5cb49b4117"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15666",
+    "number": 15666,
+    "title": "Update translations for tr (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "2aa88900dfc34c957aa49b8f9c405c2a465b9b95"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15667",
+    "number": 15667,
+    "title": "Update translations for pt (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "2b70d68942ad67acbb793c4c39f6cafad25721a0"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15668",
+    "number": 15668,
+    "title": "Update translations for ja (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "d6629f7dfce7e10826616ac1983bd11383253779"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15669",
+    "number": 15669,
+    "title": "Update translations for fr (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "2d5e2a4b295eb8f220adbd4b26912f9105b2dc7b"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15670",
+    "number": 15670,
+    "title": "Update translations for es (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "d144531caa1528e3982ce87c8c3e942b50657cf8"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15671",
+    "number": 15671,
+    "title": "Update translations for zh-hant (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "4cc0e5b3ce9a82764ba579e4f79939d04885f313"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15672",
+    "number": 15672,
+    "title": "Update translations for uk (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "bb6dbdb6cd4b97ecea3e3590febc03cc516e891a"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15673",
+    "number": 15673,
+    "title": "Update translations for de (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "674a625ae9f3d89333b75e5d4e2746c8c6716649"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15674",
+    "number": 15674,
+    "title": "Update translations for ru (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "d1216e73526671366fa4a75ee1cadbd1d82b0037"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15675",
+    "number": 15675,
+    "title": "Update FastAPI GitHub topic repositories",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "69266562475f455feeb4d63b7fd9f4c09568f80c"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15677",
+    "number": 15677,
+    "title": "Update FastAPI People - Experts",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "c4cf1341a1482357cfab2a157e9fb54eece47304"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15681",
+    "number": 15681,
+    "title": "Bump aiohttp from 3.13.4 to 3.14.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "81c243f86dd226401392634ee56b345fe8ad1097"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15682",
+    "number": 15682,
+    "title": "Bump the github-actions group with 2 updates",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "e95d3aab287687b2e5c5f4d9b40bb83e0f3d089c"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15683",
+    "number": 15683,
+    "title": "Bump the python-packages group across 1 directory with 11 updates",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "df3c778ae610e49c0859c0471ead322086f0e760"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15684",
+    "number": 15684,
+    "title": "Bump starlette from 1.0.0 to 1.1.0",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "460f8d2cc8fb5ed5fe9b0a58d06e7a62a09a9f00"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15688",
+    "number": 15688,
+    "title": "Update sponsors: Remove TestMu",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "b3b6aba5ab1bb1cd348026421c969c87d174cb48"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15689",
+    "number": 15689,
+    "title": "Update sponsors, add Rapidproxy",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "782476e7db6c1f008ad4321c597691e25e5a1f72"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15719",
+    "number": 15719,
+    "title": "Bump https://github.com/crate-ci/typos from v1.46.0 to v1.47.1 in the pre-commit group",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "0cf3f76e7c23dd8396a66c30317bf7352bb61898"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15720",
+    "number": 15720,
+    "title": "Bump the github-actions group with 3 updates",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "13b2b4cb346eb2ba18041decf709a528ca05043d"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15721",
+    "number": 15721,
+    "title": "Bump the python-packages group across 1 directory with 6 updates",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "e133ffbc1b41bd9f2b4f96f9887e2eb1383530bc"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15722",
+    "number": 15722,
+    "title": "⬆ Bump starlette from 1.1.0 to 1.2.1",
+    "body": "Bumps [starlette](https://github.com/Kludex/starlette) from 1.1.0 to 1.2.1.\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/Kludex/starlette/releases\">starlette's releases</a>.</em></p>\n<blockquote>\n<h2>Version 1.2.1</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Use <code>httpx2</code> for type checking in the <code>testclient</code> module by <a href=\"https://github.com/leifwar\"><code>@​leifwar</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3304\">Kludex/starlette#3304</a></li>\n<li>Add assert error for requires() when request param is not Request type by <a href=\"https://github.com/KeeganOP\"><code>@​KeeganOP</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3298\">Kludex/starlette#3298</a></li>\n</ul>\n<h2>New Contributors</h2>\n<ul>\n<li><a href=\"https://github.com/leifwar\"><code>@​leifwar</code></a> made their first contribution in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3304\">Kludex/starlette#3304</a></li>\n<li><a href=\"https://github.com/diskeu\"><code>@​diskeu</code></a> made their first contribution in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3243\">Kludex/starlette#3243</a></li>\n<li><a href=\"https://github.com/KeeganOP\"><code>@​KeeganOP</code></a> made their first contribution in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3298\">Kludex/starlette#3298</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/Kludex/starlette/compare/1.2.0...1.2.1\">https://github.com/Kludex/starlette/compare/1.2.0...1.2.1</a></p>\n<h2>Version 1.2.0</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Support httpx2 in the test client by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3291\">Kludex/starlette#3291</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/Kludex/starlette/compare/1.1.0...1.2.0\">https://github.com/Kludex/starlette/compare/1.1.0...1.2.0</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Changelog</summary>\n<p><em>Sourced from <a href=\"https://github.com/Kludex/starlette/blob/main/docs/release-notes.md\">starlette's changelog</a>.</em></p>\n<blockquote>\n<h2>1.2.1 (May 31, 2026)</h2>\n<h4>Fixed</h4>\n<ul>\n<li>Use <code>httpx2</code> for type checking in the <code>testclient</code> module <a href=\"https://redirect.github.com/encode/starlette/pull/3304\">#3304</a>.</li>\n<li>Add assert error for <code>requires()</code> when the request parameter is not a <code>Request</code> type <a href=\"https://redirect.github.com/encode/starlette/pull/3298\">#3298</a>.</li>\n</ul>\n<h2>1.2.0 (May 28, 2026)</h2>\n<h4>Added</h4>\n<ul>\n<li>Support httpx2 in the test client <a href=\"https://redirect.github.com/encode/starlette/pull/3291\">#3291</a>.</li>\n</ul>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href=\"https://github.com/Kludex/starlette/commit/ef773fe9fe86d452ea014a39c6ede1029b341e73\"><code>ef773fe</code></a> Version 1.2.1 (<a href=\"https://redirect.github.com/Kludex/starlette/issues/3306\">#3306</a>)</li>\n<li><a href=\"https://github.com/Kludex/starlette/commit/3fc68a7e394cb938bd202774b9d6f5c33a237a66\"><code>3fc68a7</code></a> Add sponsors section to docs sidebar (<a href=\"https://redirect.github.com/Kludex/starlette/issues/3305\">#3305</a>)</li>\n<li><a href=\"https://github.com/Kludex/starlette/commit/b053f7bbf194c3fac77d87c6033ec6181eb4cd90\"><code>b053f7b</code></a> chore(deps): bump the python-packages group across 1 directory with 6 updates...</li>\n<li><a href=\"https://github.com/Kludex/starlette/commit/14787751400853cc21853983a02d84bbfb4da45d\"><code>1478775</code></a> Add assert error for requires() when request param is not Request type (<a href=\"https://redirect.github.com/Kludex/starlette/issues/3298\">#3298</a>)</li>\n<li><a href=\"https://github.com/Kludex/starlette/commit/65765470827be550cdbc1a2e7165da494da7f6e8\"><code>6576547</code></a> Describe disconnected-after-response b",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-09T21:51:55Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "python:uv"
+    ],
+    "files": [
+      "uv.lock"
+    ],
+    "commitShas": [
+      "8b80abfbf3bb93f5af2f1b25fbbffcb5177d7e1c"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15723",
+    "number": 15723,
+    "title": "⬆ Bump python-multipart from 0.0.29 to 0.0.30",
+    "body": "Bumps [python-multipart](https://github.com/Kludex/python-multipart) from 0.0.29 to 0.0.30.\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/Kludex/python-multipart/releases\">python-multipart's releases</a>.</em></p>\n<blockquote>\n<h2>Version 0.0.30</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Treat only <code>&amp;</code> as the urlencoded field separator by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/290\">Kludex/python-multipart#290</a></li>\n<li>Ignore RFC 2231 extended parameters in <code>parse_options_header</code> by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/291\">Kludex/python-multipart#291</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/Kludex/python-multipart/compare/0.0.29...0.0.30\">https://github.com/Kludex/python-multipart/compare/0.0.29...0.0.30</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Changelog</summary>\n<p><em>Sourced from <a href=\"https://github.com/Kludex/python-multipart/blob/main/CHANGELOG.md\">python-multipart's changelog</a>.</em></p>\n<blockquote>\n<h2>0.0.30 (2026-05-31)</h2>\n<ul>\n<li>Parse <code>application/x-www-form-urlencoded</code> bodies per the WHATWG URL standard, treating only <code>&amp;</code> as a field separator <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/290\">#290</a>.</li>\n<li>Ignore RFC 2231/5987 extended parameters (<code>name*</code>, <code>filename*</code>) in <code>parse_options_header</code>, keeping the plain parameter authoritative per <a href=\"https://datatracker.ietf.org/doc/html/rfc7578#section-4.2\">RFC 7578 §4.2</a> <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/291\">#291</a>.</li>\n</ul>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/9d3ead568a259f222cff6425262ff63e88d930d4\"><code>9d3ead5</code></a> Version 0.0.30 (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/292\">#292</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/3506c15ce99cb62faf2d5ceb3c4c1e5800cb843d\"><code>3506c15</code></a> Ignore RFC 2231 extended parameters in <code>parse_options_header</code> (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/291\">#291</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/d69df35cd2cad9c72794c2c340db646afae957d8\"><code>d69df35</code></a> Treat only <code>&amp;</code> as the urlencoded field separator (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/290\">#290</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/1e6ff9740b09fb439755f30e2b0e2ada1d297325\"><code>1e6ff97</code></a> Bump idna from 3.11 to 3.15 (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/289\">#289</a>)</li>\n<li>See full diff in <a href=\"https://github.com/Kludex/python-multipart/compare/0.0.29...0.0.30\">compare view</a></li>\n</ul>\n</details>\n<br />\n\n\n[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=python-multipart&package-manager=uv&previous-version=0.0.29&new-version=0.0.30)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)\n\nDependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.\n\n[//]: # (dependabot-automerge-start)\n[//]: # (dependabot-automerge-end)\n\n---\n\n<details>\n<summary>Dependabot commands and options</summary>\n<br />\n\nYou can trigger Dependabot actions by commenting on this PR:\n- `@dependabot rebase` will rebase this PR\n- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it\n- `@dependabot show <dependency name",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-09T22:04:26Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "python:uv"
+    ],
+    "files": [
+      "uv.lock"
+    ],
+    "commitShas": [
+      "2015b63561b47b52306563c02590748db1d03eaf"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15724",
+    "number": 15724,
+    "title": "📝 Update FastAPI Cloud deployment instructions",
+    "body": "📝 Update FastAPI Cloud deployment instructions",
+    "author": "alejsdev",
+    "mergedAt": "2026-06-09T12:05:27Z",
+    "labels": [
+      "docs"
+    ],
+    "files": [
+      "README.md",
+      "docs/en/docs/deployment/fastapicloud.md",
+      "docs/en/docs/index.md",
+      "docs/en/docs/tutorial/first-steps.md"
+    ],
+    "commitShas": [
+      "71ea74fb8f331e6c24cc0a8cdcd28a8cc76d2a35"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15730",
+    "number": 15730,
+    "title": "🔧 Update sponsors: remove Scalar",
+    "body": "## Pull Request\r\n\r\n🔧 Update sponsors: remove Scalar\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-10T22:44:30Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "README.md",
+      "docs/en/data/sponsors.yml",
+      "docs/en/overrides/main.html"
+    ],
+    "commitShas": [
+      "e52919282ab7ae101bcea400542088ff5791f4c4"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15731",
+    "number": 15731,
+    "title": "🔧 Update sponsors: remove Liblab",
+    "body": "## Pull Request\r\n\r\n🔧 Update sponsors: remove Liblab\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-10T22:59:29Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "README.md",
+      "docs/en/data/sponsors.yml",
+      "docs/en/docs/advanced/generate-clients.md",
+      "docs/en/overrides/main.html"
+    ],
+    "commitShas": [
+      "ee036a111ed1e96a7cb425158bda3dc0b45e3d0e"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15735",
+    "number": 15735,
+    "title": "🔧 Update sponsors: remove InterviewPal",
+    "body": "## Pull Request\r\n\r\n🔧 Update sponsors: remove InterviewPal\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-10T23:04:41Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "README.md",
+      "docs/en/data/sponsors.yml"
+    ],
+    "commitShas": [
+      "5d2dae82c4c6ff107147167d70d4fdbd35bc0706"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15736",
+    "number": 15736,
+    "title": "🔧 Update sponsors: remove ExoFlare",
+    "body": "## Pull Request\r\n\r\n🔧 Update sponsors: remove ExoFlare\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-10T23:13:56Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "docs/en/data/sponsors.yml",
+      "docs/en/docs/fastapi-people.md"
+    ],
+    "commitShas": [
+      "e4b6a36c4fc0d0b37871fe317ab29fe074a3cdbe"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15744",
+    "number": 15744,
+    "title": "🔧 Update sponsors: remove TalorData",
+    "body": "## Pull Request\r\n\r\n🔧 Update sponsors: remove TalorData\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-13T18:22:22Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "README.md",
+      "docs/en/data/sponsors.yml"
+    ],
+    "commitShas": [
+      "e2fcd5562f41f2a0d01b1ff43773711bbeeb19e8"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15745",
+    "number": 15745,
+    "title": "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+    "body": "## Pull Request\r\n\r\n♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances\r\n\r\nSupersedes https://github.com/fastapi/fastapi/pull/4794\r\n\r\nUnblocks :sparkles: SO MANY THINGS :sparkles: \r\n\r\nBefore this, `router.include_router(other_router)` would take each path operation from `other_router` and \"clone\" it, or recreate it from scratch.\r\n\r\nThis would mean that in the end there was only one top level router, part of the app.\r\n\r\nThe way it is structured here is that there are a few additional classes to handle intermediate metadata for router and route inclusion. That way the information of \"router X includes Y and Y includes Z\" is stored somewhere, without affecting (recreating / clonning) the final route.\r\n\r\n### Non Objective\r\n\r\nDependencies for 404\r\n\r\nOriginally in the other PR I intended to support dependencies that would be executed even for 404, but that would conflict with the fact that a router could _not_ find a match, but the next router _did_ find a match. Executing dependencies in the router that did not find a match would not make sense, they could consume the request, body, etc.\r\n\r\nThis original idea was discarded.\r\n\r\n### Breaking Change\r\n\r\nNow `router.routes` is no longer a plain list of `APIRoute` objects, it can contain these intermediate objects that can contain additional routers, forming a tree.\r\n\r\nAny logic that depended on iterating on the `router.routes` directly would be affected, that logic cannot expect to be able to extract data from a plain list of routes, as it's no longer a plain list but a tree.\r\n\r\nAdditionally, any logic that iterated on `router.routes` to modify them would now also see these new objects, and would not see all the routes in the app.\r\n\r\n`router.routes` should be considered an internal implementation detail, only passed around to the FastAPI functions that need it.\r\n\r\n### Features\r\n\r\n* Adding routes after a router is included now works, they are reflected as they are not copied.\r\n* Including `subrouter` in `mainrouter` can be done before adding routes (path operations) to `subrouter`, because now the the entire object is stored instead of copying the routes.\r\n* As routes are not copied, in some cases that might save some memory.\r\n\r\n### Alpha Features\r\n\r\nThis is not documented yet, so it's not officially supported yet and could change in the future.\r\n\r\nBut, as `APIRoute` and `APIRouter` instances are now preserved, they could be customized.\r\n\r\n`APIRouter` has two new methods, `.matches()` and `.handle()`, counterpart to the existing ones in `APIRoute`. With this a router could customize how it matches and handles requests. For example, it could match only requests that include some specific header, for example for handling versions in headers.\r\n\r\nStill, for now, consider this very experimental and potentially changing and breaking in the future.\r\n\r\n### Future Features Enabled\r\n\r\n* Custom `APIRoute` subclasses (as desccribed above)\r\n* Custom `APIRouter` subclasses (as described above)\r\n* Dependencies per router\r\n* Exception handlers per router\r\n* Middleware per router\r\n* Other features planned\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\nCodex with GPT 5.5, through a lot of planning and research iterations, for weeks, then the same for the implementation, with too many iterations to count to clean up the implementation, what's supported and not, docs, types, etc.\r\n\r\nAll code and tests manually reviewed by hand.\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion ",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-14T12:35:48Z",
+    "labels": [
+      "breaking"
+    ],
+    "files": [
+      "docs/en/docs/advanced/openapi-callbacks.md",
+      "docs/en/docs/advanced/path-operation-advanced-configuration.md",
+      "docs/en/docs/how-to/extending-openapi.md",
+      "docs/en/docs/release-notes.md",
+      "docs/en/docs/tutorial/bigger-applications.md",
+      "docs_src/path_operation_advanced_configuration/tutorial002_py310.py",
+      "fastapi/applications.py",
+      "fastapi/openapi/utils.py",
+      "fastapi/routing.py",
+      "tests/test_custom_route_class.py",
+      "tests/test_router_include_context.py"
+    ],
+    "commitShas": [
+      "8e1d774cef03ab9e2552c26e850cbfc0c63974c3"
+    ],
+    "ticketKeys": [
+      "FAPI-1003"
+    ]
+  },
+  {
+    "id": "pr:15747",
+    "number": 15747,
+    "title": "📝 Update release notes",
+    "body": "## Pull Request\r\n\r\n📝 Update release notes\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-14T12:39:49Z",
+    "labels": [
+      "docs"
+    ],
+    "files": [
+      "docs/en/docs/release-notes.md"
+    ],
+    "commitShas": [
+      "31d097f286b63c2c7bc9954aa605571e0f3d1e15"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15748",
+    "number": 15748,
+    "title": "🔖 Release version 0.137.0",
+    "body": "Prepare release 0.137.0.",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-14T12:47:28Z",
+    "labels": [
+      "release"
+    ],
+    "files": [
+      "docs/en/docs/release-notes.md",
+      "fastapi/__init__.py"
+    ],
+    "commitShas": [
+      "9a9c4ad5d06f5fe8ee6775a5aeaa2f83c854f263"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15751",
+    "number": 15751,
+    "title": "Update translations for ja (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "9871e03c8a045b2cfb16a7cdb5d405f790de9759"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15752",
+    "number": 15752,
+    "title": "Update translations for es (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "96592d954b2f0f12941505863f8fffd78c07519b"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15753",
+    "number": 15753,
+    "title": "Update translations for pt (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "b82ab2fb41bce1c84445cbed8d35f3bb072ba5f5"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15754",
+    "number": 15754,
+    "title": "Update translations for tr (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "43520809e96cc87d95cad1cf1a417118ea2088f7"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15755",
+    "number": 15755,
+    "title": "Update translations for zh (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "d026f79b82006d3deaf557e7436fbd47c24d73eb"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15756",
+    "number": 15756,
+    "title": "Update translations for uk (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "3b9f938e50e2e81d1b46459cc86d74b9f282a6ec"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15757",
+    "number": 15757,
+    "title": "Update translations for ko (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "2f69b265ef32f5bfbe6f77b286f2c7231e86a654"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15758",
+    "number": 15758,
+    "title": "Update translations for ru (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "864c29f0756d21cfd76732efcd9af5156a66c489"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15759",
+    "number": 15759,
+    "title": "Update translations for de (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "011da093e154a70853f936c9b47242583f80b8be"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15760",
+    "number": 15760,
+    "title": "Update translations for zh-hant (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "b401cb71c0681686f65cc0b654bba3f54e3af5c9"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15761",
+    "number": 15761,
+    "title": "Update translations for fr (update-outdated)",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "aeeb29f6d05ddea1942753b6a7584e21b66cc718"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15763",
+    "number": 15763,
+    "title": "🐛 Fix bug, allow empty path in path operation in prefixless router",
+    "body": "## Pull Request\r\n\r\n🐛 Fix bug, allow empty path in path operation in prefixless router\r\n\r\nRelated to https://github.com/fastapi/fastapi/issues/15762\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-15T10:55:06Z",
+    "labels": [
+      "bug"
+    ],
+    "files": [
+      "fastapi/routing.py",
+      "tests/test_router_include_context.py"
+    ],
+    "commitShas": [
+      "d8aad201eba558b20419a832e51a026b0e6ede0e"
+    ],
+    "ticketKeys": [
+      "FAPI-1004"
+    ]
+  },
+  {
+    "id": "pr:15765",
+    "number": 15765,
+    "title": "🚨 Fix typing checks for APIRoute",
+    "body": "## Pull Request\r\n\r\n🚨 Fix typing checks for APIRoute\r\n\r\nRelated to: https://github.com/fastapi/fastapi/issues/15764\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-15T11:19:52Z",
+    "labels": [
+      "bug"
+    ],
+    "files": [
+      "fastapi/routing.py"
+    ],
+    "commitShas": [
+      "b78c82262f5170831ebd3f27873b09d8e579bac2"
+    ],
+    "ticketKeys": [
+      "FAPI-1005"
+    ]
+  },
+  {
+    "id": "pr:15766",
+    "number": 15766,
+    "title": "🔖 Release version 0.137.1",
+    "body": "Prepare release 0.137.1.",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-15T11:26:49Z",
+    "labels": [
+      "release"
+    ],
+    "files": [
+      "docs/en/docs/release-notes.md",
+      "fastapi/__init__.py"
+    ],
+    "commitShas": [
+      "a82e5f2fac102a8b12c0795da80b2cb1d2a8b016"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15769",
+    "number": 15769,
+    "title": "🔧 Add ty configs to check docs sources",
+    "body": "## Pull Request\r\n\r\n🔧 Add ty configs to check docs sources\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-15T14:31:14Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      ".pre-commit-config.yaml",
+      "pyproject.toml",
+      "scripts/lint.sh"
+    ],
+    "commitShas": [
+      "76876e5a812268860148ba3a2059795b4d65ae55"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15770",
+    "number": 15770,
+    "title": "🔧 Add ty configs to check docs sources",
+    "body": "## Pull Request\r\n\r\n🔧 Add ty configs to check docs sources\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-15T15:53:47Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      ".pre-commit-config.yaml",
+      "scripts/contributors.py",
+      "scripts/deploy_docs_status.py",
+      "scripts/doc_parsing_utils.py",
+      "scripts/docs.py",
+      "scripts/label_approved.py",
+      "scripts/lint.sh",
+      "scripts/notify_translations.py",
+      "scripts/people.py",
+      "scripts/sponsors.py",
+      "scripts/topic_repos.py",
+      "tests/test_compat.py",
+      "tests/test_custom_middleware_exception.py",
+      "tests/test_datastructures.py",
+      "tests/test_default_response_class.py",
+      "tests/test_deprecated_responses.py",
+      "tests/test_inherited_custom_class.py",
+      "tests/test_jsonable_encoder.py",
+      "tests/test_local_docs.py",
+      "tests/test_openapi_schema_type.py",
+      "tests/test_orjson_response_class.py",
+      "tests/test_response_model_as_return_annotation.py",
+      "tests/test_router_events.py",
+      "tests/test_schema_compat_pydantic_v2.py",
+      "tests/test_serialize_response_model.py",
+      "tests/test_skip_defaults.py",
+      "tests/test_sse.py",
+      "tests/test_starlette_urlconvertors.py",
+      "tests/test_stream_cancellation.py",
+      "tests/test_swagger_ui_escape.py",
+      "tests/test_tutorial/test_body/test_tutorial001.py",
+      "tests/test_tutorial/test_body_nested_models/test_tutorial001_tutorial002_tutorial003.py",
+      "tests/test_tutorial/test_custom_response/test_tutorial008.py",
+      "tests/test_tutorial/test_custom_response/test_tutorial009.py",
+      "tests/test_tutorial/test_custom_response/test_tutorial009b.py",
+      "tests/test_tutorial/test_debugging/test_tutorial001.py",
+      "tests/test_tutorial/test_openapi_webhooks/test_tutorial001.py",
+      "tests/test_tutorial/test_python_types/test_tutorial003.py",
+      "tests/test_tutorial/test_python_types/test_tutorial005.py",
+      "tests/test_tutorial/test_security/test_tutorial005.py",
+      "tests/test_tutorial/test_sql_databases/test_tutorial001.py",
+      "tests/test_tutorial/test_sql_databases/test_tutorial002.py",
+      "tests/test_webhooks_security.py",
+      "tests/utils.py"
+    ],
+    "commitShas": [
+      "b7de2b7feb207b0a157b81c237b5a0cba6e21cb9"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15771",
+    "number": 15771,
+    "title": "🔥 Remove unused scripts",
+    "body": "## Pull Request\r\n\r\n🔥 Remove unused scripts\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-15T16:03:45Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "scripts/coverage.sh",
+      "scripts/format.sh",
+      "scripts/lint.sh",
+      "scripts/test-cov-html.sh"
+    ],
+    "commitShas": [
+      "c054476c6f26ce3377eb58cd1ddae28b1c85607a"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15772",
+    "number": 15772,
+    "title": "⏪️ Revert removing scripts, only remove `coverage.sh`",
+    "body": "## Pull Request\r\n\r\n⏪️ Revert removing scripts, only remove `coverage.sh`\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-16T08:34:26Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "scripts/format.sh",
+      "scripts/lint.sh",
+      "scripts/test-cov-html.sh"
+    ],
+    "commitShas": [
+      "818b97a68b7956e2a409203193110082046508cb"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15774",
+    "number": 15774,
+    "title": "Fix broken Markdown in Korean custom response docs",
+    "body": "",
+    "author": "unknown",
+    "mergedAt": null,
+    "labels": [],
+    "files": [],
+    "commitShas": [
+      "44e5b99853e086bb28c803b33972965951abfd1a"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15775",
+    "number": 15775,
+    "title": "⬆ Bump https://github.com/crate-ci/typos from v1.47.1 to v1.47.2 in the pre-commit group",
+    "body": "Bumps the pre-commit group with 1 update: [https://github.com/crate-ci/typos](https://github.com/crate-ci/typos).\r\n\r\nUpdates `https://github.com/crate-ci/typos` from v1.47.1 to v1.47.2\r\n<details>\r\n<summary>Changelog</summary>\r\n<p><em>Sourced from <a href=\"https://github.com/crate-ci/typos/blob/master/CHANGELOG.md\">https://github.com/crate-ci/typos's changelog</a>.</em></p>\r\n<blockquote>\r\n<h1>Change Log</h1>\r\n<p>All notable changes to this project will be documented in this file.</p>\r\n<p>The format is based on <a href=\"https://keepachangelog.com/\">Keep a Changelog</a>\r\nand this project adheres to <a href=\"https://semver.org/\">Semantic Versioning</a>.</p>\r\n<!-- raw HTML omitted -->\r\n<h2>[Unreleased] - ReleaseDate</h2>\r\n<h2>[1.47.2] - 2026-06-04</h2>\r\n<h3>Fixes</h3>\r\n<ul>\r\n<li>Don't correct <code>inferrable</code></li>\r\n<li>Correct unused <code>inferible</code> variant</li>\r\n</ul>\r\n<h2>[1.47.1] - 2026-06-03</h2>\r\n<h3>Fixes</h3>\r\n<ul>\r\n<li>Don't correct <code>requestors</code></li>\r\n</ul>\r\n<h2>[1.47.0] - 2026-05-29</h2>\r\n<h3>Features</h3>\r\n<ul>\r\n<li>Updated the dictionary with the <a href=\"https://redirect.github.com/crate-ci/typos/issues/1545\">May 2026</a> changes</li>\r\n</ul>\r\n<h2>[1.46.3] - 2026-05-23</h2>\r\n<h3>Fixes</h3>\r\n<ul>\r\n<li>Don't correct to <code>sequentials</code></li>\r\n<li>Don't correct to <code>subdolder</code></li>\r\n</ul>\r\n<h2>[1.46.2] - 2026-05-16</h2>\r\n<h3>Fixes</h3>\r\n<ul>\r\n<li>Don't correct to <code>criterias</code></li>\r\n<li>Don't correct to <code>replaceables</code></li>\r\n</ul>\r\n<h2>[1.46.1] - 2026-05-08</h2>\r\n<h3>Fixes</h3>\r\n<ul>\r\n<li>Don't correct to <code>confidentials</code></li>\r\n</ul>\r\n<h2>[1.46.0] - 2026-04-30</h2>\r\n<!-- raw HTML omitted -->\r\n</blockquote>\r\n<p>... (truncated)</p>\r\n</details>\r\n<details>\r\n<summary>Commits</summary>\r\n<ul>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/b859c0df7f391deba73030f79b957e62b4d81dc6\"><code>b859c0d</code></a> chore: Release</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/6fd32cee0c74337fd419788965d8f1c96d6f87a5\"><code>6fd32ce</code></a> docs: Update changelog</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/7626d89232db5fc0c23e290107cf420047e297e9\"><code>7626d89</code></a> Merge pull request <a href=\"https://redirect.github.com/crate-ci/typos/issues/1530\">#1530</a> from crate-ci/renovate/j178-prek-action-2.x</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/2c9510cd3b9756411e186a1ff1d0ee9a0bb61895\"><code>2c9510c</code></a> Merge pull request <a href=\"https://redirect.github.com/crate-ci/typos/issues/1532\">#1532</a> from epage/march</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/265b88f6490711bebac4bb109149f1f06c2255e9\"><code>265b88f</code></a> feat(dict): March updates</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/5baf2ce236258ea037d71f364aa7a13eb1d2cf70\"><code>5baf2ce</code></a> chore(deps): Update compatible (<a href=\"https://redirect.github.com/crate-ci/typos/issues/1529\">#1529</a>)</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/0442cb7c40aa99aa5a9ec99ac4c3f0c654260f34\"><code>0442cb7</code></a> chore(deps): Update j178/prek-action action to v2</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/8f11c0dc0f31c780c45b3dd5b72ff4b48a350b75\"><code>8f11c0d</code></a> Merge pull request <a href=\"https://redirect.github.com/crate-ci/typos/issues/1524\">#1524</a> from epage/update</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/ecdbfab467d6037f796c649e7616aee4a6a16c5a\"><code>ecdbfab</code></a> chore: Update dependencies</li>\r\n<li><a href=\"https://github.com/crate-ci/typos/commit/c6a60235c7281eefcdf5e5dd32831a778d862c0c\"><code>c6a6023</code></a> docs(gh): Add funding info</li>\r\n<li>Additional commits viewable in <a href=\"https://github.com/crate-ci/typos/compare/44e2070e6017f834bf069503acb35ca0ca0b75f2...b859c0df7f391deba73030f79b957e62b4d81dc6\">compare view</a></li>\r\n</ul>\r\n</details>\r\n<br />\r\n\r\n\r\nDependabot will resolve any conflicts with this PR as long as you don't alter ",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-16T12:53:10Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "pre-commit"
+    ],
+    "files": [
+      ".pre-commit-config.yaml"
+    ],
+    "commitShas": [
+      "5ebf2ab2d17bacd95154a2c87caa182fa34c6c85"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15776",
+    "number": 15776,
+    "title": "⬆ Bump astral-sh/setup-uv from 8.1.0 to 8.2.0 in the github-actions group",
+    "body": "Bumps the github-actions group with 1 update: [astral-sh/setup-uv](https://github.com/astral-sh/setup-uv).\n\nUpdates `astral-sh/setup-uv` from 8.1.0 to 8.2.0\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/astral-sh/setup-uv/releases\">astral-sh/setup-uv's releases</a>.</em></p>\n<blockquote>\n<h2>v8.2.0 🌈 New inputs <code>quiet</code> and <code>download-from-astral-mirror</code></h2>\n<h2>Changes</h2>\n<p>This release brings two new inputs and a few bug fixes.</p>\n<h3>New inputs</h3>\n<p>Lets talk about the new inputs first.</p>\n<h4>quiet</h4>\n<p>Pretty simple. It turns of all <code>info</code> loggings. Useful if you use this in a composite action and are not interested in all the details.\nIn the upcoming releases we will add log groups to fully implement support for &quot;less noise&quot;</p>\n<blockquote>\n<p>[!NOTE]<br />\nWarnings and errors are always logged.</p>\n</blockquote>\n<h4>download-from-astral-mirror</h4>\n<p>In some cases you may want to directly use the fallback of checking for available versions and downloading releases from GitHub instead of using the astral.sh mirror. Setting <code>download-from-astral-mirror: false</code> allows you to do that.</p>\n<h3>Bugfixes</h3>\n<p>When using the astral.sh mirror to query available versions and download releases (done by default) we now stop sending the GitHub token in the header. The mirror never looked at it but we shouldn't be handing out that data even if it is just a short lived token.\nAll other bugfixes try to limit the impact of failed GitHub queries due to retries and other faults.</p>\n<p>We couldn't pinpoint all rootcauses yet but added more logging for error cases to track them down.</p>\n<h2>🐛 Bug fixes</h2>\n<ul>\n<li>fix: report unexpected cache save failures <a href=\"https://github.com/eifinger\"><code>@​eifinger</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/896\">#896</a>)</li>\n<li>fix: report unexpected setup failures <a href=\"https://github.com/eifinger\"><code>@​eifinger</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/895\">#895</a>)</li>\n<li>fix: add timeout to fetch to prevent silent hangs <a href=\"https://github.com/eifinger-bot\"><code>@​eifinger-bot</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/883\">#883</a>)</li>\n<li>Limit GitHub tokens to github.com download URLs <a href=\"https://github.com/zsol\"><code>@​zsol</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/878\">#878</a>)</li>\n<li>increase libuv-workaround timeout to 100ms <a href=\"https://github.com/eifinger\"><code>@​eifinger</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/880\">#880</a>)</li>\n</ul>\n<h2>🚀 Enhancements</h2>\n<ul>\n<li>Add quiet input to suppress info-level log output <a href=\"https://github.com/eifinger\"><code>@​eifinger</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/898\">#898</a>)</li>\n<li>feat: add <code>download-from-astral-mirror</code> input <a href=\"https://github.com/eifinger\"><code>@​eifinger</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/897\">#897</a>)</li>\n</ul>\n<h2>🧰 Maintenance</h2>\n<ul>\n<li>docs: update dependabot rollup biome guidance <a href=\"https://github.com/eifinger\"><code>@​eifinger</code></a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/902\">#902</a>)</li>\n<li>chore: update known checksums for 0.11.18 @<a href=\"https://github.com/apps/github-actions\">github-actions[bot]</a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/899\">#899</a>)</li>\n<li>chore: update known checksums for 0.11.17 @<a href=\"https://github.com/apps/github-actions\">github-actions[bot]</a> (<a href=\"https://redirect.github.com/astral-sh/setup-uv/issues/892\">#892</a>)</li>\n<li>chore: update known checksums for 0.11.16 @<a href=\"https://github.com/apps/github-actions\">github-actions[bot]</a> (<a href=\"https://redirect.github.com/astral-sh/se",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-16T15:29:08Z",
+    "labels": [
+      "dependencies",
+      "github_actions",
+      "internal"
+    ],
+    "files": [
+      ".github/workflows/build-docs.yml",
+      ".github/workflows/contributors.yml",
+      ".github/workflows/create-draft-release.yml",
+      ".github/workflows/deploy-docs.yml",
+      ".github/workflows/label-approved.yml",
+      ".github/workflows/notify-translations.yml",
+      ".github/workflows/people.yml",
+      ".github/workflows/pre-commit.yml",
+      ".github/workflows/prepare-release.yml",
+      ".github/workflows/publish.yml",
+      ".github/workflows/smokeshow.yml",
+      ".github/workflows/sponsors.yml",
+      ".github/workflows/test.yml",
+      ".github/workflows/topic-repos.yml",
+      ".github/workflows/translate.yml"
+    ],
+    "commitShas": [
+      "2c77ae3f76a2ec9db0f9ae9b114583a7881fa368"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15777",
+    "number": 15777,
+    "title": "⬆ Bump the python-packages group across 1 directory with 7 updates",
+    "body": "Bumps the python-packages group with 7 updates in the / directory:\n\n| Package | From | To |\n| --- | --- | --- |\n| [ruff](https://github.com/astral-sh/ruff) | `0.15.15` | `0.15.16` |\n| [inline-snapshot](https://github.com/15r10nk/inline-snapshot) | `0.34.0` | `0.34.1` |\n| [ty](https://github.com/astral-sh/ty) | `0.0.42` | `0.0.46` |\n| [typer](https://github.com/fastapi/typer) | `0.26.6` | `0.26.7` |\n| [zensical](https://github.com/zensical/zensical) | `0.0.43` | `0.0.45` |\n| [pydantic-ai](https://github.com/pydantic/pydantic-ai) | `1.105.0` | `1.106.0` |\n| [prek](https://github.com/j178/prek) | `0.4.3` | `0.4.4` |\n\n\nUpdates `ruff` from 0.15.15 to 0.15.16\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/astral-sh/ruff/releases\">ruff's releases</a>.</em></p>\n<blockquote>\n<h2>0.15.16</h2>\n<h2>Release Notes</h2>\n<p>Released on 2026-06-04.</p>\n<h3>Preview features</h3>\n<ul>\n<li>[<code>flake8-async</code>] Implement <code>yield-in-context-manager-in-async-generator</code> (<code>ASYNC119</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/24644\">#24644</a>)</li>\n<li>[<code>pylint</code>] Narrow diagnostic range and exclude cases without exception handlers (<code>PLW0717</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25440\">#25440</a>)</li>\n<li>[<code>ruff</code>] Treat <code>yield</code> before <code>break</code> from a terminal loop as terminal (<code>RUF075</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25447\">#25447</a>)</li>\n</ul>\n<h3>Bug fixes</h3>\n<ul>\n<li>[<code>eradicate</code>] Avoid flagging <code>ruff:ignore</code> comments as code (<code>ERA001</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25537\">#25537</a>)</li>\n<li>[<code>eradicate</code>] Fix <code>ERA001</code>/<code>RUF100</code> conflict when <code>noqa</code> is on commented-out code (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25414\">#25414</a>)</li>\n<li>[<code>pyflakes</code>] Avoid removing the <code>format</code> call when it would change behavior (<code>F523</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25320\">#25320</a>)</li>\n<li>[<code>pylint</code>] Avoid syntax errors in invalid character replacements in f-strings before Python 3.12 (<code>PLE2510</code>, <code>PLE2512</code>, <code>PLE2513</code>, <code>PLE2514</code>, <code>PLE2515</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25544\">#25544</a>)</li>\n<li>[<code>pyupgrade</code>] Avoid converting <code>format</code> calls with more kinds of side effects (<code>UP032</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25484\">#25484</a>)</li>\n</ul>\n<h3>Rule changes</h3>\n<ul>\n<li>[<code>flake8-pytest-style</code>] Avoid fixes for ambiguous <code>argnames</code> and <code>argvalues</code> combinations (<code>PT006</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/24776\">#24776</a>)</li>\n</ul>\n<h3>Performance</h3>\n<ul>\n<li>Drop excess capacity from statement suites during parsing (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25368\">#25368</a>)</li>\n</ul>\n<h3>Documentation</h3>\n<ul>\n<li>[<code>pydocstyle</code>] Improve discoverability of rules enabled for each convention (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/24973\">#24973</a>)</li>\n<li>[<code>ruff</code>] Restore example code for Python versions before 3.15 (<code>RUF017</code>) (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25439\">#25439</a>)</li>\n<li>Fix typo <code>bin/active</code> → <code>bin/activate</code> in tutorial (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25473\">#25473</a>)</li>\n</ul>\n<h3>Other changes</h3>\n<ul>\n<li>Shrink additional parser AST collections (<a href=\"https://redirect.github.com/astral-sh/ruff/pull/25465\">#25465</a>)</li>\n</ul>\n<h3>Contributors</h3>\n<ul>\n<li><a href=\"https://github.com/Redslayer112\"><code>@​Redslayer112</code></a></li>\n<li><a href=\"https://github.com/koriyoshi2041\"><c",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-16T20:09:36Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "python:uv"
+    ],
+    "files": [
+      "uv.lock"
+    ],
+    "commitShas": [
+      "e26e64381c35ac6cf3d25bf6accb53b94a66dd8f"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15778",
+    "number": 15778,
+    "title": "⬆ Bump python-multipart from 0.0.30 to 0.0.32",
+    "body": "Bumps [python-multipart](https://github.com/Kludex/python-multipart) from 0.0.30 to 0.0.32.\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/Kludex/python-multipart/releases\">python-multipart's releases</a>.</em></p>\n<blockquote>\n<h2>Version 0.0.32</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Replace per-byte partial-boundary scan with rfind lookbehind by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/300\">Kludex/python-multipart#300</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/Kludex/python-multipart/compare/0.0.31...0.0.32\">https://github.com/Kludex/python-multipart/compare/0.0.31...0.0.32</a></p>\n<h2>Version 0.0.31</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Speed up multipart header parsing and callback dispatch by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/295\">Kludex/python-multipart#295</a></li>\n<li>Bound header field name size before validating by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/296\">Kludex/python-multipart#296</a></li>\n<li>Validate Content-Length is non-negative in parse_form by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/297\">Kludex/python-multipart#297</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/Kludex/python-multipart/compare/0.0.30...0.0.31\">https://github.com/Kludex/python-multipart/compare/0.0.30...0.0.31</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Changelog</summary>\n<p><em>Sourced from <a href=\"https://github.com/Kludex/python-multipart/blob/main/CHANGELOG.md\">python-multipart's changelog</a>.</em></p>\n<blockquote>\n<h2>0.0.32 (2026-06-04)</h2>\n<ul>\n<li>Speed up partial-boundary scanning for CR/LF-dense part data <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/300\">#300</a>.</li>\n</ul>\n<h2>0.0.31 (2026-06-04)</h2>\n<ul>\n<li>Speed up multipart header parsing and callback dispatch <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/295\">#295</a>.</li>\n<li>Bound header field name size before validating <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/296\">#296</a>.</li>\n<li>Validate <code>Content-Length</code> is non-negative in <code>parse_form</code> <a href=\"https://redirect.github.com/Kludex/python-multipart/pull/297\">#297</a>.</li>\n</ul>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/238ead62a0bb6f6cdfe122708faa13812f59f9a6\"><code>238ead6</code></a> Version 0.0.32 (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/302\">#302</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/86729796093b04f7cf414ea6c2c4499e2a5750af\"><code>8672979</code></a> Replace per-byte partial-boundary scan with rfind lookbehind (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/300\">#300</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/8190779d8234c8bf8cbed7891c11d4bfb79e84df\"><code>8190779</code></a> Bump the python-packages group with 7 updates (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/301\">#301</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/0d3c086d237f6fd20fefe8853e95979276a07c44\"><code>0d3c086</code></a> Use uv package ecosystem for Dependabot (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/299\">#299</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/commit/4cffc68a165f7a6f6b7756ce006fabf07a05b7a4\"><code>4cffc68</code></a> Version 0.0.31 (<a href=\"https://redirect.github.com/Kludex/python-multipart/issues/298\">#298</a>)</li>\n<li><a href=\"https://github.com/Kludex/python-multipart/c",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-16T12:28:41Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "python:uv"
+    ],
+    "files": [
+      "uv.lock"
+    ],
+    "commitShas": [
+      "9ca069f2be3e619fcda6d33fb1ed7025d6f9a419"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15779",
+    "number": 15779,
+    "title": "⬆ Bump cryptography from 46.0.7 to 48.0.1",
+    "body": "Bumps [cryptography](https://github.com/pyca/cryptography) from 46.0.7 to 48.0.1.\n<details>\n<summary>Changelog</summary>\n<p><em>Sourced from <a href=\"https://github.com/pyca/cryptography/blob/main/CHANGELOG.rst\">cryptography's changelog</a>.</em></p>\n<blockquote>\n<p>48.0.1 - 2026-06-09</p>\n<pre><code>\n* Updated Windows, macOS, and Linux wheels to be compiled with OpenSSL 4.0.1.\n<p>.. _v48-0-0:</p>\n<p>48.0.0 - 2026-05-04<br />\n</code></pre></p>\n<ul>\n<li>\n<p><strong>BACKWARDS INCOMPATIBLE:</strong> Support for Python 3.8 has been removed.\n<code>cryptography</code> now requires Python 3.9 or later.</p>\n</li>\n<li>\n<p><strong>BACKWARDS INCOMPATIBLE:</strong> Loading an X.509 CRL whose inner\n<code>TBSCertList.signature</code> algorithm does not match the outer\n<code>signatureAlgorithm</code> now raises <code>ValueError</code>. Previously, such CRLs\nwere parsed successfully and only rejected during signature validation.</p>\n</li>\n<li>\n<p>Added support for :doc:<code>/hazmat/primitives/asymmetric/mlkem</code> and\n:doc:<code>/hazmat/primitives/asymmetric/mldsa</code> when using OpenSSL 3.5.0 or\nlater, in addition to the existing AWS-LC and BoringSSL support. This means\npost-quantum algorithms are now available to users of our wheels.</p>\n<ul>\n<li><strong>Note:</strong> Going forward, we do not guarantee that all functionality\nin <code>cryptography</code> will be available when building against\nOpenSSL. See :doc:<code>/statements/state-of-openssl</code> for more information.</li>\n</ul>\n</li>\n</ul>\n<p>.. _v47-0-0:</p>\n<p>47.0.0 - 2026-04-24</p>\n<pre><code>\n* Support for Python 3.8 is deprecated and will be removed in the next\n  ``cryptography`` release.\n* **BACKWARDS INCOMPATIBLE:** Support for binary elliptic curves\n  (``SECT*`` classes) has been removed. These curves are rarely used and\n  have additional security considerations that make them undesirable.\n* **BACKWARDS INCOMPATIBLE:** Support for OpenSSL 1.1.x has been removed.\n  OpenSSL 3.0.0 or later is now required. LibreSSL, BoringSSL, and AWS-LC\n  continue to be supported.\n* **BACKWARDS INCOMPATIBLE:** Dropped support for LibreSSL &lt; 4.1.\n* **BACKWARDS INCOMPATIBLE:** Loading keys with unsupported algorithms or\n  keys with unsupported explicit curve encodings now raises\n  :class:`~cryptography.exceptions.UnsupportedAlgorithm` instead of\n  ``ValueError``. This change affects\n  :func:`~cryptography.hazmat.primitives.serialization.load_pem_private_key`,\n  :func:`~cryptography.hazmat.primitives.serialization.load_der_private_key`,\n  :func:`~cryptography.hazmat.primitives.serialization.load_pem_public_key`,\n  :func:`~cryptography.hazmat.primitives.serialization.load_der_public_key`,\n  and :meth:`~cryptography.x509.Certificate.public_key` when called on\n  certificates with unsupported public key algorithms.\n&lt;/tr&gt;&lt;/table&gt; \n</code></pre>\n</blockquote>\n<p>... (truncated)</p>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a href=\"https://github.com/pyca/cryptography/commit/de987ce48ccfeb1abca41efa23b2bf73ec704f74\"><code>de987ce</code></a> 48.0.1 version bump and changelog (<a href=\"https://redirect.github.com/pyca/cryptography/issues/14996\">#14996</a>)</li>\n<li><a href=\"https://github.com/pyca/cryptography/commit/8e03e30e3aae01632a697e903e3593c924f0139d\"><code>8e03e30</code></a> bump for 48.0.0 release (<a href=\"https://redirect.github.com/pyca/cryptography/issues/14796\">#14796</a>)</li>\n<li><a href=\"https://github.com/pyca/cryptography/commit/295e0d254ef31ab864730aa41312ec355416ee71\"><code>295e0d2</code></a> Add AGENTS.md with CLAUDE.md symlink (<a href=\"https://redirect.github.com/pyca/cryptography/issues/14794\">#14794</a>)</li>\n<li><a href=\"https://github.com/pyca/cryptography/commit/104a2de19e268a433e6da92be9cb872dcf0003c8\"><code>104a2de</code></a> Bump BoringSSL, OpenSSL, AWS-LC in CI (<a href=\"https://redirect.github.com/pyca/cryptography/issues/14793\">#14793</a>)</li>\n<li><a href=\"https://github.com/pyca/cryptography/commit/67ec1e51988195e17993d2edef5258b2750",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-16T18:01:02Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "python:uv"
+    ],
+    "files": [
+      "uv.lock"
+    ],
+    "commitShas": [
+      "705324ed2977f99dec4df45175ee27a2bf26c17f"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15780",
+    "number": 15780,
+    "title": "⬆ Bump starlette from 1.2.1 to 1.3.1",
+    "body": "Bumps [starlette](https://github.com/Kludex/starlette) from 1.2.1 to 1.3.1.\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a href=\"https://github.com/Kludex/starlette/releases\">starlette's releases</a>.</em></p>\n<blockquote>\n<h2>Version 1.3.1</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Use <code>StarletteDeprecationWarning</code> instead of <code>DeprecationWarning</code> by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3119\">Kludex/starlette#3119</a></li>\n<li>Enforce <code>max_fields</code> and <code>max_part_size</code> in <code>FormParser</code> by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3329\">Kludex/starlette#3329</a></li>\n<li>Enforce <code>FormParser</code> limits in parser callbacks by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3331\">Kludex/starlette#3331</a></li>\n</ul>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/Kludex/starlette/compare/1.3.0...1.3.1\">https://github.com/Kludex/starlette/compare/1.3.0...1.3.1</a></p>\n<h2>Version 1.3.0</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Clamp oversized suffix ranges in <code>FileResponse</code> by <a href=\"https://github.com/jiyujie2006\"><code>@​jiyujie2006</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3307\">Kludex/starlette#3307</a></li>\n<li>Catch <code>OSError</code> alongside <code>MultiPartException</code> when closing temp files by <a href=\"https://github.com/N3XT3R1337\"><code>@​N3XT3R1337</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3191\">Kludex/starlette#3191</a></li>\n<li>Add <code>httpx2</code> to the <code>full</code> extra by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3323\">Kludex/starlette#3323</a></li>\n<li>Adjust testclient typing and warnings by <a href=\"https://github.com/waketzheng\"><code>@​waketzheng</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3322\">Kludex/starlette#3322</a></li>\n<li>Fix IndexError in URL.replace() on a URL with no authority by <a href=\"https://github.com/LeSingh1\"><code>@​LeSingh1</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3317\">Kludex/starlette#3317</a></li>\n<li>Annotate URLPath protocol parameter with Literal by <a href=\"https://github.com/Chang-LeHung\"><code>@​Chang-LeHung</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3285\">Kludex/starlette#3285</a></li>\n<li>avoid collapsing exception groups from user code by <a href=\"https://github.com/graingert\"><code>@​graingert</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/2830\">Kludex/starlette#2830</a></li>\n<li>Use <code>removeprefix</code> to strip weak ETag indicator in <code>is_not_modified</code> by <a href=\"https://github.com/gnosyslambda\"><code>@​gnosyslambda</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3193\">Kludex/starlette#3193</a></li>\n<li>Build <code>request.url</code> from structured components by <a href=\"https://github.com/Kludex\"><code>@​Kludex</code></a> in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3326\">Kludex/starlette#3326</a></li>\n</ul>\n<h2>New Contributors</h2>\n<ul>\n<li><a href=\"https://github.com/jiyujie2006\"><code>@​jiyujie2006</code></a> made their first contribution in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3307\">Kludex/starlette#3307</a></li>\n<li><a href=\"https://github.com/N3XT3R1337\"><code>@​N3XT3R1337</code></a> made their first contribution in <a href=\"https://redirect.github.com/Kludex/starlette/pull/3191\">Kludex/starlette#3191</a></li>\n<li><a href=\"https://github.com/leestana01\"><code>@​leestana01</code></a> made their first contribution in <a href=\"https://redirect.github.com/Kludex/starlette/pull/331",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-16T15:47:19Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "python:uv"
+    ],
+    "files": [
+      "uv.lock"
+    ],
+    "commitShas": [
+      "69f8d87fb7aa2d6028331af16ec28d7b02636183"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15781",
+    "number": 15781,
+    "title": "⬆ Bump aiohttp from 3.14.0 to 3.14.1",
+    "body": "\n\n[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=aiohttp&package-manager=uv&previous-version=3.14.0&new-version=3.14.1)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)\n\nDependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.\n\n[//]: # (dependabot-automerge-start)\n[//]: # (dependabot-automerge-end)\n\n---\n\n<details>\n<summary>Dependabot commands and options</summary>\n<br />\n\nYou can trigger Dependabot actions by commenting on this PR:\n- `@dependabot rebase` will rebase this PR\n- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it\n- `@dependabot show <dependency name> ignore conditions` will show all of the ignore conditions of the specified dependency\n- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)\n- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)\nYou can disable automated security fix PRs for this repo from the [Security Alerts page](https://github.com/fastapi/fastapi/network/alerts).\n\n</details>",
+    "author": "dependabot[bot]",
+    "mergedAt": "2026-06-16T17:59:14Z",
+    "labels": [
+      "dependencies",
+      "internal",
+      "python:uv"
+    ],
+    "files": [
+      "uv.lock"
+    ],
+    "commitShas": [
+      "84304df58f837352cdd9503bef4f46f0da852111"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15785",
+    "number": 15785,
+    "title": "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+    "body": "## Pull Request\r\n\r\n✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)\r\n\r\nRelated to: https://github.com/fastapi/fastapi/discussions/15782\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\nCodex with GPT 5.5 through several iterations, defining and trimming the interface.\r\n\r\nManual review of all the code.\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-18T06:49:39Z",
+    "labels": [
+      "feature"
+    ],
+    "files": [
+      "fastapi/openapi/utils.py",
+      "fastapi/routing.py",
+      "tests/test_router_include_context.py"
+    ],
+    "commitShas": [
+      "6ac122071d2c9e6add587e1271eb010dd6acbed0"
+    ],
+    "ticketKeys": [
+      "FAPI-1006"
+    ]
+  },
+  {
+    "id": "pr:15786",
+    "number": 15786,
+    "title": "🔨 Update sponsors script to simplify previews",
+    "body": "## Pull Request\r\n\r\n🔨 Update sponsors script to simplify previews\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-17T20:36:25Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "docs/en/data/sponsors.yml",
+      "scripts/docs.py"
+    ],
+    "commitShas": [
+      "32d711f6d24224f2aed3395cac428222cbe9b1fb"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15787",
+    "number": 15787,
+    "title": "🔧 Update sponsors: add BairesDev",
+    "body": "## Pull Request\r\n\r\n🔧 Update sponsors: add BairesDev\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-17T20:50:01Z",
+    "labels": [
+      "internal"
+    ],
+    "files": [
+      "README.md",
+      "docs/en/data/sponsors.yml",
+      "docs/en/docs/img/sponsors/bairesdev.svg"
+    ],
+    "commitShas": [
+      "d514109e42fc90590a7050e982a37ac6ecf561ab"
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "pr:15790",
+    "number": 15790,
+    "title": "🔖 Release version 0.137.2",
+    "body": "Prepare release 0.137.2.",
+    "author": "tiangolo",
+    "mergedAt": "2026-06-18T06:56:46Z",
+    "labels": [
+      "release"
+    ],
+    "files": [
+      "docs/en/docs/release-notes.md",
+      "fastapi/__init__.py"
+    ],
+    "commitShas": [
+      "6a0ba7bb1f5015383cdceb3822ca1abed6e32b82"
+    ],
+    "ticketKeys": []
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "ticket:FAPI-1000",
+    "key": "FAPI-1000",
+    "summary": "⬆️ Update Pydantic v2 code to address deprecations",
+    "description": "When running `ty` on the code base (cf #15091), we got two valid deprecation warnings:\r\n\r\n### eval_type_lenient\r\n\r\n- `eval_type_lenient` has been deprecated since [pydantic#1053](https://github.com/pydantic/pydantic/pull/10530), which was released as part of [v2.10.0b1](https://github.com/pydantic/pydantic/releases/tag/v2.10.0b1).\r\n\r\n### color \r\n- `pydantic.color.Color` has been deprecated since [pydantic#6003](https://github.com/pydantic/pydantic/pull/6003), which was released as part of [v2.0b3](https://github.com/pydantic/pydantic/releases/tag/v2.0b3).\r\n- This PR updates `ENCODERS_BY_TYPE` to also cover the new `pydantic_extra_types.color.Color`. The added unit test fails on `master`.\r\n\r\n\r\n## Open question\r\n\r\n~~As Pydantic updates & makes older functionality deprecated, we could (also in the future) be tempted to update the methods (especially when `ty` tells us to), without realizing we might be breaking older versions that we still support according to our `pyproject.toml`. For this reason, I'd want to add a specific test CLI run with Pydantic 2.7.0 to ensure it keeps working as expected. Aye? Nay?~~\r\n\r\nUPDATE: cf https://github.com/fastapi/fastapi/pull/15139!\n\n(Reconstructed from PR #15101; category: Upgrades.)",
+    "issueType": "improvement",
+    "status": "Done",
+    "components": [],
+    "fixVersions": [
+      "0.137.2"
+    ],
+    "prNumbers": [
+      15101
+    ]
+  },
+  {
+    "id": "ticket:FAPI-1001",
+    "key": "FAPI-1001",
+    "summary": "♻️ Validate Server Sent Event fields to avoid applications from sending broken data",
+    "description": "## Pull Request\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n♻️ Validate Server Sent Event fields to avoid applications from sending broken data\r\n\r\nThis was reported multiple times as a \"vulnerability\" by users probably using automated AI tools, with the argument that if input was taken from the request and passed directly to an event unfiltered, it could break the client.\r\n\r\nIf an app sets an `id` or `event` with multi-line content, I would consider that app broken, and probably the app itself vulnerable to something, not FastAPI. With this change, if any app sets invalid multi-line values (sourced from unfiltered input or in any other way), FastAPI will make it a server error (which it is, as the app is sending invalid data).\r\n\r\nI don't think the code before this PR has a bug, less a vulnerability. This change is mainly a quality of life improvement to prevent badly written apps from shooting themselves in the foot by passing unsanitized data \n\n(Reconstructed from PR #15588; category: Refactors.)",
+    "issueType": "improvement",
+    "status": "Done",
+    "components": [],
+    "fixVersions": [
+      "0.137.2"
+    ],
+    "prNumbers": [
+      15588
+    ]
+  },
+  {
+    "id": "ticket:FAPI-1002",
+    "key": "FAPI-1002",
+    "summary": "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)",
+    "description": "## Pull Request\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)\r\n\r\nThis means it would only accept header names separated with hyphens by default, and to accept header names separated with underscores, an app would need to explicitly set `convert_underscores=False`.\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n\n\n(Reconstructed from PR #15589; category: Refactors.)",
+    "issueType": "improvement",
+    "status": "Done",
+    "components": [],
+    "fixVersions": [
+      "0.137.2"
+    ],
+    "prNumbers": [
+      15589
+    ]
+  },
+  {
+    "id": "ticket:FAPI-1003",
+    "key": "FAPI-1003",
+    "summary": "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+    "description": "## Pull Request\r\n\r\n♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances\r\n\r\nSupersedes https://github.com/fastapi/fastapi/pull/4794\r\n\r\nUnblocks :sparkles: SO MANY THINGS :sparkles: \r\n\r\nBefore this, `router.include_router(other_router)` would take each path operation from `other_router` and \"clone\" it, or recreate it from scratch.\r\n\r\nThis would mean that in the end there was only one top level router, part of the app.\r\n\r\nThe way it is structured here is that there are a few additional classes to handle intermediate metadata for router and route inclusion. That way the information of \"router X includes Y and Y includes Z\" is stored somewhere, without affecting (recreating / clonning) the final route.\r\n\r\n### Non Objective\r\n\r\nDependencies for 404\r\n\r\nOriginally in the other PR I intended to support dependencies that would be executed even for 404, but that would conflict with the fact that a router could _not_ find a match, but the next router _did_ find a match. Executing dependencies in the router that did not find a match would not make sense, they could consume the request, body, etc.\r\n\r\nThis original idea was discarded.\r\n\r\n### Breaking Change\r\n\r\nNow `router.routes`\n\n(Reconstructed from PR #15745; category: Breaking Changes.)",
+    "issueType": "story",
+    "status": "Done",
+    "components": [],
+    "fixVersions": [
+      "0.137.2"
+    ],
+    "prNumbers": [
+      15745
+    ]
+  },
+  {
+    "id": "ticket:FAPI-1004",
+    "key": "FAPI-1004",
+    "summary": "🐛 Fix bug, allow empty path in path operation in prefixless router",
+    "description": "## Pull Request\r\n\r\n🐛 Fix bug, allow empty path in path operation in prefixless router\r\n\r\nRelated to https://github.com/fastapi/fastapi/issues/15762\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n\n\n(Reconstructed from PR #15763; category: Fixes.)",
+    "issueType": "bug",
+    "status": "Done",
+    "components": [],
+    "fixVersions": [
+      "0.137.2"
+    ],
+    "prNumbers": [
+      15763
+    ]
+  },
+  {
+    "id": "ticket:FAPI-1005",
+    "key": "FAPI-1005",
+    "summary": "🚨 Fix typing checks for APIRoute",
+    "description": "## Pull Request\r\n\r\n🚨 Fix typing checks for APIRoute\r\n\r\nRelated to: https://github.com/fastapi/fastapi/issues/15764\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n\n\n(Reconstructed from PR #15765; category: Fixes.)",
+    "issueType": "bug",
+    "status": "Done",
+    "components": [],
+    "fixVersions": [
+      "0.137.2"
+    ],
+    "prNumbers": [
+      15765
+    ]
+  },
+  {
+    "id": "ticket:FAPI-1006",
+    "key": "FAPI-1006",
+    "summary": "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+    "description": "## Pull Request\r\n\r\n✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)\r\n\r\nRelated to: https://github.com/fastapi/fastapi/discussions/15782\r\n\r\n<!--\r\nPlease start with a GitHub Discussion.\r\n\r\nOnce a team member asks you to open a PR, create it and link the discussion here.\r\n\r\nObvious typo fixes can be made in a PR without starting a discussion.\r\n-->\r\n\r\nDiscussion: <!-- Link to the GitHub Discussion -->\r\n\r\n## Description\r\n\r\n<!-- Write the description of your PR here -->\r\n\r\n## AI Disclaimer\r\n\r\nCodex with GPT 5.5 through several iterations, defining and trimming the interface.\r\n\r\nManual review of all the code.\r\n\r\n<!-- If using AI, write here the prompt and model used -->\r\n\r\n<details>\r\n<summary>AI transcript</summary>\r\n\r\n<!-- Paste here the entire AI transcript -->\r\n\r\n</details>\r\n\r\n## Checklist\r\n\r\n- [ ] This PR is an obvious typo fix, or it links to a GitHub Discussion for the proposed code change.\r\n- [ ] I added tests for the change.\r\n- [ ] The new or updated tests fail on the main branch and pass on this PR.\r\n- [ ] Coverage stays at 100%.\r\n- [ ] The documentation explains the change if needed.\r\n\n\n(Reconstructed from PR #15785; category: Features.)",
+    "issueType": "story",
+    "status": "Done",
+    "components": [],
+    "fixVersions": [
+      "0.137.2"
+    ],
+    "prNumbers": [
+      15785
+    ]
+  }
+]

@@ -1,0 +1,2752 @@
+[
+  {
+    "id": "commit:4f64b8f",
+    "sha": "4f64b8f65191b497255004e896a2bbfd7cfd1886",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-04-27T20:25:54Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a217d2f",
+    "sha": "a217d2ff2a46475d6d33fcb8245d132f057d1cce",
+    "message": "📝 Add FastAPI Conf '26 announcement to docs (#15457)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "alejsdev",
+    "date": "2026-04-30T10:15:20Z",
+    "files": [],
+    "prNumbers": [
+      15457
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6b20159",
+    "sha": "6b20159c596709731fa764a4c3b0edc55d353f35",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-04-30T10:15:55Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:aff0b7c",
+    "sha": "aff0b7cd43ddce84b2f80780e199e208ef85e6fa",
+    "message": "💄 Refactor opinions section with interactive tabs and new logos (#15458)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "alejsdev",
+    "date": "2026-04-30T13:39:30Z",
+    "files": [],
+    "prNumbers": [
+      15458
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a3ceb9c",
+    "sha": "a3ceb9ca7415d8874233edac857e85e47d2a6680",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-04-30T13:40:02Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b363a1d",
+    "sha": "b363a1d0023b25fba9231c17ae371c9d44c65c68",
+    "message": "💄 Improve layout and styling (#15462)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "alejsdev",
+    "date": "2026-04-30T16:03:33Z",
+    "files": [],
+    "prNumbers": [
+      15462
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d8a2c1e",
+    "sha": "d8a2c1edaa793ae926e0ac76b242a1c6631eefd1",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-04-30T16:04:10Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:33ed5ae",
+    "sha": "33ed5aecdf978bc2802bde4505d368f96f3c279f",
+    "message": "👷 Fix missing credentials issue in `translate` workflow (#15468)",
+    "author": "YuriiMotov",
+    "date": "2026-05-01T14:29:41Z",
+    "files": [],
+    "prNumbers": [
+      15468
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e0a2c75",
+    "sha": "e0a2c75b1a980c52c336cfefd12f2277238c4e8f",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-01T14:30:09Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:bc8b1d1",
+    "sha": "bc8b1d101caf6316b2a4e8214ff384c7ee5487a0",
+    "message": "👥 Update FastAPI People - Contributors and Translators (#15467)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-05-03T13:26:47Z",
+    "files": [],
+    "prNumbers": [
+      15467
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:205bd85",
+    "sha": "205bd85a4605bbf9746167b41c57559e160e93ab",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-03T13:27:17Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8da79ec",
+    "sha": "8da79ec2fe9f80c66e957745fb04a19a452aaa05",
+    "message": "👥 Update FastAPI People - Experts (#15471)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-05-03T13:37:17Z",
+    "files": [],
+    "prNumbers": [
+      15471
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:f72afb6",
+    "sha": "f72afb6f6e2393fcc211e0300805e14b9e65ac1b",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-03T13:37:48Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:9ccaab1",
+    "sha": "9ccaab154add00216c58e45917f40669fae74a2d",
+    "message": "👥 Update FastAPI GitHub topic repositories (#15470)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-05-03T13:44:38Z",
+    "files": [],
+    "prNumbers": [
+      15470
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ecf73d6",
+    "sha": "ecf73d61c3bb0284f214cc26b480323b7120ff53",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-03T13:45:03Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:810fd2a",
+    "sha": "810fd2a888b03cfde5670118608c35684a870dc7",
+    "message": "✏️ Fix Azkaban spelling typo in `virtual-environments.md‎` (#15463)",
+    "author": "isaacbernat",
+    "date": "2026-05-04T14:53:29Z",
+    "files": [],
+    "prNumbers": [
+      15463
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8c660a6",
+    "sha": "8c660a6819698d88623eab8826408671706e3627",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-04T14:54:02Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:f8cbeab",
+    "sha": "f8cbeabf81afba89f24bed790f73432b67941450",
+    "message": "🌐 Fix typos in Spanish LLM-prompt (#15472)\n\nCo-authored-by: Motov Yurii <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "crr004",
+    "date": "2026-05-05T08:04:50Z",
+    "files": [],
+    "prNumbers": [
+      15472
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3efd86c",
+    "sha": "3efd86c1fde830c79b1233b4ecbb46b3dde81066",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-05T08:05:22Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:fb74293",
+    "sha": "fb7429378d14bd2d868abf145e1f18724b15e25d",
+    "message": "👷 Add pre-commit to check typos (#15482)",
+    "author": "tiangolo",
+    "date": "2026-05-05T09:44:36Z",
+    "files": [],
+    "prNumbers": [
+      15482
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:622b635",
+    "sha": "622b6356b5102113d0074083ac23c82367f4284b",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-05T09:45:26Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3ec959a",
+    "sha": "3ec959abc7e93f90034ce63f0987f787a881463a",
+    "message": "⬆ Bump pydantic from 2.13.2 to 2.13.3 (#15444)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-11T11:58:35Z",
+    "files": [],
+    "prNumbers": [
+      15444
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:7cb1953",
+    "sha": "7cb195394c5ac560b5c8acf6884537c8f721ea65",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-11T11:58:59Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5d5666b",
+    "sha": "5d5666bec590c2d9740362ab65506aae0d128bd0",
+    "message": "⬆ Bump ty from 0.0.21 to 0.0.34 (#15443)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: svlandeg <sofie.vanlandeghem@gmail.com>\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-11T14:59:50Z",
+    "files": [],
+    "prNumbers": [
+      15443
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e89a37e",
+    "sha": "e89a37e50d27f124b77e947b7965b6df75052a35",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-11T15:00:29Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2c26191",
+    "sha": "2c26191e305da47362510506d6e5f7b6cef3085f",
+    "message": "🔧 Add sponsor: TalorData (#15531)",
+    "author": "tiangolo",
+    "date": "2026-05-15T07:09:35Z",
+    "files": [],
+    "prNumbers": [
+      15531
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b70238d",
+    "sha": "b70238d9e30eed1ebd8d6901fb96576acb2f0802",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-15T07:10:03Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b71da65",
+    "sha": "b71da659cf19e4d8f0af8cc7cfc633c79288c3e3",
+    "message": "🔧 Update sponsors badge (#15532)",
+    "author": "tiangolo",
+    "date": "2026-05-15T07:42:33Z",
+    "files": [],
+    "prNumbers": [
+      15532
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b31ffc1",
+    "sha": "b31ffc1efdc9b90462bd44aacc097b330bf0f947",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-15T07:43:05Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b6abc93",
+    "sha": "b6abc93bffd0ed5d14fa245d8110bb587d026741",
+    "message": "🔧 Remove Ruff ignored rule for tabs (#15533)",
+    "author": "tiangolo",
+    "date": "2026-05-15T10:15:37Z",
+    "files": [],
+    "prNumbers": [
+      15533
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6f2dbb9",
+    "sha": "6f2dbb96ac03ca17e1c81fee5cdbcd7114260641",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-15T10:16:08Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a0f42dd",
+    "sha": "a0f42dd7d533f4fb0cdd7074efa87e1cf4f9baad",
+    "message": "⬆ Bump actions/labeler from 6.0.1 to 6.1.0 (#15507)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-15T13:02:56Z",
+    "files": [],
+    "prNumbers": [
+      15507
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:40e383e",
+    "sha": "40e383e0b2bb0a97f3aeaaedbef6000676208952",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-15T13:03:21Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6939bf8",
+    "sha": "6939bf8bb75f200567285d3a2f321c1a72a8c8b4",
+    "message": "⬆ Bump actions/add-to-project from 1.0.2 to 2.0.0 (#15490)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-15T15:17:52Z",
+    "files": [],
+    "prNumbers": [
+      15490
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ecace74",
+    "sha": "ecace740f3eaccb1aba152cf1de79477095c56f4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-15T15:18:26Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3e2ef69",
+    "sha": "3e2ef69479875b056b63d88f01603ea51ad125a9",
+    "message": "📝 Fix image URLs in `index.md` (#15534)",
+    "author": "YuriiMotov",
+    "date": "2026-05-18T07:03:01Z",
+    "files": [],
+    "prNumbers": [
+      15534
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a35a0b8",
+    "sha": "a35a0b8b624982d46e7fb9a1d380abd10b8c6615",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T07:03:26Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:72f127d",
+    "sha": "72f127ddadd4f1789efb2d418d1b188869f5b89c",
+    "message": "🌐 Update translations for ru (update-outdated) (#15521)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T08:26:15Z",
+    "files": [],
+    "prNumbers": [
+      15521
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:9364f55",
+    "sha": "9364f552e6dd907a5c50a26a9a4b003e4e43f390",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T08:26:50Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:eff8bc4",
+    "sha": "eff8bc4e66dd8651059134a1d6404fce766f1aff",
+    "message": "🌐 Update translations for zh (update-outdated) (#15520)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T08:37:41Z",
+    "files": [],
+    "prNumbers": [
+      15520
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c7171f8",
+    "sha": "c7171f86b2189bc4394118a5b4b0e88bc5990535",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T08:38:07Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6163cc7",
+    "sha": "6163cc79967796fb103e152ea68fe251e665a2a4",
+    "message": "🌐 Update translations for es (update-outdated) (#15523)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T08:55:28Z",
+    "files": [],
+    "prNumbers": [
+      15523
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8106d63",
+    "sha": "8106d6391debfadf4a60c994fc8a1172e56c8eb3",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T08:55:57Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:622dcdc",
+    "sha": "622dcdc99c9561bacce7f292bc0b38f49ec8fd57",
+    "message": "🔒️ Only allow team members to modify dependencies (#15548)",
+    "author": "svlandeg",
+    "date": "2026-05-18T09:06:23Z",
+    "files": [],
+    "prNumbers": [
+      15548
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:34a82b1",
+    "sha": "34a82b1b874f216db5b8bacb1f5c7191055e1fa2",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T09:06:54Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e6edf14",
+    "sha": "e6edf14a27cf59590ec57ee1dd53f7cb689b79bb",
+    "message": "🌐 Update translations for fr (update-outdated) (#15522)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T09:52:29Z",
+    "files": [],
+    "prNumbers": [
+      15522
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4047993",
+    "sha": "4047993ba8d0d1ade4b76e8dbbcd150570f69a3d",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T09:52:55Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:f0c3d87",
+    "sha": "f0c3d87da2902e18097244004bc3e6fd7fd0e7be",
+    "message": "🌐 Update translations for zh-hant (update-outdated) (#15524)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T09:53:58Z",
+    "files": [],
+    "prNumbers": [
+      15524
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:480fdba",
+    "sha": "480fdba26a557f4a6de1bc0f207a30c098fb9627",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T09:54:43Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:9981244",
+    "sha": "99812444ab99526d3c961837b138dfdc7bda23f5",
+    "message": "📝 Update docs, simplify usage of admonitions, only default ones (#15553)",
+    "author": "tiangolo",
+    "date": "2026-05-18T11:55:19Z",
+    "files": [],
+    "prNumbers": [
+      15553
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e3844f1",
+    "sha": "e3844f1972e35c73545a9df0a3d3ced316367363",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T11:55:46Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5cfd983",
+    "sha": "5cfd983e1ddf5662eee01bcfedcbb9170d24f238",
+    "message": "🌐 Update translations for ko (update-outdated) (#15525)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T15:00:20Z",
+    "files": [],
+    "prNumbers": [
+      15525
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:1f48fb4",
+    "sha": "1f48fb42fcd91d93cef8196d9fa343e80b516d04",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T15:00:52Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:f396392",
+    "sha": "f3963927ec830dfc1081a1bf27f5955ebefbc60c",
+    "message": "🌐 Update translations for tr (update-outdated) (#15526)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T15:06:50Z",
+    "files": [],
+    "prNumbers": [
+      15526
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3ab6f1b",
+    "sha": "3ab6f1b31df08d9a7af29ff979f7c3775e5a6c40",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T15:07:31Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:f343905",
+    "sha": "f343905934d99411159780033bc83f028d20ae69",
+    "message": "🌐 Update translations for de (update-outdated) (#15527)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T15:13:52Z",
+    "files": [],
+    "prNumbers": [
+      15527
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:bf3668d",
+    "sha": "bf3668de89f3d6f89de8de30d8de46b8a0523aec",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T15:14:32Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:628ff21",
+    "sha": "628ff21528037c768e02f31a0a56669876489692",
+    "message": "🌐 Update translations for pt (update-outdated) (#15528)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T15:15:46Z",
+    "files": [],
+    "prNumbers": [
+      15528
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:21697d9",
+    "sha": "21697d97945b5b865b4e5f52f63130ce8cd11fa9",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T15:19:10Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3780ba5",
+    "sha": "3780ba547260220753ac9156aec7977e23c02511",
+    "message": "🌐 Update translations for uk (update-outdated) (#15529)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T15:21:59Z",
+    "files": [],
+    "prNumbers": [
+      15529
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:626ae19",
+    "sha": "626ae1918c7a9cc28fdea5caaded6b218a1034eb",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T15:22:32Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ff6a38a",
+    "sha": "ff6a38a434f49fcea27daa8e32d46fabc29b2679",
+    "message": "🌐 Update translations for ja (update-outdated) (#15530)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "tiangolo",
+    "date": "2026-05-18T15:39:27Z",
+    "files": [],
+    "prNumbers": [
+      15530
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5341528",
+    "sha": "53415286238a599c5266065477bb6b2ec7ff35ec",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-18T15:40:01Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2b5cd26",
+    "sha": "2b5cd26248cebb5dfbf58ea747671114e3e178be",
+    "message": "🍱 Update sponsors: TalorData image (#15562)",
+    "author": "tiangolo",
+    "date": "2026-05-19T13:42:23Z",
+    "files": [],
+    "prNumbers": [
+      15562
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6f9dcdf",
+    "sha": "6f9dcdf61a3e6b754872c91c203f132edb20efbe",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-19T13:42:52Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:31ced9d",
+    "sha": "31ced9d49e253f1cdc78ab56a314ef1ad7d8d7ee",
+    "message": "🔧 Migrate docs from MkDocs to Zensical (#15563)",
+    "author": "tiangolo",
+    "date": "2026-05-19T17:40:41Z",
+    "files": [],
+    "prNumbers": [
+      15563
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:f4cafbc",
+    "sha": "f4cafbc467c225263ad3b5b0d4a7306b42ac855b",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-19T17:41:11Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3969ae8",
+    "sha": "3969ae8f38dce5ce6ba42d227eae6a699721c435",
+    "message": "📝 Update security policy (#15577)",
+    "author": "tiangolo",
+    "date": "2026-05-20T16:11:48Z",
+    "files": [],
+    "prNumbers": [
+      15577
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ed7f49e",
+    "sha": "ed7f49ed691dc77033e3cc514e5715321e0bbe05",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-20T16:12:24Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:74d735d",
+    "sha": "74d735d5181911a3f1b639563d91716258028ef1",
+    "message": "🌐 Improve translation consistency in `‎docs/pt/docs/advanced/generate-clients.md‎` (#15456)\n\nCo-authored-by: uilton <uilton@meta4chain.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "Will-thom",
+    "date": "2026-05-21T05:28:41Z",
+    "files": [],
+    "prNumbers": [
+      15456
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b11805a",
+    "sha": "b11805add795b526c4c7303dff7c2292b9db62b4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-21T05:29:09Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a314e3b",
+    "sha": "a314e3be3bd4a944e780f5daa0f4a56253577892",
+    "message": "⬆ Bump cloudflare/wrangler-action from 3.15.0 to 4.0.0 (#15571)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-21T06:38:39Z",
+    "files": [],
+    "prNumbers": [
+      15571
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:60571d7",
+    "sha": "60571d7ada8f9afb87d910252e687c5a28216b86",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-21T06:39:04Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:87d1dae",
+    "sha": "87d1daeeead69289dab2ce3496ff33530304cb47",
+    "message": "⬆ Bump idna from 3.11 to 3.15 (#15565)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-21T06:48:48Z",
+    "files": [],
+    "prNumbers": [
+      15565
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4232d80",
+    "sha": "4232d80e845b4e499d764c55a6403e64b7c4a1f0",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-21T06:49:11Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c99e215",
+    "sha": "c99e215ed8a1d2dc82c683a5e46e07286a40f167",
+    "message": "⬆ Bump urllib3 from 2.6.3 to 2.7.0 (#15502)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-21T06:55:21Z",
+    "files": [],
+    "prNumbers": [
+      15502
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b95681e",
+    "sha": "b95681eb5b51cc6de1afd82eacedb7b812ef0219",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-21T06:55:49Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:55a9ff2",
+    "sha": "55a9ff2e5e53942ed0deff1a926692a1ac98c920",
+    "message": "📝 Add docs references to central contributing docs (#15580)",
+    "author": "tiangolo",
+    "date": "2026-05-21T20:03:25Z",
+    "files": [],
+    "prNumbers": [
+      15580
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:0b98630",
+    "sha": "0b9863020dd9b3a237e971fa1e10afa0da280c9a",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-21T20:03:55Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c347875",
+    "sha": "c347875c9c1b8135fc3c59ad547ceaf6da246c22",
+    "message": "📝 Update and simplify docs about help and management (#15583)",
+    "author": "tiangolo",
+    "date": "2026-05-22T09:10:53Z",
+    "files": [],
+    "prNumbers": [
+      15583
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ecd7082",
+    "sha": "ecd70826ebe3a9eb8760e82a7427d309cd142677",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-22T09:11:29Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:973230c",
+    "sha": "973230c78293e627104b681c22850a234e074fe3",
+    "message": "🔥 Remove config files now in central GitHub repo (#15585)",
+    "author": "tiangolo",
+    "date": "2026-05-22T17:15:08Z",
+    "files": [],
+    "prNumbers": [
+      15585
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4f37a43",
+    "sha": "4f37a43d3239ceaaffe9a593379b86ebe3c0542f",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-22T17:16:06Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8b647e3",
+    "sha": "8b647e340567ab0817aad3e1073553d4bce02f48",
+    "message": "⚡️ Speed up test suite via caching and fixture scopes to make it ~24% faster (#13583)\n\nCo-authored-by: Sebastián Ramírez <tiangolo@gmail.com>",
+    "author": "dikos1337",
+    "date": "2026-05-23T15:32:48Z",
+    "files": [],
+    "prNumbers": [
+      13583
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e16894e",
+    "sha": "e16894ec5b82ae7ed876032412c69e7ab8dd22f9",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-23T15:33:10Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:7b57e42",
+    "sha": "7b57e42986bb4d40c9eb6580537d13fb8e76097e",
+    "message": "📝 Document `--entrypoint` CLI option (#15464)",
+    "author": "YuriiMotov",
+    "date": "2026-05-23T16:35:54Z",
+    "files": [],
+    "prNumbers": [
+      15464
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3675137",
+    "sha": "3675137523dc167981aa3a3c44599b4f3079ccd8",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-23T16:36:21Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:00f805c",
+    "sha": "00f805cec94c0bf48c1f9a563535a3ab2e6f90ab",
+    "message": "✅ Update tests, don't double dispose the engine (#15587)",
+    "author": "tiangolo",
+    "date": "2026-05-23T17:02:16Z",
+    "files": [],
+    "prNumbers": [
+      15587
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:cb83b83",
+    "sha": "cb83b83dcf78eab4ea17d504db5abcda705fbdc4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-23T17:02:38Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c7fb785",
+    "sha": "c7fb7851b3389f24c51701d705458989be53ccbb",
+    "message": "♻️ Validate Server Sent Event fields to avoid applications from sending broken data (#15588)",
+    "author": "tiangolo",
+    "date": "2026-05-23T17:23:05Z",
+    "files": [],
+    "prNumbers": [
+      15588
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3b252a2",
+    "sha": "3b252a2a22ba27a8ab83d6bde7d9cddbc5bf738e",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-23T17:23:30Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:22b02e2",
+    "sha": "22b02e26f9e8c7e32bd8266e2b0ebe8bb3a0db2b",
+    "message": "🔖 Release version 0.136.2",
+    "author": "tiangolo",
+    "date": "2026-05-23T17:24:08Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:063b5bf",
+    "sha": "063b5bf582d31fb155cc6bc6f88cf512329d0fd5",
+    "message": "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default) (#15589)",
+    "author": "tiangolo",
+    "date": "2026-05-23T18:35:05Z",
+    "files": [],
+    "prNumbers": [
+      15589
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c910e01",
+    "sha": "c910e0139f983d0e04e2d1d235cd71803afeae34",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-23T18:40:42Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8206485",
+    "sha": "82064857539e6286522c347b4b11331b48dd2378",
+    "message": "🔖 Release version 0.136.3",
+    "author": "tiangolo",
+    "date": "2026-05-23T18:51:45Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:21c4691",
+    "sha": "21c46919fc14f6541397ff5bdc77d9c806e7b33e",
+    "message": "📝 Update `docs/en/docs/tutorial/security/oauth2-jwt.md` (#14781)\n\nCo-authored-by: Sebastián Ramírez <tiangolo@gmail.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "zadevhub",
+    "date": "2026-05-24T10:29:22Z",
+    "files": [],
+    "prNumbers": [
+      14781
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2895c51",
+    "sha": "2895c51ba8a25a0828e2a9585318c381339e9813",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-24T10:29:48Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:7baefe7",
+    "sha": "7baefe7144bbe6f83f3d4c0f33f09dacc3abbeca",
+    "message": "📝 Remove \"NGINX Unit\" from the list of ASGI-servers in docs (#15475)",
+    "author": "angryfoxx",
+    "date": "2026-05-24T10:56:40Z",
+    "files": [],
+    "prNumbers": [
+      15475
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:84f205c",
+    "sha": "84f205c8f7f7027f07b85fe4dab43704236c9cb9",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-24T10:57:12Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3e3d389",
+    "sha": "3e3d38930efbf9cd60fa35fa8c94bd0f2bf25bb4",
+    "message": "✏️ Use `Annotated` in inline example in `docs/en/docs/tutorial/body-multiple-params.md` (#15591)",
+    "author": "TheArchons",
+    "date": "2026-05-24T11:00:37Z",
+    "files": [],
+    "prNumbers": [
+      15591
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:09ba2ce",
+    "sha": "09ba2cec9885f1b016af3297558b9a964c57fc9b",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-24T11:01:06Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3fdc54e",
+    "sha": "3fdc54edab2401824303ad5c2dee0407ba6a07d6",
+    "message": "👷 Configure Dependabot to group updates and update weekly (#15560)",
+    "author": "YuriiMotov",
+    "date": "2026-05-24T11:06:37Z",
+    "files": [],
+    "prNumbers": [
+      15560
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:1a84bbc",
+    "sha": "1a84bbc00b259f90a1698f24d822e5b6a61b41aa",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-24T11:07:04Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:1464678",
+    "sha": "1464678ba6df508d64df75211e0b6d0d010287b5",
+    "message": "⬆ Bump the python-packages group with 15 updates (#15594)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-24T13:03:23Z",
+    "files": [],
+    "prNumbers": [
+      15594
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6cbdde2",
+    "sha": "6cbdde231589f14df19034e528f47216b52eb755",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-24T13:03:53Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:59d4a80",
+    "sha": "59d4a80fcf8a7b3a46b2560f75dc0d171e7ea8ff",
+    "message": "✅ Add `httpx2` test dependency to avoid deprecation warning (#15603)",
+    "author": "YuriiMotov",
+    "date": "2026-05-27T10:47:28Z",
+    "files": [],
+    "prNumbers": [
+      15603
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:dbfd55c",
+    "sha": "dbfd55cea3a656029a9368924f3d8f1f829702c9",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-27T10:47:52Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:57535ef",
+    "sha": "57535ef85b97d95862ec3de443c648e1c6aee139",
+    "message": "✅ Use custom `changing_dir` instead of `CLIRunner.isolated_filesystem` to set working dir (#15616)",
+    "author": "YuriiMotov",
+    "date": "2026-05-27T20:22:44Z",
+    "files": [],
+    "prNumbers": [
+      15616
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ad09734",
+    "sha": "ad09734fa3e69b9cbd0fd2d57ba59fa8e73c2f86",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-27T20:23:09Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a53efbc",
+    "sha": "a53efbcae9a354d6187c1fa6f474d526693e3461",
+    "message": "⚰️ Remove ruff and coverage ignores for non-existing files (#15610)\n\nCo-authored-by: AshNicolus <yashnema52@gmail.com>",
+    "author": "YuriiMotov",
+    "date": "2026-05-27T20:53:15Z",
+    "files": [],
+    "prNumbers": [
+      15610
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c9343d2",
+    "sha": "c9343d2cf0c3217bcd07fde747340c7ac4d8e621",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-27T20:53:41Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a3558be",
+    "sha": "a3558be5f81235569114d50fdf24575ac0bc82b5",
+    "message": "🔒️ Improve GitHub actions security (#15607)",
+    "author": "YuriiMotov",
+    "date": "2026-05-27T20:57:52Z",
+    "files": [],
+    "prNumbers": [
+      15607
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2bd97a6",
+    "sha": "2bd97a6013cf29b0f1ecd8850e8ba4b89d00b89c",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-27T20:58:15Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4a5f0cd",
+    "sha": "4a5f0cd370f6e8266eec0d4fe55d8e8df7a1e6fb",
+    "message": "⬆ Bump python-multipart from 0.0.26 to 0.0.29 (#15595)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-28T10:19:23Z",
+    "files": [],
+    "prNumbers": [
+      15595
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:136b55f",
+    "sha": "136b55f3d8f412781f6d406ffab0fbfe98a07c52",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-28T10:20:07Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2a1506d",
+    "sha": "2a1506d167adfb4a0483e78e6a8c712f5b5ad634",
+    "message": "⬆ Bump CodSpeedHQ/action from 4.14.0 to 4.15.1 (#15513)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-28T10:29:24Z",
+    "files": [],
+    "prNumbers": [
+      15513
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:334582b",
+    "sha": "334582bfe4d5d55de86ed68f82b049543d6c7fdd",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-28T10:29:52Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:dcac2f0",
+    "sha": "dcac2f0d957ab69b176e6ca55562e0adede5ed6c",
+    "message": "⬆ Bump pymdown-extensions from 10.21.2 to 10.21.3 (#15569)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-28T10:34:00Z",
+    "files": [],
+    "prNumbers": [
+      15569
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:199415d",
+    "sha": "199415da857997463e81874fc37b8871ae7ffad4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-28T10:34:26Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:99a1b1e",
+    "sha": "99a1b1edee76b1ff23eb818a889493c3c5e00aaa",
+    "message": "⬆ Bump authlib from 1.6.11 to 1.7.2 (#15512)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-05-28T10:48:36Z",
+    "files": [],
+    "prNumbers": [
+      15512
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:91dba44",
+    "sha": "91dba4484dbdaa67178afe633e1ddf7e0ee3f94a",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-28T10:49:01Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:1990ecb",
+    "sha": "1990ecb446d4db044e8f2be26758aa42b2c62fa8",
+    "message": "🔥 Remove slim package stub, deprecated for a while (#15649)",
+    "author": "tiangolo",
+    "date": "2026-05-30T17:17:33Z",
+    "files": [],
+    "prNumbers": [
+      15649
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ee22a4b",
+    "sha": "ee22a4b8ca46dcce26c8c183afc4992a888d8be2",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-30T17:18:39Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b4d58fd",
+    "sha": "b4d58fddee0d9830ccf790f7ad728f7b9aa958e2",
+    "message": "👷 Automate release preparation (#15661)",
+    "author": "tiangolo",
+    "date": "2026-05-31T16:00:38Z",
+    "files": [],
+    "prNumbers": [
+      15661
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:0ee8a24",
+    "sha": "0ee8a2424953b7553f25100edfa47514e3a9c651",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-05-31T16:01:07Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:37c92a8",
+    "sha": "37c92a87ffff168f807fa5188fc8b09efae14cb5",
+    "message": "👥 Update FastAPI People - Contributors and Translators (#15662)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T06:24:46Z",
+    "files": [],
+    "prNumbers": [
+      15662
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d390d51",
+    "sha": "d390d514eb1451356eee51292e87769a54c749f4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T06:25:13Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d1216e7",
+    "sha": "d1216e73526671366fa4a75ee1cadbd1d82b0037",
+    "message": "🌐 Update translations for ru (update-outdated) (#15674)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T08:41:55Z",
+    "files": [],
+    "prNumbers": [
+      15674
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e29b179",
+    "sha": "e29b179705168749456ff7958ef7655738fcf70f",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T08:42:21Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:bb6dbdb",
+    "sha": "bb6dbdb6cd4b97ecea3e3590febc03cc516e891a",
+    "message": "🌐 Update translations for uk (update-outdated) (#15672)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T10:28:01Z",
+    "files": [],
+    "prNumbers": [
+      15672
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e1c1299",
+    "sha": "e1c1299bb52e0aabb2e0049ed5fe84f0cfd6931e",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T10:28:32Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:674a625",
+    "sha": "674a625ae9f3d89333b75e5d4e2746c8c6716649",
+    "message": "🌐 Update translations for de (update-outdated) (#15673)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T10:29:20Z",
+    "files": [],
+    "prNumbers": [
+      15673
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:cf2369a",
+    "sha": "cf2369a59769a6d0731a69bf4a5e66dd9fd07c4a",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T10:29:51Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:502d20c",
+    "sha": "502d20c4416fc54a5de012a6aa5e4ebc47a15925",
+    "message": "🌐 Update translations for ko (update-outdated) (#15664)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T10:53:57Z",
+    "files": [],
+    "prNumbers": [
+      15664
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d822aef",
+    "sha": "d822aefc8a9fb55aae1588e600b51c5cb49b4117",
+    "message": "🌐 Update translations for zh (update-outdated) (#15665)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T10:54:26Z",
+    "files": [],
+    "prNumbers": [
+      15665
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:7b262b3",
+    "sha": "7b262b3d54b791591717e4bf2dcdf5f746cdcb67",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T10:54:29Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2aa8890",
+    "sha": "2aa88900dfc34c957aa49b8f9c405c2a465b9b95",
+    "message": "🌐 Update translations for tr (update-outdated) (#15666)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T10:54:44Z",
+    "files": [],
+    "prNumbers": [
+      15666
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2b70d68",
+    "sha": "2b70d68942ad67acbb793c4c39f6cafad25721a0",
+    "message": "🌐 Update translations for pt (update-outdated) (#15667)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T10:54:59Z",
+    "files": [],
+    "prNumbers": [
+      15667
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4bdda67",
+    "sha": "4bdda67fb2279dca3cf7f6361b6e61dfe3d30d9f",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T10:55:45Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:46bc43a",
+    "sha": "46bc43a04ac56c3686e28ae22be69f02a926f1c8",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T10:56:17Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:dbe9840",
+    "sha": "dbe984018bc0da065212c34ee1439326a77b9787",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T10:57:22Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d6629f7",
+    "sha": "d6629f7dfce7e10826616ac1983bd11383253779",
+    "message": "🌐 Update translations for ja (update-outdated) (#15668)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T11:56:02Z",
+    "files": [],
+    "prNumbers": [
+      15668
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:9f4f3fd",
+    "sha": "9f4f3fdc5b943386deefd9d55426d2604619122e",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T11:56:34Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6926656",
+    "sha": "69266562475f455feeb4d63b7fd9f4c09568f80c",
+    "message": "👥 Update FastAPI GitHub topic repositories (#15675)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T15:20:05Z",
+    "files": [],
+    "prNumbers": [
+      15675
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a5a68f1",
+    "sha": "a5a68f14e7624d4996ffadda310ecc88d3386193",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T15:20:38Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c4cf134",
+    "sha": "c4cf1341a1482357cfab2a157e9fb54eece47304",
+    "message": "👥 Update FastAPI People - Experts (#15677)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T17:49:30Z",
+    "files": [],
+    "prNumbers": [
+      15677
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6999d21",
+    "sha": "6999d21e98b5b80d8dcdc00adc42f34062d5b404",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T17:49:54Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2d5e2a4",
+    "sha": "2d5e2a4b295eb8f220adbd4b26912f9105b2dc7b",
+    "message": "🌐 Update translations for fr (update-outdated) (#15669)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T17:53:50Z",
+    "files": [],
+    "prNumbers": [
+      15669
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:57b42cc",
+    "sha": "57b42cc1380c0e01465352b0471a96596fff0357",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T17:54:15Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d144531",
+    "sha": "d144531caa1528e3982ce87c8c3e942b50657cf8",
+    "message": "🌐 Update translations for es (update-outdated) (#15670)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T17:54:40Z",
+    "files": [],
+    "prNumbers": [
+      15670
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4cc0e5b",
+    "sha": "4cc0e5b3ce9a82764ba579e4f79939d04885f313",
+    "message": "🌐 Update translations for zh-hant (update-outdated) (#15671)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-01T17:55:14Z",
+    "files": [],
+    "prNumbers": [
+      15671
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:566bc53",
+    "sha": "566bc53187d56cfb8866e45fef82ddd82a22e9c7",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T17:55:37Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3d2aace",
+    "sha": "3d2aace42fdfe34077647e47f3ee9688161e2651",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-01T17:55:53Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:460f8d2",
+    "sha": "460f8d2cc8fb5ed5fe9b0a58d06e7a62a09a9f00",
+    "message": "⬆ Bump starlette from 1.0.0 to 1.1.0 (#15684)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-04T08:42:42Z",
+    "files": [],
+    "prNumbers": [
+      15684
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2441eff",
+    "sha": "2441eff8375593ed4e2cbe258e9974e288245871",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-04T08:43:06Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e95d3aa",
+    "sha": "e95d3aab287687b2e5c5f4d9b40bb83e0f3d089c",
+    "message": "⬆ Bump the github-actions group with 2 updates (#15682)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-04T08:49:11Z",
+    "files": [],
+    "prNumbers": [
+      15682
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5d2320f",
+    "sha": "5d2320fca63c2810c124580f97539873089c9b66",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-04T08:49:36Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:81c243f",
+    "sha": "81c243f86dd226401392634ee56b345fe8ad1097",
+    "message": "⬆ Bump aiohttp from 3.13.4 to 3.14.0 (#15681)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-04T10:38:07Z",
+    "files": [],
+    "prNumbers": [
+      15681
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:09e615a",
+    "sha": "09e615a6fc5ea99a4b6e5fb4e767470613d7ada3",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-04T10:38:33Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:df3c778",
+    "sha": "df3c778ae610e49c0859c0471ead322086f0e760",
+    "message": "⬆ Bump the python-packages group across 1 directory with 11 updates (#15683)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-04T12:24:07Z",
+    "files": [],
+    "prNumbers": [
+      15683
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:433a7ef",
+    "sha": "433a7ef39b4283d61491d7ebe7c28980f8dc47d2",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-04T12:24:31Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b3b6aba",
+    "sha": "b3b6aba5ab1bb1cd348026421c969c87d174cb48",
+    "message": "🔧 Update sponsors: Remove TestMu (#15688)",
+    "author": "tiangolo",
+    "date": "2026-06-04T12:30:46Z",
+    "files": [],
+    "prNumbers": [
+      15688
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:7eb2bf5",
+    "sha": "7eb2bf5c4eb9942085b488a8227a8d8bb1b4d03d",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-04T12:31:15Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:782476e",
+    "sha": "782476e7db6c1f008ad4321c597691e25e5a1f72",
+    "message": "🔧 Update sponsors, add Rapidproxy (#15689)",
+    "author": "tiangolo",
+    "date": "2026-06-04T12:44:48Z",
+    "files": [],
+    "prNumbers": [
+      15689
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5cdf820",
+    "sha": "5cdf820c8046edaf83c306ebd7435f038fc4a75a",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-04T12:45:13Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:71ea74f",
+    "sha": "71ea74fb8f331e6c24cc0a8cdcd28a8cc76d2a35",
+    "message": "📝 Update FastAPI Cloud deployment instructions (#15724)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "alejsdev",
+    "date": "2026-06-09T12:05:27Z",
+    "files": [],
+    "prNumbers": [
+      15724
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:706e20d",
+    "sha": "706e20da5e6c6729299cc643ed2ff383c0bd5440",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-09T12:05:54Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:0cf3f76",
+    "sha": "0cf3f76e7c23dd8396a66c30317bf7352bb61898",
+    "message": "⬆ Bump https://github.com/crate-ci/typos from v1.46.0 to v1.47.1 in the pre-commit group (#15719)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-09T21:49:44Z",
+    "files": [],
+    "prNumbers": [
+      15719
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e42d913",
+    "sha": "e42d913c604f506da17feb445fc8385b841cac65",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-09T21:50:10Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8b80abf",
+    "sha": "8b80abfbf3bb93f5af2f1b25fbbffcb5177d7e1c",
+    "message": "⬆ Bump starlette from 1.1.0 to 1.2.1 (#15722)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-09T21:51:55Z",
+    "files": [],
+    "prNumbers": [
+      15722
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b6ed466",
+    "sha": "b6ed4666fe0a78c392692679fd66937a1b2e7748",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-09T21:52:25Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:13b2b4c",
+    "sha": "13b2b4cb346eb2ba18041decf709a528ca05043d",
+    "message": "⬆ Bump the github-actions group with 3 updates (#15720)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-09T21:54:29Z",
+    "files": [],
+    "prNumbers": [
+      15720
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3c5d5bb",
+    "sha": "3c5d5bb497469d5004c89f0b5f90dbfd51dd12c2",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-09T21:55:01Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2015b63",
+    "sha": "2015b63561b47b52306563c02590748db1d03eaf",
+    "message": "⬆ Bump python-multipart from 0.0.29 to 0.0.30 (#15723)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-09T22:04:26Z",
+    "files": [],
+    "prNumbers": [
+      15723
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4be7707",
+    "sha": "4be770779e93519b35f233f5adaf302ed9ff5dc2",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-09T22:04:54Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e133ffb",
+    "sha": "e133ffbc1b41bd9f2b4f96f9887e2eb1383530bc",
+    "message": "⬆ Bump the python-packages group across 1 directory with 6 updates (#15721)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-09T22:05:55Z",
+    "files": [],
+    "prNumbers": [
+      15721
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b317203",
+    "sha": "b31720337af8b5ba5c78e4f0c44ac0ce25d7a5e2",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-09T22:07:36Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e529192",
+    "sha": "e52919282ab7ae101bcea400542088ff5791f4c4",
+    "message": "🔧 Update sponsors: remove Scalar (#15730)",
+    "author": "tiangolo",
+    "date": "2026-06-10T22:44:29Z",
+    "files": [],
+    "prNumbers": [
+      15730
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b98fb55",
+    "sha": "b98fb552e6ba43364f7ae39fd6ef96ecc6f38873",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-10T22:44:58Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ee036a1",
+    "sha": "ee036a111ed1e96a7cb425158bda3dc0b45e3d0e",
+    "message": "🔧 Update sponsors: remove Liblab (#15731)",
+    "author": "tiangolo",
+    "date": "2026-06-10T22:59:29Z",
+    "files": [],
+    "prNumbers": [
+      15731
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e680fd6",
+    "sha": "e680fd6c8c1c7e3682c9e02d675a9b4c643493e8",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-10T22:59:54Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5d2dae8",
+    "sha": "5d2dae82c4c6ff107147167d70d4fdbd35bc0706",
+    "message": "🔧 Update sponsors: remove InterviewPal (#15735)",
+    "author": "tiangolo",
+    "date": "2026-06-10T23:04:41Z",
+    "files": [],
+    "prNumbers": [
+      15735
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:944fb70",
+    "sha": "944fb706228734cc64fd5f8d5937bc97792c346b",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-10T23:05:07Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e4b6a36",
+    "sha": "e4b6a36c4fc0d0b37871fe317ab29fe074a3cdbe",
+    "message": "🔧 Update sponsors: remove ExoFlare (#15736)",
+    "author": "tiangolo",
+    "date": "2026-06-10T23:13:56Z",
+    "files": [],
+    "prNumbers": [
+      15736
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d3e6a29",
+    "sha": "d3e6a2931f95dcb044c09cbfc39e4b0e9e620fd4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-10T23:14:26Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e2fcd55",
+    "sha": "e2fcd5562f41f2a0d01b1ff43773711bbeeb19e8",
+    "message": "🔧 Update sponsors: remove TalorData (#15744)",
+    "author": "tiangolo",
+    "date": "2026-06-13T18:22:22Z",
+    "files": [],
+    "prNumbers": [
+      15744
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:016ab76",
+    "sha": "016ab760faba1813ba235d5582a014a58bd2f417",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-13T18:22:48Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8e1d774",
+    "sha": "8e1d774cef03ab9e2552c26e850cbfc0c63974c3",
+    "message": "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances (#15745)",
+    "author": "tiangolo",
+    "date": "2026-06-14T12:35:48Z",
+    "files": [],
+    "prNumbers": [
+      15745
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:ba609a8",
+    "sha": "ba609a8946e9054c050ca4cf7afa2a222694bfc9",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-14T12:36:16Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:31d097f",
+    "sha": "31d097f286b63c2c7bc9954aa605571e0f3d1e15",
+    "message": "📝 Update release notes (#15747)",
+    "author": "tiangolo",
+    "date": "2026-06-14T12:39:49Z",
+    "files": [],
+    "prNumbers": [
+      15747
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c6d5897",
+    "sha": "c6d58978269b51304ccd8f0fb644f35ecbed94ce",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-14T12:40:20Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:9a9c4ad",
+    "sha": "9a9c4ad5d06f5fe8ee6775a5aeaa2f83c854f263",
+    "message": "🔖 Release version 0.137.0 (#15748)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-14T12:47:28Z",
+    "files": [],
+    "prNumbers": [
+      15748
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d8aad20",
+    "sha": "d8aad201eba558b20419a832e51a026b0e6ede0e",
+    "message": "🐛 Fix bug, allow empty path in path operation in prefixless router (#15763)",
+    "author": "tiangolo",
+    "date": "2026-06-15T10:55:06Z",
+    "files": [],
+    "prNumbers": [
+      15763
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e0f8cad",
+    "sha": "e0f8cadf094bb4cb7a21e7757333d5dfbae46712",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T10:55:32Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b78c822",
+    "sha": "b78c82262f5170831ebd3f27873b09d8e579bac2",
+    "message": "🚨 Fix typing checks for APIRoute (#15765)",
+    "author": "tiangolo",
+    "date": "2026-06-15T11:19:51Z",
+    "files": [],
+    "prNumbers": [
+      15765
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:edd1461",
+    "sha": "edd1461589287bb432c8eb81ace92d000fd5c1b3",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T11:20:24Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a82e5f2",
+    "sha": "a82e5f2fac102a8b12c0795da80b2cb1d2a8b016",
+    "message": "🔖 Release version 0.137.1 (#15766)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T11:26:48Z",
+    "files": [],
+    "prNumbers": [
+      15766
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:76876e5",
+    "sha": "76876e5a812268860148ba3a2059795b4d65ae55",
+    "message": "🔧 Add ty configs to check docs sources (#15769)",
+    "author": "tiangolo",
+    "date": "2026-06-15T14:31:14Z",
+    "files": [],
+    "prNumbers": [
+      15769
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4473a0c",
+    "sha": "4473a0cd9129f9623f8d23d1a3bc86914967d9c5",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T14:31:50Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b7de2b7",
+    "sha": "b7de2b7feb207b0a157b81c237b5a0cba6e21cb9",
+    "message": "🔧 Add ty configs to check docs sources (#15770)",
+    "author": "tiangolo",
+    "date": "2026-06-15T15:53:46Z",
+    "files": [],
+    "prNumbers": [
+      15770
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8c5a830",
+    "sha": "8c5a830b6d32e21794e301fc7e5dbaaa272ba0f7",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T15:54:17Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c054476",
+    "sha": "c054476c6f26ce3377eb58cd1ddae28b1c85607a",
+    "message": "🔥 Remove unused scripts (#15771)",
+    "author": "tiangolo",
+    "date": "2026-06-15T16:03:45Z",
+    "files": [],
+    "prNumbers": [
+      15771
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:1b28443",
+    "sha": "1b284435ee798087076320689d10fcc1d0dde61c",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T16:04:17Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:864c29f",
+    "sha": "864c29f0756d21cfd76732efcd9af5156a66c489",
+    "message": "🌐 Update translations for ru (update-outdated) (#15758)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T18:36:31Z",
+    "files": [],
+    "prNumbers": [
+      15758
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c9d3e82",
+    "sha": "c9d3e8250063b1e57ee98105325bc7cf01cde3a6",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T18:37:06Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:9871e03",
+    "sha": "9871e03c8a045b2cfb16a7cdb5d405f790de9759",
+    "message": "🌐 Update translations for ja (update-outdated) (#15751)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T19:08:51Z",
+    "files": [],
+    "prNumbers": [
+      15751
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:eaf1d94",
+    "sha": "eaf1d9492502c1d3f962729b38e1a827d6af8630",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T19:09:23Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:96592d9",
+    "sha": "96592d954b2f0f12941505863f8fffd78c07519b",
+    "message": "🌐 Update translations for es (update-outdated) (#15752)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T19:32:43Z",
+    "files": [],
+    "prNumbers": [
+      15752
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:451eb49",
+    "sha": "451eb49bbcd1599ebcea1799fee9cf1398c91a07",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T19:33:11Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b82ab2f",
+    "sha": "b82ab2fb41bce1c84445cbed8d35f3bb072ba5f5",
+    "message": "🌐 Update translations for pt (update-outdated) (#15753)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T19:50:40Z",
+    "files": [],
+    "prNumbers": [
+      15753
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:93610bb",
+    "sha": "93610bbbcc687a8b3219a2b75794e9ca2bf8dd68",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T19:51:12Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:4352080",
+    "sha": "43520809e96cc87d95cad1cf1a417118ea2088f7",
+    "message": "🌐 Update translations for tr (update-outdated) (#15754)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T20:11:49Z",
+    "files": [],
+    "prNumbers": [
+      15754
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d026f79",
+    "sha": "d026f79b82006d3deaf557e7436fbd47c24d73eb",
+    "message": "🌐 Update translations for zh (update-outdated) (#15755)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T20:12:19Z",
+    "files": [],
+    "prNumbers": [
+      15755
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8012339",
+    "sha": "8012339dc25368bc1c24c12666aae80c8341363f",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T20:12:22Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a4bd128",
+    "sha": "a4bd128ed50b4955a41cf9785b404312c4689ab3",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T20:12:49Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:3b9f938",
+    "sha": "3b9f938e50e2e81d1b46459cc86d74b9f282a6ec",
+    "message": "🌐 Update translations for uk (update-outdated) (#15756)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T21:08:29Z",
+    "files": [],
+    "prNumbers": [
+      15756
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:89fcd72",
+    "sha": "89fcd722e30a4867e7cbe65b977aa66a9c3bc6e4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T21:09:01Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2f69b26",
+    "sha": "2f69b265ef32f5bfbe6f77b286f2c7231e86a654",
+    "message": "🌐 Update translations for ko (update-outdated) (#15757)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T21:13:54Z",
+    "files": [],
+    "prNumbers": [
+      15757
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:132c533",
+    "sha": "132c533acea52e575cbdee94702efcff182bb46a",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T21:14:49Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:011da09",
+    "sha": "011da093e154a70853f936c9b47242583f80b8be",
+    "message": "🌐 Update translations for de (update-outdated) (#15759)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T21:24:43Z",
+    "files": [],
+    "prNumbers": [
+      15759
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:76008f7",
+    "sha": "76008f778bbf2b55a337b2e3be3ea71ae5db51a4",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T21:25:25Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:b401cb7",
+    "sha": "b401cb71c0681686f65cc0b654bba3f54e3af5c9",
+    "message": "🌐 Update translations for zh-hant (update-outdated) (#15760)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <109919500+YuriiMotov@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T22:10:42Z",
+    "files": [],
+    "prNumbers": [
+      15760
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:aeeb29f",
+    "sha": "aeeb29f6d05ddea1942753b6a7584e21b66cc718",
+    "message": "🌐 Update translations for fr (update-outdated) (#15761)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-15T22:10:59Z",
+    "files": [],
+    "prNumbers": [
+      15761
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:090386b",
+    "sha": "090386b10e23b9105c5d12ab6ce8779ef43b129a",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T22:11:15Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:aa5eeb3",
+    "sha": "aa5eeb3652e1305b8aac57ff1d547cf852a97016",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-15T22:12:18Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:818b97a",
+    "sha": "818b97a68b7956e2a409203193110082046508cb",
+    "message": "⏪️ Revert removing scripts, only remove `coverage.sh` (#15772)",
+    "author": "tiangolo",
+    "date": "2026-06-16T08:34:25Z",
+    "files": [],
+    "prNumbers": [
+      15772
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2f836a9",
+    "sha": "2f836a9e70b344ab8a0584b35ea0d61e84ce95ba",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T08:34:59Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:44e5b99",
+    "sha": "44e5b99853e086bb28c803b33972965951abfd1a",
+    "message": "🌐 Fix broken Markdown in Korean custom response docs (#15774)",
+    "author": "kooqooo",
+    "date": "2026-06-16T11:38:18Z",
+    "files": [],
+    "prNumbers": [
+      15774
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2f5ba0d",
+    "sha": "2f5ba0d5032df6cb0e3bb2ca31ed99bcd04b1912",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T11:38:50Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:9ca069f",
+    "sha": "9ca069f2be3e619fcda6d33fb1ed7025d6f9a419",
+    "message": "⬆ Bump python-multipart from 0.0.30 to 0.0.32 (#15778)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-16T12:28:41Z",
+    "files": [],
+    "prNumbers": [
+      15778
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:8868394",
+    "sha": "88683944c7e088f21082d13114397d0b627cde47",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T12:29:19Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5ebf2ab",
+    "sha": "5ebf2ab2d17bacd95154a2c87caa182fa34c6c85",
+    "message": "⬆ Bump https://github.com/crate-ci/typos from v1.47.1 to v1.47.2 in the pre-commit group (#15775)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-16T12:53:10Z",
+    "files": [],
+    "prNumbers": [
+      15775
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:06074e7",
+    "sha": "06074e739b3c9c29d4a27a42ee607537fafcc690",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T12:54:08Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:2c77ae3",
+    "sha": "2c77ae3f76a2ec9db0f9ae9b114583a7881fa368",
+    "message": "⬆ Bump astral-sh/setup-uv from 8.1.0 to 8.2.0 in the github-actions group (#15776)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Yurii Motov <yurii.motov.monte@gmail.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-16T15:29:07Z",
+    "files": [],
+    "prNumbers": [
+      15776
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:a62dd75",
+    "sha": "a62dd7502219a0f0ae0b47504b00b8e45f44fe89",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T15:29:42Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:69f8d87",
+    "sha": "69f8d87fb7aa2d6028331af16ec28d7b02636183",
+    "message": "⬆ Bump starlette from 1.2.1 to 1.3.1 (#15780)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-16T15:47:19Z",
+    "files": [],
+    "prNumbers": [
+      15780
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:aaf70c1",
+    "sha": "aaf70c196c85bd9e0ba4b12f37a1b0650063773b",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T15:47:51Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:84304df",
+    "sha": "84304df58f837352cdd9503bef4f46f0da852111",
+    "message": "⬆ Bump aiohttp from 3.14.0 to 3.14.1 (#15781)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-16T17:59:13Z",
+    "files": [],
+    "prNumbers": [
+      15781
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:627636b",
+    "sha": "627636b617427794c56589814046db2e0669bf23",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T17:59:45Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:705324e",
+    "sha": "705324ed2977f99dec4df45175ee27a2bf26c17f",
+    "message": "⬆ Bump cryptography from 46.0.7 to 48.0.1 (#15779)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-16T18:01:02Z",
+    "files": [],
+    "prNumbers": [
+      15779
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:c66d1c2",
+    "sha": "c66d1c222bf0aa1c90d6436164292b84ca8d4361",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T18:01:49Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:e26e643",
+    "sha": "e26e64381c35ac6cf3d25bf6accb53b94a66dd8f",
+    "message": "⬆ Bump the python-packages group across 1 directory with 7 updates (#15777)\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    "author": "dependabot[bot]",
+    "date": "2026-06-16T20:09:35Z",
+    "files": [],
+    "prNumbers": [
+      15777
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:202b2d2",
+    "sha": "202b2d2f5f331db9102b5dbcef071a9e09bed10e",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-16T20:10:12Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:32d711f",
+    "sha": "32d711f6d24224f2aed3395cac428222cbe9b1fb",
+    "message": "🔨 Update sponsors script to simplify previews (#15786)",
+    "author": "tiangolo",
+    "date": "2026-06-17T20:36:24Z",
+    "files": [],
+    "prNumbers": [
+      15786
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:1c1edb9",
+    "sha": "1c1edb9b55c29b90762b7165cddbefd1276358cf",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-17T20:36:51Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:d514109",
+    "sha": "d514109e42fc90590a7050e982a37ac6ecf561ab",
+    "message": "🔧 Update sponsors: add BairesDev (#15787)",
+    "author": "tiangolo",
+    "date": "2026-06-17T20:50:01Z",
+    "files": [],
+    "prNumbers": [
+      15787
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:7feb17f",
+    "sha": "7feb17f80a483e70efa26f01addb94d0070d42ee",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-17T20:50:29Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6ac1220",
+    "sha": "6ac122071d2c9e6add587e1271eb010dd6acbed0",
+    "message": "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse) (#15785)",
+    "author": "tiangolo",
+    "date": "2026-06-18T06:49:38Z",
+    "files": [],
+    "prNumbers": [
+      15785
+    ],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:5d421ae",
+    "sha": "5d421ae9774acf3b15ceaaa4f4ed6d68a165e0a1",
+    "message": "📝 Update release notes\n\n[skip ci]",
+    "author": "github-actions[bot]",
+    "date": "2026-06-18T06:50:13Z",
+    "files": [],
+    "prNumbers": [],
+    "ticketKeys": []
+  },
+  {
+    "id": "commit:6a0ba7b",
+    "sha": "6a0ba7bb1f5015383cdceb3822ca1abed6e32b82",
+    "message": "🔖 Release version 0.137.2 (#15790)\n\nCo-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>",
+    "author": "tiangolo",
+    "date": "2026-06-18T06:56:45Z",
+    "files": [],
+    "prNumbers": [
+      15790
+    ],
+    "ticketKeys": []
+  }
+]
