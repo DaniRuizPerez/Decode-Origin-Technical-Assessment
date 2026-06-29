@@ -1,17 +1,22 @@
 /**
- * Home page — the review/approve dashboard.
+ * Home page — the review/approve dashboard, now backed by the REAL pipeline.
  *
- * WHY a SAMPLE package today: the pipeline and the `/api/generate` route land in
- * later waves. This page is the single data-source seam: it feeds the dashboard
- * a realistic, schema-validated `ReleasePackage` so the UI is fully reviewable
- * now. In Wave 3 the coordinator replaces `SAMPLE_PACKAGE` with a fetch from
- * `/api/generate` (e.g. make this an async server component) — the
- * `<Dashboard pkg={...} />` contract stays identical.
+ * This is an async Server Component: it runs the pipeline on the server at
+ * request time and passes the resulting `ReleasePackage` to the (client)
+ * Dashboard. Offline that's the deterministic extractive baseline over the real
+ * FastAPI fixtures; with ANTHROPIC_API_KEY set it's abstractive output — the
+ * `<Dashboard pkg={...} />` contract is identical either way.
+ *
+ * `force-dynamic` so the pipeline runs per request (it reads fixtures from disk)
+ * rather than being prerendered at build time.
  */
 
 import { Dashboard } from "@/components/Dashboard";
-import { SAMPLE_PACKAGE } from "@/lib/sample/releasePackage";
+import { runPipeline } from "@/lib/pipeline";
 
-export default function Home() {
-  return <Dashboard pkg={SAMPLE_PACKAGE} />;
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const pkg = await runPipeline();
+  return <Dashboard pkg={pkg} />;
 }
