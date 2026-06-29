@@ -94,10 +94,14 @@ suggestions). The pipeline orchestrates them, times each stage into an observabi
 Reviewer run inside a **generate → verify → repair** loop (`lib/grounding`): the
 verifier checks every generated item's `sources[]` against the set of real artifact
 ids; unsupported items trigger one bounded repair pass (regenerate citing only valid
-ids, or drop the claim). The verifier is **dual-mode and mirrors the provider** — a
-deterministic reference-check offline; an LLM claim-verifier when keyed (the
-documented next step). Hallucination is attacked at generation time, not just on a
-scoreboard.
+ids, or drop the claim). The verifier is **deterministic in both modes** — it checks
+that every cited id resolves to a real source artifact (citation existence). Offline
+the mock returns the already-grounded fallback, so the loop is a no-op pass; **when
+keyed, abstractive generation can introduce ungrounded claims and the same loop
+catches and repairs them**. A *semantic* LLM claim-verifier (does the cited text
+actually support the claim?) reuses the same report shape and is a documented future
+extension — see Future improvements. Hallucination is attacked at generation time,
+not just on a scoreboard.
 
 **Structured outputs as a hard contract.** Each LLM call uses zod schemas; the
 Anthropic provider sends `output_config.format` derived from `z.toJSONSchema(schema)`
