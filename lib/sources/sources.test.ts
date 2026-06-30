@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 
 import { getConnector } from "@/lib/connectors";
-import { buildSourceIndex } from "./index";
+import { buildSourceIndex, buildDocIndex } from "./index";
 
 /**
  * Runs against the REAL committed fixtures (the harvested FastAPI
@@ -68,5 +68,85 @@ describe("buildSourceIndex", () => {
   it("tolerates duplicate cited ids", () => {
     const index = buildSourceIndex(input, ["pr:15745", "pr:15745"]);
     expect(Object.keys(index)).toEqual(["pr:15745"]);
+  });
+});
+
+/**
+ * Runs against the REAL harvested docs (`data/mocks/docs/*.md`), so this doubles
+ * as a contract check on the first-line provenance comment that
+ * `scripts/harvest.ts` writes (`<!-- source: <path> @ <ref> -->`). If a re-harvest
+ * changes that format, or drops a well-known doc, these fail loudly.
+ */
+describe("buildDocIndex", () => {
+  const docs = getConnector().loadDocs();
+  const project = getConnector().loadReleaseInput().release.project;
+
+  it("resolves a flattened docPath to its original path + GitHub blob url at the harvested ref", () => {
+    const index = buildDocIndex(docs, project, [
+      "tutorial__bigger-applications.md",
+    ]);
+    const ref = index["tutorial__bigger-applications.md"];
+    expect(ref.docPath).toBe("tutorial__bigger-applications.md");
+    // sourcePath + ref come from the doc's first-line comment, not a hardcoded rule.
+    expect(ref.sourcePath).toBe("docs/en/docs/tutorial/bigger-applications.md");
+    expect(ref.url).toBe(
+      "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/bigger-applications.md",
+    );
+  });
+
+  it("derives the url as https://github.com/<project>/blob/<ref>/<sourcePath>", () => {
+    // Cross-check the url format directly against the parsed first line of a real doc.
+    const docPath = "advanced__openapi-callbacks.md";
+    const doc = docs.find((d) => d.docPath === docPath)!;
+    const m = /^<!--\s*source:\s*(.+?)\s*@\s*(.+?)\s*-->/.exec(
+      doc.text.split("\n")[0],
+    )!;
+    const [, sourcePath, gitRef] = m;
+    const index = buildDocIndex(docs, project, [docPath]);
+    expect(index[docPath].sourcePath).toBe(sourcePath);
+    expect(index[docPath].url).toBe(
+      `https://github.com/${project}/blob/${gitRef}/${sourcePath}`,
+    );
+  });
+
+  it("degrades a doc with no parseable source comment to sourcePath=docPath, url=null", () => {
+    const index = buildDocIndex(
+      [{ docPath: "no-comment.md", text: "# A doc with no provenance line\n" }],
+      project,
+      ["no-comment.md"],
+    );
+    expect(index["no-comment.md"]).toEqual({
+      docPath: "no-comment.md",
+      sourcePath: "no-comment.md",
+      url: null,
+    });
+  });
+
+  it("degrades an unknown (missing) docPath rather than throwing", () => {
+    const index = buildDocIndex(docs, project, ["does-not-exist.md"]);
+    expect(index["does-not-exist.md"]).toEqual({
+      docPath: "does-not-exist.md",
+      sourcePath: "does-not-exist.md",
+      url: null,
+    });
+  });
+
+  it("resolves only the referenced docPaths (does not index all 60 docs)", () => {
+    const index = buildDocIndex(docs, project, [
+      "tutorial__bigger-applications.md",
+      "tutorial__header-params.md",
+    ]);
+    expect(Object.keys(index).sort()).toEqual([
+      "tutorial__bigger-applications.md",
+      "tutorial__header-params.md",
+    ]);
+  });
+
+  it("tolerates duplicate referenced docPaths", () => {
+    const index = buildDocIndex(docs, project, [
+      "tutorial__header-params.md",
+      "tutorial__header-params.md",
+    ]);
+    expect(Object.keys(index)).toEqual(["tutorial__header-params.md"]);
   });
 });

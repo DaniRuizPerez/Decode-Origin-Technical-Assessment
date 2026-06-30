@@ -26,7 +26,7 @@ import { getConnector, loadGroundTruth } from "@/lib/connectors";
 import { getProvider } from "@/lib/llm";
 import { buildRetriever, chunkDocs } from "@/lib/rag";
 import { digest, plan, write, reviewDocs } from "@/lib/agents";
-import { buildSourceIndex } from "@/lib/sources";
+import { buildSourceIndex, buildDocIndex } from "@/lib/sources";
 import {
   ReleasePackageSchema,
   type AgentCallTrace,
@@ -147,6 +147,15 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
     });
   }
 
+  // Resolve the DISTINCT docPaths referenced by the documentation updates and the
+  // surfaced retrieval chunks into a doc index (docPath → original repo path +
+  // GitHub blob url at the harvested ref), so the UI can link each target doc file
+  // to the real doc on GitHub. Parsed from each doc's first-line harvest comment.
+  const refPaths = new Set<string>();
+  for (const d of documentationUpdates) refPaths.add(d.docPath);
+  for (const c of retrieval) refPaths.add(c.docPath);
+  const docIndex = buildDocIndex(docs, input.release.project, refPaths);
+
   // Assemble + validate the package against the shared contract.
   return ReleasePackageSchema.parse({
     release: input.release,
@@ -160,6 +169,7 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
     },
     retrieval,
     sourceIndex,
+    docIndex,
     trace,
     approval: { approved: false, approvedAt: null },
   });
