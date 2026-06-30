@@ -387,6 +387,137 @@ const RAW = {
   ],
 
   /* --------------------------------------------------------------------------
+   * Resolved citations (id → SourceRef): readable title + GitHub url for every
+   * id the artifacts above cite. WHY hand-listed here: this sample stands in for
+   * a pipeline run, so it must be self-complete — the real pipeline builds this
+   * map via buildSourceIndex(). Titles/urls are the genuine fixture values, so
+   * the UI's links resolve to real FastAPI PRs/commits. Tickets are
+   * reconstructed (Jira-shaped) and so carry url: null.
+   * ------------------------------------------------------------------------ */
+  sourceIndex: {
+    "ticket:FAPI-1003": {
+      id: "ticket:FAPI-1003",
+      kind: "ticket" as const,
+      title:
+        "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+      url: null,
+    },
+    "pr:15745": {
+      id: "pr:15745",
+      kind: "pr" as const,
+      title:
+        "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+      url: "https://github.com/fastapi/fastapi/pull/15745",
+    },
+    "commit:8e1d774": {
+      id: "commit:8e1d774",
+      kind: "commit" as const,
+      title:
+        "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances (#15745)",
+      url: "https://github.com/fastapi/fastapi/commit/8e1d774cef03ab9e2552c26e850cbfc0c63974c3",
+    },
+    "ticket:FAPI-1006": {
+      id: "ticket:FAPI-1006",
+      kind: "ticket" as const,
+      title:
+        "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+      url: null,
+    },
+    "pr:15785": {
+      id: "pr:15785",
+      kind: "pr" as const,
+      title:
+        "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+      url: "https://github.com/fastapi/fastapi/pull/15785",
+    },
+    "commit:6ac1220": {
+      id: "commit:6ac1220",
+      kind: "commit" as const,
+      title:
+        "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse) (#15785)",
+      url: "https://github.com/fastapi/fastapi/commit/6ac122071d2c9e6add587e1271eb010dd6acbed0",
+    },
+    "pr:15763": {
+      id: "pr:15763",
+      kind: "pr" as const,
+      title: "🐛 Fix bug, allow empty path in path operation in prefixless router",
+      url: "https://github.com/fastapi/fastapi/pull/15763",
+    },
+    "pr:15765": {
+      id: "pr:15765",
+      kind: "pr" as const,
+      title: "🚨 Fix typing checks for APIRoute",
+      url: "https://github.com/fastapi/fastapi/pull/15765",
+    },
+    "commit:d8aad20": {
+      id: "commit:d8aad20",
+      kind: "commit" as const,
+      title:
+        "🐛 Fix bug, allow empty path in path operation in prefixless router (#15763)",
+      url: "https://github.com/fastapi/fastapi/commit/d8aad201eba558b20419a832e51a026b0e6ede0e",
+    },
+    "commit:b78c822": {
+      id: "commit:b78c822",
+      kind: "commit" as const,
+      title: "🚨 Fix typing checks for APIRoute (#15765)",
+      url: "https://github.com/fastapi/fastapi/commit/b78c82262f5170831ebd3f27873b09d8e579bac2",
+    },
+    "ticket:FAPI-1001": {
+      id: "ticket:FAPI-1001",
+      kind: "ticket" as const,
+      title:
+        "♻️ Validate Server Sent Event fields to avoid applications from sending broken data",
+      url: null,
+    },
+    "pr:15588": {
+      id: "pr:15588",
+      kind: "pr" as const,
+      title:
+        "♻️ Validate Server Sent Event fields to avoid applications from sending broken data",
+      url: "https://github.com/fastapi/fastapi/pull/15588",
+    },
+    "ticket:FAPI-1002": {
+      id: "ticket:FAPI-1002",
+      kind: "ticket" as const,
+      title:
+        "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)",
+      url: null,
+    },
+    "pr:15589": {
+      id: "pr:15589",
+      kind: "pr" as const,
+      title:
+        "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)",
+      url: "https://github.com/fastapi/fastapi/pull/15589",
+    },
+    "commit:063b5bf": {
+      id: "commit:063b5bf",
+      kind: "commit" as const,
+      title:
+        "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default) (#15589)",
+      url: "https://github.com/fastapi/fastapi/commit/063b5bf582d31fb155cc6bc6f88cf512329d0fd5",
+    },
+    "ticket:FAPI-1000": {
+      id: "ticket:FAPI-1000",
+      kind: "ticket" as const,
+      title: "⬆️ Update Pydantic v2 code to address deprecations",
+      url: null,
+    },
+    "pr:15101": {
+      id: "pr:15101",
+      kind: "pr" as const,
+      title: "⬆️ Update Pydantic v2 code to address deprecations",
+      url: "https://github.com/fastapi/fastapi/pull/15101",
+    },
+    "pr:15760": {
+      id: "pr:15760",
+      kind: "pr" as const,
+      title: "Update translations for zh-hant (update-outdated)",
+      url: "https://github.com/fastapi/fastapi/pull/15760",
+    },
+  },
+
+  /* --------------------------------------------------------------------------
    * Observability trace — one record per agent/LLM call. Powers the UI's
    * collapsible "pipeline trace" view. provider="mock" because no LLM is wired.
    * ------------------------------------------------------------------------ */

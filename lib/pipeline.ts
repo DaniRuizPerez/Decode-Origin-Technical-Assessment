@@ -26,6 +26,7 @@ import { getConnector, loadGroundTruth } from "@/lib/connectors";
 import { getProvider } from "@/lib/llm";
 import { buildRetriever, chunkDocs } from "@/lib/rag";
 import { digest, plan, write, reviewDocs } from "@/lib/agents";
+import { buildSourceIndex } from "@/lib/sources";
 import {
   ReleasePackageSchema,
   type AgentCallTrace,
@@ -113,6 +114,19 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
     isPossibleDocDebt: !changedDocs.has(d.docPath),
   }));
 
+  // Resolve the DISTINCT ids cited across every artifact into a source index
+  // (id → title + GitHub url) so the UI can render readable, clickable evidence
+  // instead of opaque ids. Coordinator-owned because it spans all artifact kinds
+  // and needs the loaded `input` to resolve titles/urls.
+  const citedIds = new Set<string>();
+  for (const e of writerOut.changelog) for (const s of e.sources) citedIds.add(s);
+  for (const n of writerOut.internalReleaseNotes)
+    for (const s of n.sources) citedIds.add(s);
+  for (const n of writerOut.customerReleaseNotes)
+    for (const s of n.sources) citedIds.add(s);
+  for (const d of documentationUpdates) for (const s of d.sources) citedIds.add(s);
+  const sourceIndex = buildSourceIndex(input, citedIds);
+
   // Retrieval evidence for the UI: resolve each suggestion's retrieved chunk by
   // id. Chunk ids are deterministic, so they match the reviewer's references.
   const chunkById = new Map(chunkDocs(docs).map((c) => [c.id, c]));
@@ -145,6 +159,7 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
       documentationUpdates,
     },
     retrieval,
+    sourceIndex,
     trace,
     approval: { approved: false, approvedAt: null },
   });

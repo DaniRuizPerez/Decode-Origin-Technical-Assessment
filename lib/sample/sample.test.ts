@@ -41,6 +41,25 @@ describe("SAMPLE_PACKAGE", () => {
       }
     }
   });
+
+  it("resolves every cited source id in sourceIndex (readable, complete)", () => {
+    const a = SAMPLE_PACKAGE.artifacts;
+    const cited = new Set<string>([
+      ...a.changelog.flatMap((e) => e.sources),
+      ...a.internalReleaseNotes.flatMap((n) => n.sources),
+      ...a.customerReleaseNotes.flatMap((n) => n.sources),
+      ...a.documentationUpdates.flatMap((u) => u.sources),
+    ]);
+    for (const id of cited) {
+      const ref = SAMPLE_PACKAGE.sourceIndex[id];
+      expect(ref, `missing sourceIndex entry for ${id}`).toBeDefined();
+      expect(ref.title.length).toBeGreaterThan(0);
+    }
+    // PRs/commits link out to GitHub; reconstructed tickets carry no url.
+    const pr = SAMPLE_PACKAGE.sourceIndex["pr:15745"];
+    expect(pr.url).toBe("https://github.com/fastapi/fastapi/pull/15745");
+    expect(SAMPLE_PACKAGE.sourceIndex["ticket:FAPI-1003"].url).toBeNull();
+  });
 });
 
 describe("toSpecOutput", () => {
