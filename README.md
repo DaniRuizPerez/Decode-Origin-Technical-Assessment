@@ -1,6 +1,6 @@
 # Automated Release Documentation Agent
 
-Turns the raw artifacts of a software release — git commits, merged pull requests, and Jira-shaped tickets — into a complete, **reviewable** release package: a categorized **changelog**, **internal release notes**, **customer-facing release notes**, and section-level **documentation-update suggestions** against the existing docs. A human reviews the draft in a dashboard, edits inline, and **approves** it; every generated claim **cites** the source artifacts it draws from. Offline output is grounded by construction; when keyed, a **generate → verify → repair** loop catches and repairs any ungrounded citation before the draft is accepted (semantic faithfulness — does the cited text actually *support* the claim? — is documented future work). It runs **fully offline with no API key** using a deterministic extractive baseline, and — by setting one environment variable — runs the *same pipeline* with abstractive Claude (`claude-opus-4-8`) generation instead.
+Turns the raw artifacts of a software release — git commits, merged pull requests, and Jira-shaped tickets — into a complete, **reviewable** release package: a categorized **changelog**, **internal release notes**, **customer-facing release notes**, and section-level **documentation-update suggestions** against the existing docs. A human reviews the draft in a dashboard, edits inline, and **approves** it; every generated claim **cites** the source artifacts it draws from. Offline output is grounded by construction; when keyed, a **generate → verify → repair** loop catches ungrounded citations and repairs them where it can — surfacing any residual failure rather than letting it pass silently (semantic faithfulness — does the cited text actually *support* the claim? — is documented future work). It runs **fully offline with no API key** using a deterministic extractive baseline, and — by setting one environment variable — runs the *same pipeline* with abstractive Claude (`claude-opus-4-8`) generation instead.
 
 Built with **Next.js 15 + TypeScript + Tailwind**. A 4-agent pipeline (Digester → Planner → Release Writer → Documentation Reviewer), hybrid RAG (BM25 + embeddings fused with reciprocal-rank fusion), and a grounded generate → verify → repair loop.
 
@@ -16,7 +16,7 @@ npm install        # install dependencies
 npm run dev        # start the dev server, then open http://localhost:3000
                    #   the dashboard renders a REAL release end-to-end on load
 
-npm test           # 149 unit tests (vitest), all offline
+npm test           # 186 unit tests (vitest), all offline
 npm run eval       # run the LIVE pipeline over the real fixtures and score it
 npm run build      # production build (next build)
 ```

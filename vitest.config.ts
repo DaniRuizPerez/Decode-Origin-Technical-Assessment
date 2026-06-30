@@ -12,7 +12,15 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["lib/**/*.test.ts", "scripts/**/*.test.ts"],
+    // Test surface: lib + scripts, plus the App Router API route tests under
+    // app/ (route handlers are plain Request→Response functions; their files
+    // declare `// @vitest-environment node` so they're explicit either way).
+    include: [
+      "lib/**/*.test.ts",
+      "scripts/**/*.test.ts",
+      "app/**/*.test.ts",
+      "app/**/*.test.tsx",
+    ],
     testTimeout: 30_000,
   },
 });

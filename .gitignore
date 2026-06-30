@@ -32,3 +32,6 @@ yarn-error.log*
 
 # local model cache (transformers.js)
 /.cache
+
+# assessment brief / local reference docs — not part of the deliverable
+*.pdf
