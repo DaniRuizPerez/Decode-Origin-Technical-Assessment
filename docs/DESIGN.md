@@ -158,8 +158,11 @@ Verified offline baseline on the real data: hallucination **0.0%**, ticket cover
 
 ## Future improvements
 
-- **Neural embeddings + a cross-encoder reranker** for stronger doc retrieval
-  (the offline FN above is the motivating case).
+- **Neural embeddings + a cross-encoder reranker** for stronger doc retrieval.
+  *Validated:* a session-run of the abstractive pipeline (see `data/samples/`) lifted
+  doc-rec **precision 66.7% → 100%** (F1 → 80%) by reasoning away irrelevant picks, but
+  left the one recall miss (`openapi-callbacks.md`) — which isn't retrieved even at
+  k=8 — confirming that *retrieval*, not generation, is the bottleneck for that doc.
 - **LLM-judge faithfulness at scale** — turn on the keyed claim-verifier as the
   headline hallucination metric, ideally with a different judge model to reduce bias.
 - **Multi-source connectors** (Slack, Linear, Zendesk, Confluence, Google Docs) behind
