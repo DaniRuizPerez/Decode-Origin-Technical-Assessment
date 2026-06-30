@@ -1,0 +1,869 @@
+{
+  "release": {
+    "project": "fastapi/fastapi",
+    "baseRef": "0.136.0",
+    "headRef": "0.137.2",
+    "name": "0.137.2"
+  },
+  "changeSet": {
+    "changes": [
+      {
+        "id": "chg-pr-15101",
+        "type": "deps",
+        "summary": "Update Pydantic v2 code to address deprecations",
+        "details": "When running `ty` on the code base (cf #15091), we got two valid deprecation warnings: - `eval_type_lenient` has been deprecated since [pydantic#1053](https://github.com/pydantic/pydantic/pull/10530), which was released as part of [v2.10.0b1](https://github.com/pydantic/pydantic/releases/tag/v2.10.0b1).…",
+        "components": [
+          "compat",
+          "dependencies",
+          "encoders"
+        ],
+        "sourceIds": [
+          "ticket:FAPI-1000",
+          "pr:15101"
+        ],
+        "confidence": 0.95,
+        "isBreaking": false
+      },
+      {
+        "id": "chg-pr-15588",
+        "type": "refactor",
+        "summary": "Validate Server Sent Event fields to avoid applications from sending broken data",
+        "details": "Validate Server Sent Event fields to avoid applications from sending broken data This was reported multiple times as a \"vulnerability\" by users probably using automated AI tools, with the argument that if input was taken from the request and passed directly to an event unfiltered, it could break the client.…",
+        "components": [
+          "sse"
+        ],
+        "sourceIds": [
+          "ticket:FAPI-1001",
+          "pr:15588",
+          "commit:c7fb785"
+        ],
+        "confidence": 0.95,
+        "isBreaking": false
+      },
+      {
+        "id": "chg-pr-15589",
+        "type": "refactor",
+        "summary": "Do not accept underscore headers when using `convert_underscores=True` (the default)",
+        "details": "Do not accept underscore headers when using `convert_underscores=True` (the default) This means it would only accept header names separated with hyphens by default, and to accept header names separated with underscores, an app would need to explicitly set `convert_underscores=False`.",
+        "components": [
+          "dependencies"
+        ],
+        "sourceIds": [
+          "ticket:FAPI-1002",
+          "pr:15589",
+          "commit:063b5bf"
+        ],
+        "confidence": 0.95,
+        "isBreaking": false
+      },
+      {
+        "id": "chg-pr-15745",
+        "type": "breaking",
+        "summary": "Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+        "details": "Refactor internals to preserve `APIRouter` and `APIRoute` instances Supersedes https://github.com/fastapi/fastapi/pull/4794 Unblocks :sparkles: SO MANY THINGS :sparkles: Before this, `router.include_router(other_router)` would take each path operation from `other_router` and \"clone\" it, or recreate it from scratch.…",
+        "components": [
+          "applications",
+          "openapi",
+          "routing"
+        ],
+        "sourceIds": [
+          "ticket:FAPI-1003",
+          "pr:15745",
+          "commit:8e1d774"
+        ],
+        "confidence": 0.95,
+        "isBreaking": true
+      },
+      {
+        "id": "chg-pr-15763",
+        "type": "fix",
+        "summary": "Fix bug, allow empty path in path operation in prefixless router",
+        "details": "Fix bug, allow empty path in path operation in prefixless router Related to https://github.com/fastapi/fastapi/issues/15762",
+        "components": [
+          "routing"
+        ],
+        "sourceIds": [
+          "ticket:FAPI-1004",
+          "pr:15763",
+          "commit:d8aad20"
+        ],
+        "confidence": 0.95,
+        "isBreaking": false
+      },
+      {
+        "id": "chg-pr-15765",
+        "type": "fix",
+        "summary": "Fix typing checks for APIRoute",
+        "details": "Fix typing checks for APIRoute Related to: https://github.com/fastapi/fastapi/issues/15764",
+        "components": [
+          "routing"
+        ],
+        "sourceIds": [
+          "ticket:FAPI-1005",
+          "pr:15765",
+          "commit:b78c822"
+        ],
+        "confidence": 0.95,
+        "isBreaking": false
+      },
+      {
+        "id": "chg-pr-15785",
+        "type": "feature",
+        "summary": "Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+        "details": "Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse) Related to: https://github.com/fastapi/fastapi/discussions/15782 Codex with GPT 5.5 through several iterations, defining and trimming the interface. Manual review of all the code.",
+        "components": [
+          "openapi",
+          "routing"
+        ],
+        "sourceIds": [
+          "ticket:FAPI-1006",
+          "pr:15785",
+          "commit:6ac1220"
+        ],
+        "confidence": 0.95,
+        "isBreaking": false
+      },
+      {
+        "id": "chg-internal-noise",
+        "type": "chore",
+        "summary": "Routine maintenance: 151 translation, dependency, and internal PRs",
+        "details": "Aggregated translation, dependency-bump, CI, and internal-tooling pull requests with no linked tracking ticket. Collapsed into one entry so the change set foregrounds substantive work; the full list is preserved in unlinkedArtifactIds.",
+        "components": [],
+        "sourceIds": [
+          "pr:13583",
+          "pr:14781",
+          "pr:15174",
+          "pr:15263",
+          "pr:15282",
+          "pr:15316",
+          "pr:15333",
+          "pr:15334",
+          "pr:15360",
+          "pr:15368",
+          "pr:15369",
+          "pr:15373"
+        ],
+        "confidence": 0.5,
+        "isBreaking": false
+      }
+    ],
+    "unlinkedArtifactIds": [
+      "pr:13583",
+      "pr:14781",
+      "pr:15174",
+      "pr:15263",
+      "pr:15282",
+      "pr:15316",
+      "pr:15333",
+      "pr:15334",
+      "pr:15360",
+      "pr:15368",
+      "pr:15369",
+      "pr:15373",
+      "pr:15374",
+      "pr:15385",
+      "pr:15391",
+      "pr:15393",
+      "pr:15394",
+      "pr:15395",
+      "pr:15396",
+      "pr:15397",
+      "pr:15400",
+      "pr:15405",
+      "pr:15406",
+      "pr:15407",
+      "pr:15408",
+      "pr:15409",
+      "pr:15410",
+      "pr:15415",
+      "pr:15417",
+      "pr:15418",
+      "pr:15419",
+      "pr:15436",
+      "pr:15437",
+      "pr:15439",
+      "pr:15443",
+      "pr:15444",
+      "pr:15456",
+      "pr:15457",
+      "pr:15458",
+      "pr:15462",
+      "pr:15463",
+      "pr:15464",
+      "pr:15467",
+      "pr:15468",
+      "pr:15470",
+      "pr:15471",
+      "pr:15472",
+      "pr:15475",
+      "pr:15482",
+      "pr:15490",
+      "pr:15502",
+      "pr:15507",
+      "pr:15512",
+      "pr:15513",
+      "pr:15520",
+      "pr:15521",
+      "pr:15522",
+      "pr:15523",
+      "pr:15524",
+      "pr:15525",
+      "pr:15526",
+      "pr:15527",
+      "pr:15528",
+      "pr:15529",
+      "pr:15530",
+      "pr:15531",
+      "pr:15532",
+      "pr:15533",
+      "pr:15534",
+      "pr:15548",
+      "pr:15553",
+      "pr:15560",
+      "pr:15562",
+      "pr:15563",
+      "pr:15565",
+      "pr:15569",
+      "pr:15571",
+      "pr:15577",
+      "pr:15580",
+      "pr:15583",
+      "pr:15585",
+      "pr:15587",
+      "pr:15591",
+      "pr:15594",
+      "pr:15595",
+      "pr:15603",
+      "pr:15607",
+      "pr:15610",
+      "pr:15616",
+      "pr:15649",
+      "pr:15661",
+      "pr:15662",
+      "pr:15664",
+      "pr:15665",
+      "pr:15666",
+      "pr:15667",
+      "pr:15668",
+      "pr:15669",
+      "pr:15670",
+      "pr:15671",
+      "pr:15672",
+      "pr:15673",
+      "pr:15674",
+      "pr:15675",
+      "pr:15677",
+      "pr:15681",
+      "pr:15682",
+      "pr:15683",
+      "pr:15684",
+      "pr:15688",
+      "pr:15689",
+      "pr:15719",
+      "pr:15720",
+      "pr:15721",
+      "pr:15722",
+      "pr:15723",
+      "pr:15724",
+      "pr:15730",
+      "pr:15731",
+      "pr:15735",
+      "pr:15736",
+      "pr:15744",
+      "pr:15747",
+      "pr:15748",
+      "pr:15751",
+      "pr:15752",
+      "pr:15753",
+      "pr:15754",
+      "pr:15755",
+      "pr:15756",
+      "pr:15757",
+      "pr:15758",
+      "pr:15759",
+      "pr:15760",
+      "pr:15761",
+      "pr:15766",
+      "pr:15769",
+      "pr:15770",
+      "pr:15771",
+      "pr:15772",
+      "pr:15774",
+      "pr:15775",
+      "pr:15776",
+      "pr:15777",
+      "pr:15778",
+      "pr:15779",
+      "pr:15780",
+      "pr:15781",
+      "pr:15786",
+      "pr:15787",
+      "pr:15790",
+      "commit:4f64b8f",
+      "commit:a217d2f",
+      "commit:6b20159",
+      "commit:aff0b7c",
+      "commit:a3ceb9c",
+      "commit:b363a1d",
+      "commit:d8a2c1e",
+      "commit:33ed5ae",
+      "commit:e0a2c75",
+      "commit:bc8b1d1",
+      "commit:205bd85",
+      "commit:8da79ec",
+      "commit:f72afb6",
+      "commit:9ccaab1",
+      "commit:ecf73d6",
+      "commit:810fd2a",
+      "commit:8c660a6",
+      "commit:f8cbeab",
+      "commit:3efd86c",
+      "commit:fb74293",
+      "commit:622b635",
+      "commit:3ec959a",
+      "commit:7cb1953",
+      "commit:5d5666b",
+      "commit:e89a37e",
+      "commit:2c26191",
+      "commit:b70238d",
+      "commit:b71da65",
+      "commit:b31ffc1",
+      "commit:b6abc93",
+      "commit:6f2dbb9",
+      "commit:a0f42dd",
+      "commit:40e383e",
+      "commit:6939bf8",
+      "commit:ecace74",
+      "commit:3e2ef69",
+      "commit:a35a0b8",
+      "commit:72f127d",
+      "commit:9364f55",
+      "commit:eff8bc4",
+      "commit:c7171f8",
+      "commit:6163cc7",
+      "commit:8106d63",
+      "commit:622dcdc",
+      "commit:34a82b1",
+      "commit:e6edf14",
+      "commit:4047993",
+      "commit:f0c3d87",
+      "commit:480fdba",
+      "commit:9981244",
+      "commit:e3844f1",
+      "commit:5cfd983",
+      "commit:1f48fb4",
+      "commit:f396392",
+      "commit:3ab6f1b",
+      "commit:f343905",
+      "commit:bf3668d",
+      "commit:628ff21",
+      "commit:21697d9",
+      "commit:3780ba5",
+      "commit:626ae19",
+      "commit:ff6a38a",
+      "commit:5341528",
+      "commit:2b5cd26",
+      "commit:6f9dcdf",
+      "commit:31ced9d",
+      "commit:f4cafbc",
+      "commit:3969ae8",
+      "commit:ed7f49e",
+      "commit:74d735d",
+      "commit:b11805a",
+      "commit:a314e3b",
+      "commit:60571d7",
+      "commit:87d1dae",
+      "commit:4232d80",
+      "commit:c99e215",
+      "commit:b95681e",
+      "commit:55a9ff2",
+      "commit:0b98630",
+      "commit:c347875",
+      "commit:ecd7082",
+      "commit:973230c",
+      "commit:4f37a43",
+      "commit:8b647e3",
+      "commit:e16894e",
+      "commit:7b57e42",
+      "commit:3675137",
+      "commit:00f805c",
+      "commit:cb83b83",
+      "commit:c7fb785",
+      "commit:3b252a2",
+      "commit:22b02e2",
+      "commit:063b5bf",
+      "commit:c910e01",
+      "commit:8206485",
+      "commit:21c4691",
+      "commit:2895c51",
+      "commit:7baefe7",
+      "commit:84f205c",
+      "commit:3e3d389",
+      "commit:09ba2ce",
+      "commit:3fdc54e",
+      "commit:1a84bbc",
+      "commit:1464678",
+      "commit:6cbdde2",
+      "commit:59d4a80",
+      "commit:dbfd55c",
+      "commit:57535ef",
+      "commit:ad09734",
+      "commit:a53efbc",
+      "commit:c9343d2",
+      "commit:a3558be",
+      "commit:2bd97a6",
+      "commit:4a5f0cd",
+      "commit:136b55f",
+      "commit:2a1506d",
+      "commit:334582b",
+      "commit:dcac2f0",
+      "commit:199415d",
+      "commit:99a1b1e",
+      "commit:91dba44",
+      "commit:1990ecb",
+      "commit:ee22a4b",
+      "commit:b4d58fd",
+      "commit:0ee8a24",
+      "commit:37c92a8",
+      "commit:d390d51",
+      "commit:d1216e7",
+      "commit:e29b179",
+      "commit:bb6dbdb",
+      "commit:e1c1299",
+      "commit:674a625",
+      "commit:cf2369a",
+      "commit:502d20c",
+      "commit:d822aef",
+      "commit:7b262b3",
+      "commit:2aa8890",
+      "commit:2b70d68",
+      "commit:4bdda67",
+      "commit:46bc43a",
+      "commit:dbe9840",
+      "commit:d6629f7",
+      "commit:9f4f3fd",
+      "commit:6926656",
+      "commit:a5a68f1",
+      "commit:c4cf134",
+      "commit:6999d21",
+      "commit:2d5e2a4",
+      "commit:57b42cc",
+      "commit:d144531",
+      "commit:4cc0e5b",
+      "commit:566bc53",
+      "commit:3d2aace",
+      "commit:460f8d2",
+      "commit:2441eff",
+      "commit:e95d3aa",
+      "commit:5d2320f",
+      "commit:81c243f",
+      "commit:09e615a",
+      "commit:df3c778",
+      "commit:433a7ef",
+      "commit:b3b6aba",
+      "commit:7eb2bf5",
+      "commit:782476e",
+      "commit:5cdf820",
+      "commit:71ea74f",
+      "commit:706e20d",
+      "commit:0cf3f76",
+      "commit:e42d913",
+      "commit:8b80abf",
+      "commit:b6ed466",
+      "commit:13b2b4c",
+      "commit:3c5d5bb",
+      "commit:2015b63",
+      "commit:4be7707",
+      "commit:e133ffb",
+      "commit:b317203",
+      "commit:e529192",
+      "commit:b98fb55",
+      "commit:ee036a1",
+      "commit:e680fd6",
+      "commit:5d2dae8",
+      "commit:944fb70",
+      "commit:e4b6a36",
+      "commit:d3e6a29",
+      "commit:e2fcd55",
+      "commit:016ab76",
+      "commit:8e1d774",
+      "commit:ba609a8",
+      "commit:31d097f",
+      "commit:c6d5897",
+      "commit:9a9c4ad",
+      "commit:d8aad20",
+      "commit:e0f8cad",
+      "commit:b78c822",
+      "commit:edd1461",
+      "commit:a82e5f2",
+      "commit:76876e5",
+      "commit:4473a0c",
+      "commit:b7de2b7",
+      "commit:8c5a830",
+      "commit:c054476",
+      "commit:1b28443",
+      "commit:864c29f",
+      "commit:c9d3e82",
+      "commit:9871e03",
+      "commit:eaf1d94",
+      "commit:96592d9",
+      "commit:451eb49",
+      "commit:b82ab2f",
+      "commit:93610bb",
+      "commit:4352080",
+      "commit:d026f79",
+      "commit:8012339",
+      "commit:a4bd128",
+      "commit:3b9f938",
+      "commit:89fcd72",
+      "commit:2f69b26",
+      "commit:132c533",
+      "commit:011da09",
+      "commit:76008f7",
+      "commit:b401cb7",
+      "commit:aeeb29f",
+      "commit:090386b",
+      "commit:aa5eeb3",
+      "commit:818b97a",
+      "commit:2f836a9",
+      "commit:44e5b99",
+      "commit:2f5ba0d",
+      "commit:9ca069f",
+      "commit:8868394",
+      "commit:5ebf2ab",
+      "commit:06074e7",
+      "commit:2c77ae3",
+      "commit:a62dd75",
+      "commit:69f8d87",
+      "commit:aaf70c1",
+      "commit:84304df",
+      "commit:627636b",
+      "commit:705324e",
+      "commit:c66d1c2",
+      "commit:e26e643",
+      "commit:202b2d2",
+      "commit:32d711f",
+      "commit:1c1edb9",
+      "commit:d514109",
+      "commit:7feb17f",
+      "commit:6ac1220",
+      "commit:5d421ae",
+      "commit:6a0ba7b"
+    ]
+  },
+  "plan": {
+    "themes": [
+      {
+        "title": "Breaking changes",
+        "summary": "Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+        "changeIds": [
+          "chg-pr-15745"
+        ]
+      },
+      {
+        "title": "Routing",
+        "summary": "2 changes (2 fix); e.g. Fix bug, allow empty path in path operation in prefixless router.",
+        "changeIds": [
+          "chg-pr-15763",
+          "chg-pr-15765"
+        ]
+      },
+      {
+        "title": "Compat",
+        "summary": "Update Pydantic v2 code to address deprecations",
+        "changeIds": [
+          "chg-pr-15101"
+        ]
+      },
+      {
+        "title": "Dependencies",
+        "summary": "Do not accept underscore headers when using `convert_underscores=True` (the default)",
+        "changeIds": [
+          "chg-pr-15589"
+        ]
+      },
+      {
+        "title": "Openapi",
+        "summary": "Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+        "changeIds": [
+          "chg-pr-15785"
+        ]
+      },
+      {
+        "title": "Sse",
+        "summary": "Validate Server Sent Event fields to avoid applications from sending broken data",
+        "changeIds": [
+          "chg-pr-15588"
+        ]
+      },
+      {
+        "title": "Maintenance",
+        "summary": "Routine maintenance: 151 translation, dependency, and internal PRs",
+        "changeIds": [
+          "chg-internal-noise"
+        ]
+      }
+    ],
+    "affectedSystems": [
+      "compat",
+      "dependencies",
+      "encoders",
+      "sse",
+      "applications",
+      "openapi",
+      "routing"
+    ],
+    "risk": {
+      "level": "high",
+      "reasons": [
+        "Breaking change: \"Refactor internals to preserve `APIRouter` and `APIRoute` instances\" (pr:15745) — affects a core API; downstream code may need migration.",
+        "2 fixes clustered in \"routing\" (pr:15763, pr:15765) suggest a recently-changed area shipped with rough edges.",
+        "1 dependency/upgrade change(s) (e.g. pr:15101) can shift transitive behavior.",
+        "Wide blast radius: 7 components touched (compat, dependencies, encoders, sse, applications, openapi, …)."
+      ]
+    },
+    "coverage": {
+      "total": 7,
+      "covered": 7,
+      "missingTicketKeys": []
+    }
+  },
+  "artifacts": {
+    "changelog": [
+      {
+        "category": "Breaking Changes",
+        "text": "`include_router()` now preserves `APIRouter` and `APIRoute` instances instead of copying them. Routers keep their identity when composed, and `router.routes` is now a tree rather than a flat list — code that iterated it expecting a flat list of routes may need to migrate to `iter_route_contexts()`.",
+        "sources": [
+          "ticket:FAPI-1003",
+          "pr:15745",
+          "commit:8e1d774"
+        ]
+      },
+      {
+        "category": "Features",
+        "text": "Added `iter_route_contexts()` — the supported way to walk a router's routes for advanced introspection (e.g. tooling like Jupyverse), replacing direct access to the now-tree-structured `router.routes`.",
+        "sources": [
+          "ticket:FAPI-1006",
+          "pr:15785",
+          "commit:6ac1220"
+        ]
+      },
+      {
+        "category": "Behavior Changes",
+        "text": "Header parameters with the default `convert_underscores=True` no longer accept underscores in header names, removing an ambiguity in how underscore/dash headers were matched.",
+        "sources": [
+          "ticket:FAPI-1002",
+          "pr:15589",
+          "commit:063b5bf"
+        ]
+      },
+      {
+        "category": "Behavior Changes",
+        "text": "Server-Sent Event fields are now validated before being sent, so applications can no longer emit malformed SSE payloads.",
+        "sources": [
+          "ticket:FAPI-1001",
+          "pr:15588",
+          "commit:c7fb785"
+        ]
+      },
+      {
+        "category": "Fixes",
+        "text": "Fixed an empty path in a path operation on a prefix-less router.",
+        "sources": [
+          "ticket:FAPI-1004",
+          "pr:15763",
+          "commit:d8aad20"
+        ]
+      },
+      {
+        "category": "Fixes",
+        "text": "Corrected the typing checks for `APIRoute`.",
+        "sources": [
+          "ticket:FAPI-1005",
+          "pr:15765",
+          "commit:b78c822"
+        ]
+      },
+      {
+        "category": "Dependencies",
+        "text": "Updated internal usage of Pydantic v2 to clear deprecation warnings and stay current with the v2 API.",
+        "sources": [
+          "ticket:FAPI-1000",
+          "pr:15101"
+        ]
+      },
+      {
+        "category": "Maintenance",
+        "text": "Routine maintenance: translation updates, dependency bumps, and internal/CI changes (151 PRs, summarized rather than itemized).",
+        "sources": [
+          "pr:13583",
+          "pr:14781",
+          "pr:15174",
+          "pr:15263"
+        ]
+      }
+    ],
+    "internalReleaseNotes": [
+      {
+        "heading": "Overview",
+        "body": "The headline of this release is a refactor of FastAPI's routing internals: `include_router()` now preserves `APIRouter`/`APIRoute` instances instead of recreating them, so route identity is retained and `router.routes` becomes a tree rather than a flat list. Shipping alongside it are two routing fixes, a new `iter_route_contexts()` introspection API, a stricter header-conversion rule, SSE field validation, and a Pydantic v2 deprecation cleanup.",
+        "sources": [
+          "ticket:FAPI-1003",
+          "pr:15745",
+          "pr:15785",
+          "pr:15763",
+          "pr:15765"
+        ]
+      },
+      {
+        "heading": "Affected systems",
+        "body": "routing, applications, and openapi (the router refactor and `iter_route_contexts()`); dependencies (the header-conversion change); sse (SSE validation); compat / encoders (the Pydantic v2 cleanup).",
+        "sources": [
+          "pr:15745",
+          "pr:15785",
+          "pr:15589",
+          "pr:15588",
+          "pr:15101"
+        ]
+      },
+      {
+        "heading": "Risk — High",
+        "body": "Driven by the breaking routing refactor on a core API (downstream code may need migration), two fixes clustered in the recently-changed routing area suggesting rough edges, a dependency upgrade that can shift transitive behavior, and a wide blast radius across seven components. Recommend extra regression coverage around router composition and any code that introspects routes.",
+        "sources": [
+          "pr:15745",
+          "pr:15763",
+          "pr:15765",
+          "pr:15101"
+        ]
+      },
+      {
+        "heading": "Migration notes",
+        "body": "Replace any direct iteration of `router.routes` (now a tree) with `iter_route_contexts()`. Applications that relied on underscores being accepted in header names under the default `convert_underscores=True` must adjust their header definitions.",
+        "sources": [
+          "ticket:FAPI-1003",
+          "pr:15745",
+          "pr:15785",
+          "pr:15589"
+        ]
+      },
+      {
+        "heading": "Coverage & data quality",
+        "body": "All 7 tracked tickets (FAPI-1000…1006) are represented above. The remaining ~151 PRs in the window are translation, dependency-bump, and internal/CI work with no linked ticket; they were summarized as one Maintenance entry rather than itemized, and surfaced as unlinked artifacts rather than dropped silently.",
+        "sources": [
+          "ticket:FAPI-1000",
+          "ticket:FAPI-1001",
+          "ticket:FAPI-1002"
+        ]
+      }
+    ],
+    "customerReleaseNotes": [
+      {
+        "heading": "What's new",
+        "body": "Router handling is now more robust and predictable: routers keep their identity when you compose them with other routers, which makes larger, more modular applications easier to build. A new supported way to inspect an application's routes is available for advanced tooling.",
+        "sources": [
+          "pr:15745",
+          "pr:15785"
+        ]
+      },
+      {
+        "heading": "Improvements",
+        "body": "Streaming responses are validated before they're sent, so malformed server-sent events can't slip through, and header handling is now stricter and less ambiguous.",
+        "sources": [
+          "pr:15588",
+          "pr:15589"
+        ]
+      },
+      {
+        "heading": "Action required",
+        "body": "If your code reads an application's internal list of routes directly, switch to the new supported inspection method. If you rely on underscores in custom header names, review your header definitions, as underscores are no longer accepted by default.",
+        "sources": [
+          "pr:15745",
+          "pr:15785",
+          "pr:15589"
+        ]
+      }
+    ],
+    "documentationUpdates": [
+      {
+        "docPath": "tutorial__header-params.md",
+        "section": "Automatic conversion",
+        "suggestion": "Update the \"Automatic conversion\" section: with the default `convert_underscores=True`, header names that contain underscores are no longer accepted. Document the new, stricter behavior and note that setting `convert_underscores=False` opts out of conversion entirely.",
+        "retrievedChunkId": "tutorial__header-params.md#4:automatic-conversion",
+        "sources": [
+          "ticket:FAPI-1002",
+          "pr:15589",
+          "commit:063b5bf"
+        ],
+        "isPossibleDocDebt": false
+      },
+      {
+        "docPath": "tutorial__bigger-applications.md",
+        "section": "Include the `APIRouter`s for `users` and `items`",
+        "suggestion": "Update the \"Include the `APIRouter`s\" section: `include_router()` now preserves `APIRouter`/`APIRoute` instances instead of copying them, so `router.routes` is a tree rather than a flat list. Note that advanced code which introspected `router.routes` should move to the new `iter_route_contexts()` API.",
+        "retrievedChunkId": "tutorial__bigger-applications.md#16:include-the-apirouter-s-for-users-and-items",
+        "sources": [
+          "ticket:FAPI-1003",
+          "pr:15745",
+          "commit:8e1d774"
+        ],
+        "isPossibleDocDebt": false
+      }
+    ]
+  },
+  "retrieval": [
+    {
+      "id": "tutorial__header-params.md#4:automatic-conversion",
+      "docPath": "tutorial__header-params.md",
+      "section": "Automatic conversion",
+      "text": "## Automatic conversion { #automatic-conversion }\n\n`Header` has a little extra functionality on top of what `Path`, `Query` and `Cookie` provide.\n\nMost of the standard headers are separated by a \"hyphen\" character, also known as the \"minus symbol\" (`-`).\n\nBut a variable like `user-agent` is invalid in Python.\n\nSo, by default, `Header` will convert the parameter names characters from underscore (`_`) to hyphen (`-`) to extract and document the headers.\n\nAlso, HTTP headers are case-insensitive, so, you can declare them with standard Python style (also known as \"snake_case\").\n\nSo, you can use `user_agent` as you normally would in Python code, instead of needing to capitalize the first letters as `User_Agent` or something similar.\n\nIf for some reason you need to disable automatic conversion of underscores to hyphens, set the parameter `convert_underscores` of `Header` to `False`:\n\n{* ../../docs_src/header_params/tutorial002_an_py310.py hl[10] *}\n\n/// warning\n\nBefore setting `convert_underscores` to `False`, bear in mind that some HTTP proxies and servers disallow the usage of headers with underscores.\n\n///",
+      "score": 1,
+      "signals": {}
+    },
+    {
+      "id": "tutorial__bigger-applications.md#16:include-the-apirouter-s-for-users-and-items",
+      "docPath": "tutorial__bigger-applications.md",
+      "section": "Include the `APIRouter`s for `users` and `items`",
+      "text": "### Include the `APIRouter`s for `users` and `items` { #include-the-apirouters-for-users-and-items }\n\nNow, let's include the `router`s from the submodules `users` and `items`:\n\n{* ../../docs_src/bigger_applications/app_an_py310/main.py hl[10:11] title[\"app/main.py\"] *}\n\n/// info\n\n`users.router` contains the `APIRouter` inside of the file `app/routers/users.py`.\n\nAnd `items.router` contains the `APIRouter` inside of the file `app/routers/items.py`.\n\n///\n\nWith `app.include_router()` we can add each `APIRouter` to the main `FastAPI` application.\n\nIt will include all the routes from that router as part of it.\n\n/// note | Technical Details\n\nIt will actually internally create a *path operation* for each *path operation* that was declared in the `APIRouter`.\n\nSo, behind the scenes, it will actually work as if everything was the same single app.\n\n///\n\n/// check\n\nYou don't have to worry about performance when including routers.\n\nThis will take microseconds and will only happen at startup.\n\nSo it won't affect performance. ⚡\n\n///",
+      "score": 1,
+      "signals": {}
+    }
+  ],
+  "trace": [
+    {
+      "agent": "digester",
+      "provider": "mock",
+      "ms": 2,
+      "inputSummary": "250 commits / 158 PRs / 7 tickets",
+      "outputSummary": "8 changes, 401 unlinked artifacts",
+      "tokens": null
+    },
+    {
+      "agent": "planner",
+      "provider": "mock",
+      "ms": 5,
+      "inputSummary": "8 changes",
+      "outputSummary": "7 themes, risk=high, coverage 7/7",
+      "tokens": null
+    },
+    {
+      "agent": "writer",
+      "provider": "anthropic",
+      "ms": 11,
+      "inputSummary": "8 changes, risk=high",
+      "outputSummary": "abstractive (Claude Code session): 8 changelog, 5+3 note sections",
+      "tokens": null
+    },
+    {
+      "agent": "doc-reviewer",
+      "provider": "anthropic",
+      "ms": 19,
+      "inputSummary": "60 existing docs",
+      "outputSummary": "abstractive (Claude Code session): 2 doc updates; dropped 2 irrelevant alternatives.md picks",
+      "tokens": null
+    }
+  ],
+  "approval": {
+    "approved": false,
+    "approvedAt": null
+  }
+}
