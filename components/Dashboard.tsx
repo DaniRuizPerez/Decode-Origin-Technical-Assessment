@@ -6,10 +6,11 @@
  * WHY this component owns state (and the leaf panels don't): editing one field
  * and exporting the result requires a single source of truth for the *current
  * draft*. The dashboard holds an editable copy of `pkg.artifacts` and passes
- * down values + typed onEdit callbacks; the Review bar exports that same draft.
- * Leaf panels stay dumb (value in, change-event out), which keeps them testable
- * and lets the coordinator later feed `pkg` from `/api/generate` with zero
- * changes to this file — only `app/page.tsx` swaps the data source.
+ * down values + typed onEdit callbacks; the Review bar approves + exports that
+ * same draft. Leaf panels stay dumb (value in, change-event out), which keeps
+ * them testable. `pkg` is produced server-side by `app/page.tsx` (the pipeline
+ * at request time); `/api/generate` returns the identical shape as an alternate
+ * JSON entry point, so the data source can swap with no change to this file.
  *
  * WHY a client component: it holds React state (edit mode + the draft) and wires
  * interactivity. `pkg` itself is plain serializable data, so it can be produced
@@ -82,12 +83,16 @@ export function Dashboard({ pkg }: { pkg: ReleasePackage }) {
     setDirty(true);
   }
 
+  // The draft package the reviewer approves/exports: the server-produced
+  // package with the (possibly edited) artifacts spliced in. `/api/approve`
+  // re-validates this exact object before stamping + exporting it.
+  const draftPkg = { ...pkg, artifacts };
+
   return (
     <SourceIndexProvider value={pkg.sourceIndex}>
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
         <ReviewBar
-          release={pkg.release}
-          artifacts={artifacts}
+          pkg={draftPkg}
           editing={editing}
           onToggleEdit={() => setEditing((v) => !v)}
           dirty={dirty}
