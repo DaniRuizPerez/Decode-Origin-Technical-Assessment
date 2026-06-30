@@ -17,6 +17,10 @@ import { runPipeline } from "@/lib/pipeline";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  // WHY call runPipeline() directly rather than fetch("/api/generate"): this is
+  // a Server Component, so it can render the pipeline output at request time with
+  // no extra HTTP hop. `/api/generate` returns the identical ReleasePackage and
+  // stays a tested alternate JSON entry point for non-UI consumers.
   const pkg = await runPipeline();
   return <Dashboard pkg={pkg} />;
 }

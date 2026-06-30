@@ -6,15 +6,20 @@
  * WHY sticky at the top: review is the primary action, so the Edit toggle and
  * Approve/Export button stay reachable while scrolling long artifacts.
  *
- * WHY export happens here from the *current draft*: "Approve" should export
- * exactly what the reviewer sees after editing, in the spec's snake_case shape
- * (`toSpecOutput`). We build the JSON entirely client-side and trigger a
- * download via an object URL — no network, honoring the offline-first rule.
+ * WHY approve goes through the server: "Approve" should ship exactly what the
+ * reviewer sees after editing, but the export must be the *server-validated*
+ * artifact. We POST the current draft package to `/api/approve`, which
+ * re-validates it against the contract and stamps the approval; on success we
+ * download the snake_case `specOutput` the server returns. If the server is
+ * unreachable (offline / 5xx) we fall back to building the same export
+ * client-side via `toSpecOutput`, honoring the offline-first rule. A 422 means
+ * the (edited) package is invalid — we surface the schema issues inline and let
+ * the reviewer fix and retry rather than exporting a broken artifact.
  */
 
 import { useState } from "react";
-import type { ReleaseArtifacts, ReleaseRef } from "@/lib/schemas";
-import { toSpecOutput } from "@/lib/export";
+import type { ReleasePackage, ReleaseRef } from "@/lib/schemas";
+import { toSpecOutput, type SpecOutput } from "@/lib/export";
 
 /** Build a safe, descriptive filename from the release ref. */
 function exportFilename(release: ReleaseRef): string {
@@ -25,41 +30,88 @@ function exportFilename(release: ReleaseRef): string {
   return `release-notes-${slug}.json`;
 }
 
+/** Trigger a browser download of `spec` as pretty-printed JSON. */
+function downloadSpec(spec: SpecOutput, filename: string) {
+  const blob = new Blob([JSON.stringify(spec, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  // Programmatic anchor click is the standard way to trigger a file download.
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export function ReviewBar({
-  release,
-  artifacts,
+  pkg,
   editing,
   onToggleEdit,
   dirty,
 }: {
-  release: ReleaseRef;
-  /** The current (possibly edited) artifacts to export. */
-  artifacts: ReleaseArtifacts;
+  /** The current (possibly edited) draft package to approve + export. */
+  pkg: ReleasePackage;
   editing: boolean;
   onToggleEdit: () => void;
   /** True once the reviewer has changed any field — surfaced as a hint. */
   dirty: boolean;
 }) {
-  // Local-only approval state. WHY local: there is no persistence layer yet; the
-  // coordinator can lift this to the server when /api/generate lands in Wave 3.
+  // Local-only approval state. WHY local: the server stamps `approval` on the
+  // returned package, but there is no persistence layer yet, so the UI keeps
+  // the approved timestamp in component state for the current session.
   const [approvedAt, setApprovedAt] = useState<string | null>(null);
+  // Schema issues from a 422 response, surfaced inline. `null` = no error.
+  const [issues, setIssues] = useState<string[] | null>(null);
+  // Disable the button while the approve request is in flight.
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleApproveAndExport() {
-    const spec = toSpecOutput(artifacts);
-    const blob = new Blob([JSON.stringify(spec, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    // Programmatic anchor click is the standard way to trigger a file download
-    // without a server round-trip.
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = exportFilename(release);
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    setApprovedAt(new Date().toISOString());
+  const filename = exportFilename(pkg.release);
+
+  async function handleApproveAndExport() {
+    setSubmitting(true);
+    setIssues(null);
+    try {
+      const res = await fetch("/api/approve", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pkg),
+      });
+
+      if (res.status === 422) {
+        // The edited package is invalid. Surface the schema issues inline and
+        // do NOT export — let the reviewer fix the offending field and retry.
+        const data = (await res.json().catch(() => null)) as
+          | { issues?: Array<{ path?: Array<string | number>; message?: string }> }
+          | null;
+        const messages =
+          data?.issues?.map((i) => {
+            const path = (i.path ?? []).join(".");
+            return path ? `${path}: ${i.message ?? "invalid"}` : (i.message ?? "invalid");
+          }) ?? [];
+        setIssues(messages.length > 0 ? messages : ["Package failed validation."]);
+        return;
+      }
+
+      if (!res.ok) {
+        // 5xx / unexpected status: fall through to the offline fallback below.
+        throw new Error(`approve failed with status ${res.status}`);
+      }
+
+      // 200: download the SERVER-validated export, then mark approved.
+      const data = (await res.json()) as { specOutput: SpecOutput };
+      downloadSpec(data.specOutput, filename);
+      setApprovedAt(new Date().toISOString());
+    } catch {
+      // Network error or non-2xx/non-422 response: fall back to building the
+      // export client-side so approve still works offline.
+      downloadSpec(toSpecOutput(pkg.artifacts), filename);
+      setApprovedAt(new Date().toISOString());
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -105,12 +157,33 @@ export function ReviewBar({
           <button
             type="button"
             onClick={handleApproveAndExport}
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+            disabled={submitting}
+            aria-busy={submitting}
+            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Approve &amp; export JSON
+            {submitting ? "Approving…" : "Approve & export JSON"}
           </button>
         </div>
       </div>
+
+      {issues ? (
+        <div
+          role="alert"
+          className="mt-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"
+        >
+          <p className="font-semibold">Can&apos;t approve — the package failed validation:</p>
+          <ul className="mt-1 list-disc space-y-0.5 pl-5">
+            {issues.map((msg, i) => (
+              <li key={i} className="font-mono text-xs">
+                {msg}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-rose-700">
+            Fix the highlighted fields and approve again.
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }
