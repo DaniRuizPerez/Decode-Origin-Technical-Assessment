@@ -9,7 +9,7 @@ import {
   type ReleasePackage,
 } from "@/lib/schemas";
 
-import { main, formatReport } from "./run";
+import { main, formatReport, regimeLabel } from "./run";
 import { runEval } from "./metrics";
 import { getConnector, loadGroundTruth, loadCuratedGold } from "@/lib/connectors";
 
@@ -82,6 +82,50 @@ describe("formatReport", () => {
     expect(text).toContain("PRIMARY (vs curated gold)");
     expect(text).toContain("Changelog recall");
     expect(text).toContain("SUBSTANTIVE (headline)");
+  });
+
+  it("omits the Source line when no label is given (back-compat)", () => {
+    const input = getConnector().loadReleaseInput();
+    const report = runEval(
+      makePackage(EMPTY_ARTIFACTS),
+      input,
+      loadGroundTruth(),
+      loadCuratedGold(),
+    );
+    expect(formatReport(report)).not.toContain("Source:");
+  });
+
+  it("adds a Source line identifying the regime when a label is given", () => {
+    const input = getConnector().loadReleaseInput();
+    const report = runEval(
+      makePackage(EMPTY_ARTIFACTS),
+      input,
+      loadGroundTruth(),
+      loadCuratedGold(),
+    );
+    const text = formatReport(report, "deterministic extractive baseline — grounded by construction");
+    // Assert the NEW line on its own, leaving the existing header assertions intact.
+    expect(text).toContain("Source: deterministic extractive baseline — grounded by construction");
+    // The Source line sits directly under the header, before the first section.
+    const lines = text.split("\n");
+    expect(lines[0]).toMatch(/^Eval report — /);
+    expect(lines[1]).toBe("Source: deterministic extractive baseline — grounded by construction");
+  });
+});
+
+describe("regimeLabel", () => {
+  it("maps mock → deterministic extractive baseline", () => {
+    expect(regimeLabel("mock")).toBe(
+      "deterministic extractive baseline — grounded by construction",
+    );
+  });
+
+  it("maps anthropic → abstractive claude-opus-4-8", () => {
+    expect(regimeLabel("anthropic")).toBe("abstractive — claude-opus-4-8");
+  });
+
+  it("passes through an unknown provider name unchanged", () => {
+    expect(regimeLabel("future-provider")).toBe("future-provider");
   });
 });
 

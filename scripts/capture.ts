@@ -16,7 +16,7 @@ import { writeFileSync } from "node:fs";
 
 import { getConnector, loadCuratedGold, loadGroundTruth } from "@/lib/connectors";
 import { runEval } from "@/lib/eval/metrics";
-import { formatReport } from "@/lib/eval/run";
+import { formatReport, regimeLabel } from "@/lib/eval/run";
 import { getProvider } from "@/lib/llm";
 import { runPipeline } from "@/lib/pipeline";
 
@@ -29,7 +29,9 @@ async function main(): Promise<void> {
   writeFileSync(outPath, `${JSON.stringify(pkg, null, 2)}\n`);
 
   const input = getConnector().loadReleaseInput();
-  console.log(formatReport(runEval(pkg, input, loadGroundTruth(), loadCuratedGold())));
+  console.log(
+    formatReport(runEval(pkg, input, loadGroundTruth(), loadCuratedGold()), regimeLabel(provider.name)),
+  );
   console.log(`\nSaved package to ${outPath} (score later with: npm run eval -- ${outPath})`);
 }
 

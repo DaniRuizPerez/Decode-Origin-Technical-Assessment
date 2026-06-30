@@ -35,6 +35,23 @@ function pct(x: number): string {
 }
 
 /**
+ * Map a provider name (`getProvider().name`) to a human-readable generation-regime
+ * label for the report's `Source:` line, so the metrics are self-describing about
+ * how the scored package was produced THIS run. Only valid for live/keyed runs that
+ * actually generated the package — NOT for scoring a saved file of unknown origin.
+ */
+export function regimeLabel(providerName: string): string {
+  switch (providerName) {
+    case "mock":
+      return "deterministic extractive baseline — grounded by construction";
+    case "anthropic":
+      return "abstractive — claude-opus-4-8";
+    default:
+      return providerName;
+  }
+}
+
+/**
  * A human-readable summary of the harvested ground truth — shown when no package
  * is supplied so the operator can see *what the eval will grade against* even
  * before the pipeline produces anything.
@@ -67,14 +84,24 @@ function formatGroundTruthSummary(gt: GroundTruth): string {
   ].join("\n");
 }
 
-/** Pretty-print a full `EvalReport`. Returns the string (also used in tests). */
-export function formatReport(report: EvalReport): string {
+/**
+ * Pretty-print a full `EvalReport`. Returns the string (also used in tests).
+ *
+ * @param sourceLabel optional regime/provenance label. When provided, a
+ *   `Source: <label>` line is added under the header so the numbers can never be
+ *   misread (e.g. the deterministic extractive baseline mistaken for Claude's
+ *   abstractive output, or a saved file mistaken for a live keyed run).
+ */
+export function formatReport(report: EvalReport, sourceLabel?: string): string {
   const { hallucination, ticketCoverage, docRecommendation, changelogRecall } = report;
   const lines: string[] = [];
 
   lines.push(
     `Eval report — ${report.release.project} ${report.release.baseRef}…${report.release.headRef}`,
   );
+  if (sourceLabel) {
+    lines.push(`Source: ${sourceLabel}`);
+  }
   lines.push("");
 
   // --- Hallucination ---
@@ -196,6 +223,9 @@ export function main(argv: string[] = process.argv): number {
   }
 
   const report = runEval(pkg, input, gt, curated);
-  console.log(formatReport(report));
+  // Saved-file path: label by provenance (the file we scored), NOT by provider —
+  // we did not generate this package this run and must not claim "anthropic"/"mock"
+  // regime for a file of unknown origin.
+  console.log(formatReport(report, `scored from saved package: ${packagePath}`));
   return 0;
 }

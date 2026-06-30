@@ -14,7 +14,7 @@
 
 import { getConnector, loadCuratedGold, loadGroundTruth } from "@/lib/connectors";
 import { runEval } from "@/lib/eval/metrics";
-import { formatReport, main } from "@/lib/eval/run";
+import { formatReport, main, regimeLabel } from "@/lib/eval/run";
 import { getProvider } from "@/lib/llm";
 import { runPipeline } from "@/lib/pipeline";
 
@@ -30,7 +30,7 @@ async function run(): Promise<number> {
   const pkg = await runPipeline({ provider });
   const input = getConnector().loadReleaseInput();
   const report = runEval(pkg, input, loadGroundTruth(), loadCuratedGold());
-  console.log(formatReport(report));
+  console.log(formatReport(report, regimeLabel(provider.name)));
   return 0;
 }
 
