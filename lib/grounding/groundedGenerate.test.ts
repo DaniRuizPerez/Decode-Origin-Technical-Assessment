@@ -250,4 +250,121 @@ describe("groundedGenerate", () => {
     expect(traces).toHaveLength(1);
     expect(report.flagged).toHaveLength(1);
   });
+
+  it("REPAIR PATH (empty citation): an item that cites NOTHING is repaired to grounded", async () => {
+    // The verifier flags two distinct failure modes; the existing repair test
+    // covers the unknown-id mode, this one covers the `empty` mode (zero sources)
+    // flowing all the way through the bounded loop on the REAL verifier.
+    const emptyDraft: Draft = {
+      entries: [{ text: "Add streaming responses", sources: [] }], // ungrounded
+    };
+    const fixedDraft: Draft = {
+      entries: [{ text: "Add streaming responses", sources: ["pr:42"] }],
+    };
+    const provider = scriptedProvider([emptyDraft, fixedDraft]);
+
+    const { value, report, traces } = await groundedGenerate({
+      provider,
+      request: makeRequest(groundedFallback),
+      extractItems,
+      validSourceIds,
+    });
+
+    // One repair fired; the final accepted value is grounded with a clean report.
+    expect(traces).toHaveLength(2);
+    expect(value).toEqual(fixedDraft);
+    expect(report.rate).toBe(1);
+    expect(report.flagged).toEqual([]);
+  });
+
+  it("PARTIAL REPAIR: keeps the already-grounded item and only fixes the flagged one", async () => {
+    // First draft: one valid item + one fabricated-id item. The verifier must
+    // flag ONLY index 1, and after repair both items are grounded — proving the
+    // loop is driven by the real per-item verifier, not an all-or-nothing check.
+    const mixedDraft: Draft = {
+      entries: [
+        { text: "Fix header parsing", sources: ["commit:abc1234"] }, // already good
+        { text: "Add streaming responses", sources: ["pr:9999"] }, // fabricated
+      ],
+    };
+    const repairedDraft: Draft = {
+      entries: [
+        { text: "Fix header parsing", sources: ["commit:abc1234"] },
+        { text: "Add streaming responses", sources: ["pr:43"] }, // corrected
+      ],
+    };
+
+    // A spy provider so we can assert the repair instruction named ONLY the bad
+    // item's index/id (not the already-grounded one).
+    const seenPrompts: string[] = [];
+    let call = 0;
+    const provider: LLMProvider = {
+      name: "spy",
+      async complete<T>(
+        req: CompletionRequest<T>,
+      ): Promise<CompletionResult<T>> {
+        seenPrompts.push(req.prompt);
+        const value = (call === 0 ? mixedDraft : repairedDraft) as unknown as T;
+        call += 1;
+        return { value, trace: trace("spy", `c${call}`) };
+      },
+    };
+
+    const { value, report } = await groundedGenerate({
+      provider,
+      request: makeRequest(groundedFallback),
+      extractItems,
+      validSourceIds,
+    });
+
+    // Final value is fully grounded…
+    expect(value).toEqual(repairedDraft);
+    expect(report.flagged).toEqual([]);
+    // …and the repair prompt pointed at item 1's fabricated id, not item 0.
+    expect(seenPrompts[1]).toContain("item 1");
+    expect(seenPrompts[1]).toContain("pr:9999");
+    expect(seenPrompts[1]).not.toContain("commit:abc1234");
+  });
+
+  it("CONTRACT (surface, not drop): an unrepairable item is RETAINED in `value` and reported, never silently dropped", async () => {
+    // Documents the deliberate faithfulness contract: when the repair budget is
+    // exhausted, groundedGenerate does NOT strip the ungrounded item from the
+    // output — it returns the last attempt verbatim and SURFACES the residual
+    // failure in `report.flagged`, so the UI can show an incomplete-information
+    // signal rather than the pipeline quietly shipping a thinner artifact.
+    //
+    // (This is intentionally the opposite of "drop the unsupported claim": the
+    // only place "drop" appears is the repair *instruction* sent to the model.
+    // The controller itself never mutates the item list — see groundedGenerate.ts.)
+    const alwaysBad: Draft = {
+      entries: [
+        { text: "Fix header parsing", sources: ["commit:abc1234"] }, // grounded
+        { text: "Add telemetry export", sources: ["pr:9999"] }, // never fixed
+      ],
+    };
+    const provider = scriptedProvider([alwaysBad]);
+
+    const { value, report, traces } = await groundedGenerate({
+      provider,
+      request: makeRequest(groundedFallback),
+      extractItems,
+      validSourceIds,
+      maxRepairs: 1,
+    });
+
+    // Bounded: initial + exactly one repair, then it gives up.
+    expect(traces).toHaveLength(2);
+
+    // The ungrounded item is STILL present in the returned value (not dropped) —
+    // both entries survive, the fabricated citation included.
+    expect(value.entries).toHaveLength(2);
+    expect(value.entries[1].sources).toEqual(["pr:9999"]);
+
+    // …and the residual failure is surfaced in the report, not thrown.
+    expect(report.totalItems).toBe(2);
+    expect(report.supportedItems).toBe(1);
+    expect(report.flagged).toHaveLength(1);
+    expect(report.flagged[0].index).toBe(1);
+    expect(report.flagged[0].issue).toContain("pr:9999");
+  });
 });

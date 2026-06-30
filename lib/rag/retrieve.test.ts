@@ -71,9 +71,15 @@ describe("Retriever (seeded corpus)", () => {
     expect(a.map((h) => h.score)).toEqual(b.map((h) => h.score));
   });
 
-  it("fuses both rankings (a dense-only match still surfaces)", async () => {
-    // Query shares NO literal token with the database doc, but ask for it by a
-    // closely-overlapping phrasing so the dense signal can contribute.
+  it("fusion returns the topically-relevant doc for a content query", async () => {
+    // NOTE: this query ("async session connection pool") overlaps database.md
+    // ("Use an async session and a connection pool.") on the literal tokens
+    // async/session/connection/pool, so BM25 alone already matches it — the
+    // dense leg adds a (positive) second signal but is not the reason the doc
+    // surfaces. (A true dense-ONLY match — surfacing a doc with no lexical
+    // overlap — requires the env-gated neural embeddings, not the default
+    // hashing provider; see the ablation test below.) What this proves is the
+    // end-to-end contract: fusion returns the right doc for a content query.
     const retriever = await buildRetriever(seededDocs());
     const hits = await retriever.retrieve("async session connection pool", 3);
     // The database section is the intended answer and must appear.
@@ -86,6 +92,46 @@ describe("Retriever (seeded corpus)", () => {
     await retriever.index();
     // retrieve() also lazily indexes, so this must work regardless.
     expect((await retriever.retrieve("APIRouter", 1)).length).toBe(1);
+  });
+
+  it("ABLATION (default embeddings): hybrid selects the SAME docs as BM25-only for a lexical query", async () => {
+    // Honest characterization of the DEFAULT (deterministic hashing) embeddings.
+    //
+    // The hashing provider is a bag-of-hashed-words vector over the SAME tokens
+    // the BM25 index uses (shared tokenizer). For a lexical / entity query, the
+    // only chunks with any dense signal are the ones that share those tokens —
+    // i.e. exactly the chunks BM25 already ranks. So RRF fuses two rankings that
+    // agree on membership, and hybrid surfaces the same documents, in the same
+    // order, as BM25 alone. The dense leg's REAL payoff (recovering a doc with
+    // NO lexical overlap via synonymy) only materializes with the env-gated
+    // neural model (`RAG_EMBEDDINGS=transformers`), which the offline suite does
+    // not load. This asserts that documented behavior, not a brittle score.
+    const docs = seededDocs();
+    const chunks = chunkDocs(docs);
+    const QUERY = "APIRouter include_router";
+
+    // BM25-only ranking (the lexical leg in isolation).
+    const bm25Docs = new Bm25Index(chunks)
+      .search(QUERY)
+      .map((r) => r.chunk.docPath);
+
+    // Hybrid ranking over the full corpus (k = corpus size so nothing is clipped).
+    const retriever = await buildRetriever(docs);
+    const hybrid = await retriever.retrieve(QUERY, chunks.length);
+    const hybridDocs = hybrid.map((h) => h.docPath);
+
+    // Same docs, same order: fusion does not change the lexical outcome here.
+    expect(hybridDocs).toEqual(bm25Docs);
+    // And only lexically-matching docs surface — the no-overlap docs (security)
+    // contribute no dense signal under the hashing provider and stay out.
+    expect(hybridDocs).not.toContain("security.md");
+
+    // Each surfaced chunk still carries BOTH raw signals (the dense leg ran and
+    // contributed a positive score; it simply didn't alter doc selection).
+    for (const hit of hybrid) {
+      expect(hit.signals.bm25).toBeGreaterThan(0);
+      expect(hit.signals.dense).toBeGreaterThan(0);
+    }
   });
 });
 

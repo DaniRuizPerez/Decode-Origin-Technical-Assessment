@@ -1,3 +1,4 @@
+import type Anthropic from "@anthropic-ai/sdk";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { z } from "zod";
 
@@ -12,12 +13,18 @@ import { ChangeSetSchema, type ChangeSet } from "@/lib/schemas";
 
 /**
  * The whole point of this layer is that it works offline: these tests run with
- * NO network and NO API key. They cover the three guarantees the system leans on
- * — mock determinism, schema validation on the same path as the real provider,
- * and key-gated `getProvider()` selection — without ever calling Claude.
+ * NO network and NO API key. They cover the guarantees the system leans on —
+ * mock determinism, schema validation on the same path as the real provider,
+ * key-gated `getProvider()` selection, and — via a FAKE injected SDK client —
+ * the AnthropicProvider's own parse/trace behavior, all without ever touching
+ * the network.
  *
- * `AnthropicProvider` is intentionally NOT executed (it needs a key + network);
- * we only assert that `getProvider()` *selects* it when a key is present.
+ * `AnthropicProvider.complete()` is exercised here only through its injectable
+ * `constructor(client?)`: we hand it a hand-rolled object shaped like the SDK's
+ * `{ messages: { create } }` and cast it to `Anthropic`, so `create()` returns a
+ * canned response and NO HTTP request is ever made. `getProvider()` selection is
+ * still asserted to pick the real provider when a key is present (construction
+ * only — its `complete()` is never invoked through that path).
  */
 
 describe("MockProvider", () => {
@@ -127,6 +134,141 @@ describe("MockProvider", () => {
     expect(trace.tokens).toBeNull();
     expect(trace.inputSummary).toContain("Write the customer release notes");
     expect(trace.outputSummary).toContain("ok");
+  });
+});
+
+describe("AnthropicProvider (fake injected SDK client — no network)", () => {
+  /**
+   * A small request schema standing in for a real agent's structured output. Kept
+   * tiny so the canned model "response" is easy to read; it still exercises the
+   * exact code path the real agents use (schema.parse over JSON.parse(text)).
+   */
+  const ReplySchema = z.object({
+    summary: z.string(),
+    items: z.array(z.string()),
+  });
+  type Reply = z.infer<typeof ReplySchema>;
+
+  function makeRequest(): CompletionRequest<Reply> {
+    return {
+      agent: "writer",
+      system: "You write grounded release notes.",
+      prompt: "Summarize the release for v1.2.3.",
+      schema: ReplySchema,
+      // The real provider ignores `fallback` (it generates abstractively); it is
+      // present only to satisfy the contract.
+      fallback: { summary: "", items: [] },
+    };
+  }
+
+  /**
+   * Build a fake Anthropic client whose `messages.create()` resolves to a canned
+   * response. Shaped like the SDK surface the provider actually reads
+   * (`content[]` text blocks + `usage`) and cast to `Anthropic` so NO real client
+   * (and therefore no HTTP / no key) is ever constructed. `create` is also a spy
+   * so a test can assert the provider issued exactly one call.
+   */
+  function fakeClient(response: unknown): {
+    client: Anthropic;
+    calls: () => number;
+  } {
+    let count = 0;
+    const client = {
+      messages: {
+        create: async () => {
+          count += 1;
+          return response;
+        },
+      },
+    } as unknown as Anthropic;
+    return { client, calls: () => count };
+  }
+
+  it("HAPPY PATH: parses the model's JSON text block and returns value + trace", async () => {
+    const value: Reply = {
+      summary: "Adds adaptive thinking and streaming.",
+      items: ["adaptive thinking", "streaming responses"],
+    };
+    // The model returns a single text block of schema-valid JSON, plus usage.
+    const response = {
+      content: [{ type: "text", text: JSON.stringify(value) }],
+      usage: { input_tokens: 123, output_tokens: 45 },
+    };
+    const { client, calls } = fakeClient(response);
+
+    const provider = new AnthropicProvider(client);
+    const { value: out, trace } = await provider.complete(makeRequest());
+
+    // Exactly one create() call — no retries, no extra network round-trips.
+    expect(calls()).toBe(1);
+
+    // The returned value is the parsed model output (valid against the schema).
+    expect(out).toEqual(value);
+    expect(() => ReplySchema.parse(out)).not.toThrow();
+
+    // The trace carries the agent name, a numeric ms, and the SDK's token counts.
+    expect(trace.agent).toBe("writer");
+    expect(trace.provider).toBe("anthropic");
+    expect(typeof trace.ms).toBe("number");
+    expect(trace.ms).toBeGreaterThanOrEqual(0);
+    expect(trace.tokens).toEqual({ input: 123, output: 45 });
+    // Summaries are derived from the prompt / model text.
+    expect(trace.inputSummary).toContain("Summarize the release");
+    expect(trace.outputSummary).toContain("adaptive thinking");
+  });
+
+  it("concatenates multiple text blocks and ignores non-text (thinking) blocks", async () => {
+    // Adaptive thinking can emit a thinking block before the answer; the provider
+    // must filter to text blocks and join them into one JSON string.
+    const value: Reply = { summary: "ok", items: ["a"] };
+    const json = JSON.stringify(value);
+    const response = {
+      content: [
+        { type: "thinking", thinking: "deliberating…" },
+        { type: "text", text: json.slice(0, 10) },
+        { type: "text", text: json.slice(10) },
+      ],
+      usage: { input_tokens: 7, output_tokens: 3 },
+    };
+    const { client } = fakeClient(response);
+
+    const { value: out } = await new AnthropicProvider(client).complete(
+      makeRequest(),
+    );
+    expect(out).toEqual(value);
+  });
+
+  it("MALFORMED PATH: throws when the model text is not valid JSON", async () => {
+    const response = {
+      content: [{ type: "text", text: "this is not json {" }],
+      usage: { input_tokens: 5, output_tokens: 1 },
+    };
+    const { client } = fakeClient(response);
+
+    // JSON.parse blows up inside complete(); a bad model output must not propagate
+    // as a (mistyped) value to callers.
+    await expect(
+      new AnthropicProvider(client).complete(makeRequest()),
+    ).rejects.toThrow();
+  });
+
+  it("MALFORMED PATH: throws when the model JSON violates the request schema", async () => {
+    // Well-formed JSON, wrong shape (items must be string[]). schema.parse must
+    // reject it on the same path the MockProvider uses.
+    const response = {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({ summary: "ok", items: "not-an-array" }),
+        },
+      ],
+      usage: { input_tokens: 5, output_tokens: 2 },
+    };
+    const { client } = fakeClient(response);
+
+    await expect(
+      new AnthropicProvider(client).complete(makeRequest()),
+    ).rejects.toThrow();
   });
 });
 
