@@ -111,8 +111,13 @@ propagate. The typed I/O between agents is the same idea applied to the whole pi
 **Retrieval strategy.** Docs are chunked by heading; retrieval fuses **BM25** (lexical)
 and **dense embeddings** via **Reciprocal Rank Fusion**. Hybrid matters here because
 release queries are short and entity-heavy (`include_router`, `convert_underscores`):
-lexical pins exact identifiers, dense captures paraphrase. The Documentation Reviewer
-queries with a change's summary **plus its code identifiers** to land on the right doc.
+lexical pins exact identifiers. The *default* dense embeddings are dependency-free
+FNV-1a hashing — also lexical (token-hash bag), **not** semantic — so the offline
+fusion is two complementary lexical views, and paraphrase recall is *not* captured by
+default. Capturing paraphrase is the env-gated neural upgrade (`RAG_EMBEDDINGS=transformers`,
+a MiniLM model); the offline tradeoff is detailed under Tradeoffs. The Documentation
+Reviewer queries with a change's summary **plus its code identifiers** to land on the
+right doc.
 
 **Context engineering + cost.** Each agent receives only typed inputs and retrieved
 chunks (small prompts); the Anthropic provider prompt-caches the stable system block
