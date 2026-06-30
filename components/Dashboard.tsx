@@ -24,6 +24,7 @@ import { NotesSections } from "./NotesSections";
 import { DocumentationUpdates } from "./DocumentationUpdates";
 import { PipelineTrace } from "./PipelineTrace";
 import { ReviewBar } from "./ReviewBar";
+import { SourceIndexProvider } from "./SourceIndexContext";
 
 export function Dashboard({ pkg }: { pkg: ReleasePackage }) {
   const [editing, setEditing] = useState(false);
@@ -82,41 +83,43 @@ export function Dashboard({ pkg }: { pkg: ReleasePackage }) {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-      <ReviewBar
-        release={pkg.release}
-        artifacts={artifacts}
-        editing={editing}
-        onToggleEdit={() => setEditing((v) => !v)}
-        dirty={dirty}
-      />
-
-      <div className="space-y-6">
-        <ReleaseHeader pkg={pkg} />
-
-        <ChangelogList
-          entries={artifacts.changelog}
+    <SourceIndexProvider value={pkg.sourceIndex}>
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+        <ReviewBar
+          release={pkg.release}
+          artifacts={artifacts}
           editing={editing}
-          onEditText={editChangelogText}
+          onToggleEdit={() => setEditing((v) => !v)}
+          dirty={dirty}
         />
 
-        <NotesSections
-          internal={artifacts.internalReleaseNotes}
-          customer={artifacts.customerReleaseNotes}
-          editing={editing}
-          onEditInternal={editInternalBody}
-          onEditCustomer={editCustomerBody}
-        />
+        <div className="space-y-6">
+          <ReleaseHeader pkg={pkg} />
 
-        <DocumentationUpdates
-          updates={artifacts.documentationUpdates}
-          retrieval={pkg.retrieval}
-          editing={editing}
-          onEditSuggestion={editDocSuggestion}
-        />
+          <ChangelogList
+            entries={artifacts.changelog}
+            editing={editing}
+            onEditText={editChangelogText}
+          />
 
-        <PipelineTrace trace={pkg.trace} />
-      </div>
-    </main>
+          <NotesSections
+            internal={artifacts.internalReleaseNotes}
+            customer={artifacts.customerReleaseNotes}
+            editing={editing}
+            onEditInternal={editInternalBody}
+            onEditCustomer={editCustomerBody}
+          />
+
+          <DocumentationUpdates
+            updates={artifacts.documentationUpdates}
+            retrieval={pkg.retrieval}
+            editing={editing}
+            onEditSuggestion={editDocSuggestion}
+          />
+
+          <PipelineTrace trace={pkg.trace} />
+        </div>
+      </main>
+    </SourceIndexProvider>
   );
 }

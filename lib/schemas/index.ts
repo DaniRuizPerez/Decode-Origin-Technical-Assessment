@@ -283,6 +283,25 @@ export const ApprovalSchema = z.object({
 });
 export type Approval = z.infer<typeof ApprovalSchema>;
 
+/**
+ * A resolved citation: a namespaced source id enriched with a human-readable
+ * title and (where one exists) a clickable GitHub URL. The pipeline resolves the
+ * DISTINCT ids cited across the artifacts into a `sourceIndex` (id → SourceRef)
+ * so the UI can show readable, linkable evidence instead of opaque ids.
+ *
+ * `url` is nullable on purpose: reconstructed Jira-shaped tickets have no
+ * external GitHub page, and an unresolvable id degrades to `{ kind:"other" }`.
+ */
+export const SourceRefSchema = z.object({
+  id: z.string(),
+  kind: z.enum(["commit", "pr", "ticket", "other"]),
+  /** PR title / commit subject (first line) / ticket summary. */
+  title: z.string(),
+  /** GitHub URL, or null (reconstructed tickets have none). */
+  url: z.string().nullable().default(null),
+});
+export type SourceRef = z.infer<typeof SourceRefSchema>;
+
 /** The complete, reviewable output of one pipeline run. */
 export const ReleasePackageSchema = z.object({
   release: ReleaseRefSchema,
@@ -291,6 +310,13 @@ export const ReleasePackageSchema = z.object({
   artifacts: ReleaseArtifactsSchema,
   /** Retrieval evidence surfaced for the documentation suggestions. */
   retrieval: z.array(RetrievedChunkSchema).default([]),
+  /**
+   * Resolved citations: a map of cited source id → {@link SourceRef} (title +
+   * GitHub url), built from the cited ids across all artifacts. Lets the UI show
+   * readable, clickable evidence. `.default({})` keeps every pre-existing package
+   * and sample valid even though they predate this field.
+   */
+  sourceIndex: z.record(z.string(), SourceRefSchema).default({}),
   trace: z.array(AgentCallTraceSchema).default([]),
   approval: ApprovalSchema.default({ approved: false, approvedAt: null }),
 });

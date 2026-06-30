@@ -1,0 +1,47 @@
+import { describe, it, expect } from "vitest";
+
+import { runPipeline } from "./pipeline";
+import { ReleasePackageSchema } from "@/lib/schemas";
+
+/**
+ * End-to-end pipeline check against the REAL fixtures. With no ANTHROPIC_API_KEY
+ * the whole run resolves to the deterministic mock provider, so this is
+ * network-free and stable. Beyond the smoke check, it pins the new `sourceIndex`:
+ * the distinct ids cited across all artifacts must resolve to readable titles and
+ * canonical GitHub urls.
+ */
+describe("runPipeline", () => {
+  it("produces a valid, grounded ReleasePackage with a populated sourceIndex", async () => {
+    const pkg = await runPipeline();
+
+    // Contract holds end-to-end.
+    expect(() => ReleasePackageSchema.parse(pkg)).not.toThrow();
+
+    // Every id cited by any artifact is resolved in the index.
+    const cited = new Set<string>();
+    for (const e of pkg.artifacts.changelog) e.sources.forEach((s) => cited.add(s));
+    for (const n of pkg.artifacts.internalReleaseNotes)
+      n.sources.forEach((s) => cited.add(s));
+    for (const n of pkg.artifacts.customerReleaseNotes)
+      n.sources.forEach((s) => cited.add(s));
+    for (const d of pkg.artifacts.documentationUpdates)
+      d.sources.forEach((s) => cited.add(s));
+
+    expect(cited.size).toBeGreaterThan(0);
+    for (const id of cited) {
+      expect(pkg.sourceIndex[id]).toBeDefined();
+      expect(pkg.sourceIndex[id].id).toBe(id);
+    }
+    // The index holds exactly the cited ids — nothing extra, nothing missing.
+    expect(Object.keys(pkg.sourceIndex).sort()).toEqual([...cited].sort());
+  });
+
+  it("resolves PR #15745 to its title and the correct /pull/15745 url", async () => {
+    const pkg = await runPipeline();
+    const ref = pkg.sourceIndex["pr:15745"];
+    expect(ref).toBeDefined();
+    expect(ref.kind).toBe("pr");
+    expect(ref.title.length).toBeGreaterThan(0);
+    expect(ref.url).toBe("https://github.com/fastapi/fastapi/pull/15745");
+  });
+});
