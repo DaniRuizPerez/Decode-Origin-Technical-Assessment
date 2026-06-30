@@ -60,6 +60,20 @@ describe("SAMPLE_PACKAGE", () => {
     expect(pr.url).toBe("https://github.com/fastapi/fastapi/pull/15745");
     expect(SAMPLE_PACKAGE.sourceIndex["ticket:FAPI-1003"].url).toBeNull();
   });
+
+  it("carries a docIndex covering every documentation-update docPath", () => {
+    for (const u of SAMPLE_PACKAGE.artifacts.documentationUpdates) {
+      const ref = SAMPLE_PACKAGE.docIndex[u.docPath];
+      expect(ref, `missing docIndex entry for ${u.docPath}`).toBeDefined();
+      expect(ref.docPath).toBe(u.docPath);
+    }
+    // The target doc files link out to the real doc on GitHub at the harvested ref.
+    const big = SAMPLE_PACKAGE.docIndex["tutorial__bigger-applications.md"];
+    expect(big.sourcePath).toBe("docs/en/docs/tutorial/bigger-applications.md");
+    expect(big.url).toBe(
+      "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/bigger-applications.md",
+    );
+  });
 });
 
 describe("toSpecOutput", () => {

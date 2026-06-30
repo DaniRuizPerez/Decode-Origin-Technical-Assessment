@@ -113,6 +113,7 @@ export function Dashboard({ pkg }: { pkg: ReleasePackage }) {
           <DocumentationUpdates
             updates={artifacts.documentationUpdates}
             retrieval={pkg.retrieval}
+            docIndex={pkg.docIndex}
             editing={editing}
             onEditSuggestion={editDocSuggestion}
           />

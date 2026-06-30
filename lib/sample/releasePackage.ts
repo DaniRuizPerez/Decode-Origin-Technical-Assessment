@@ -518,6 +518,33 @@ const RAW = {
   },
 
   /* --------------------------------------------------------------------------
+   * Resolved doc references (docPath → DocRef): original repo path + GitHub blob
+   * url for each doc file the documentation updates / retrieval above reference.
+   * WHY hand-listed here: like sourceIndex, this sample stands in for a pipeline
+   * run, so it must be self-complete — the real pipeline builds this map via
+   * buildDocIndex() by parsing each doc's first-line harvest comment
+   * (`<!-- source: <path> @ 0.136.0 -->`). The urls are the genuine paths/ref, so
+   * the UI's target-file links resolve to the real FastAPI docs on GitHub.
+   * ------------------------------------------------------------------------ */
+  docIndex: {
+    "tutorial__bigger-applications.md": {
+      docPath: "tutorial__bigger-applications.md",
+      sourcePath: "docs/en/docs/tutorial/bigger-applications.md",
+      url: "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/bigger-applications.md",
+    },
+    "tutorial__header-params.md": {
+      docPath: "tutorial__header-params.md",
+      sourcePath: "docs/en/docs/tutorial/header-params.md",
+      url: "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/header-params.md",
+    },
+    "advanced__openapi-callbacks.md": {
+      docPath: "advanced__openapi-callbacks.md",
+      sourcePath: "docs/en/docs/advanced/openapi-callbacks.md",
+      url: "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/advanced/openapi-callbacks.md",
+    },
+  },
+
+  /* --------------------------------------------------------------------------
    * Observability trace — one record per agent/LLM call. Powers the UI's
    * collapsible "pipeline trace" view. provider="mock" because no LLM is wired.
    * ------------------------------------------------------------------------ */

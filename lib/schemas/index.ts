@@ -302,6 +302,26 @@ export const SourceRefSchema = z.object({
 });
 export type SourceRef = z.infer<typeof SourceRefSchema>;
 
+/**
+ * A resolved doc reference: the flattened `docPath` a suggestion/chunk carries
+ * (e.g. `tutorial__bigger-applications.md`), enriched with the original repo path
+ * and a clickable GitHub blob URL at the harvested ref. The pipeline resolves the
+ * DISTINCT docPaths referenced across the documentation updates and retrieval
+ * chunks into a `docIndex` (docPath → DocRef) so the UI can link each target file
+ * to the real doc on GitHub instead of showing an opaque flattened filename.
+ *
+ * `url` is nullable on purpose: a doc whose harvested source comment is missing or
+ * unparseable degrades to `{ sourcePath: docPath, url: null }` (plain text in the UI).
+ */
+export const DocRefSchema = z.object({
+  docPath: z.string(),
+  /** Original repo path, e.g. docs/en/docs/tutorial/bigger-applications.md */
+  sourcePath: z.string(),
+  /** GitHub blob URL at the harvested ref, or null. */
+  url: z.string().nullable().default(null),
+});
+export type DocRef = z.infer<typeof DocRefSchema>;
+
 /** The complete, reviewable output of one pipeline run. */
 export const ReleasePackageSchema = z.object({
   release: ReleaseRefSchema,
@@ -317,6 +337,14 @@ export const ReleasePackageSchema = z.object({
    * and sample valid even though they predate this field.
    */
   sourceIndex: z.record(z.string(), SourceRefSchema).default({}),
+  /**
+   * Resolved doc references: a map of referenced docPath → {@link DocRef}
+   * (original repo path + GitHub blob url), built from the docPaths referenced by
+   * the documentation updates and retrieval chunks. Lets the UI link each target
+   * doc file to the real doc on GitHub. `.default({})` keeps every pre-existing
+   * package and sample valid even though they predate this field.
+   */
+  docIndex: z.record(z.string(), DocRefSchema).default({}),
   trace: z.array(AgentCallTraceSchema).default([]),
   approval: ApprovalSchema.default({ approved: false, approvedAt: null }),
 });

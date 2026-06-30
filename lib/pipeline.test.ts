@@ -44,4 +44,32 @@ describe("runPipeline", () => {
     expect(ref.title.length).toBeGreaterThan(0);
     expect(ref.url).toBe("https://github.com/fastapi/fastapi/pull/15745");
   });
+
+  it("populates docIndex for every docPath referenced by doc updates + retrieval", async () => {
+    const pkg = await runPipeline();
+
+    // Distinct docPaths referenced by the documentation updates and retrieval chunks.
+    const referenced = new Set<string>();
+    for (const d of pkg.artifacts.documentationUpdates) referenced.add(d.docPath);
+    for (const c of pkg.retrieval) referenced.add(c.docPath);
+
+    expect(referenced.size).toBeGreaterThan(0);
+    for (const docPath of referenced) {
+      const ref = pkg.docIndex[docPath];
+      expect(ref, `missing docIndex entry for ${docPath}`).toBeDefined();
+      expect(ref.docPath).toBe(docPath);
+    }
+    // The index holds exactly the referenced docPaths — nothing extra, nothing missing.
+    expect(Object.keys(pkg.docIndex).sort()).toEqual([...referenced].sort());
+  });
+
+  it("resolves tutorial__bigger-applications.md to its GitHub blob url at the harvested ref", async () => {
+    const pkg = await runPipeline();
+    const ref = pkg.docIndex["tutorial__bigger-applications.md"];
+    expect(ref).toBeDefined();
+    expect(ref.sourcePath).toBe("docs/en/docs/tutorial/bigger-applications.md");
+    expect(ref.url).toBe(
+      "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/bigger-applications.md",
+    );
+  });
 });
