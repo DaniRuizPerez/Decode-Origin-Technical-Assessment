@@ -21,7 +21,6 @@
           "ticket:FAPI-1000",
           "pr:15101"
         ],
-        "confidence": 0.95,
         "isBreaking": false
       },
       {
@@ -37,7 +36,6 @@
           "pr:15588",
           "commit:c7fb785"
         ],
-        "confidence": 0.95,
         "isBreaking": false
       },
       {
@@ -53,7 +51,6 @@
           "pr:15589",
           "commit:063b5bf"
         ],
-        "confidence": 0.95,
         "isBreaking": false
       },
       {
@@ -71,7 +68,6 @@
           "pr:15745",
           "commit:8e1d774"
         ],
-        "confidence": 0.95,
         "isBreaking": true
       },
       {
@@ -87,7 +83,6 @@
           "pr:15763",
           "commit:d8aad20"
         ],
-        "confidence": 0.95,
         "isBreaking": false
       },
       {
@@ -103,7 +98,6 @@
           "pr:15765",
           "commit:b78c822"
         ],
-        "confidence": 0.95,
         "isBreaking": false
       },
       {
@@ -120,7 +114,6 @@
           "pr:15785",
           "commit:6ac1220"
         ],
-        "confidence": 0.95,
         "isBreaking": false
       },
       {
@@ -143,7 +136,6 @@
           "pr:15369",
           "pr:15373"
         ],
-        "confidence": 0.5,
         "isBreaking": false
       }
     ],
@@ -828,8 +820,7 @@
           "ticket:FAPI-1001",
           "pr:15588",
           "commit:c7fb785"
-        ],
-        "isPossibleDocDebt": false
+        ]
       },
       {
         "docPath": "tutorial__header-params.md",
@@ -840,8 +831,7 @@
           "ticket:FAPI-1002",
           "pr:15589",
           "commit:063b5bf"
-        ],
-        "isPossibleDocDebt": false
+        ]
       },
       {
         "docPath": "tutorial__bigger-applications.md",
@@ -852,8 +842,7 @@
           "ticket:FAPI-1003",
           "pr:15745",
           "commit:8e1d774"
-        ],
-        "isPossibleDocDebt": false
+        ]
       },
       {
         "docPath": "alternatives.md",
@@ -864,8 +853,7 @@
           "ticket:FAPI-1006",
           "pr:15785",
           "commit:6ac1220"
-        ],
-        "isPossibleDocDebt": false
+        ]
       }
     ]
   },
@@ -875,34 +863,400 @@
       "docPath": "alternatives.md",
       "section": "[APIStar](https://github.com/encode/apistar) (<= 0.5)",
       "text": "### [APIStar](https://github.com/encode/apistar) (<= 0.5) { #apistar-0-5 }\n\nRight before deciding to build **FastAPI** I found **APIStar** server. It had almost everything I was looking for and had a great design.\n\nIt was one of the first implementations of a framework using Python type hints to declare parameters and requests that I ever saw (before NestJS and Molten). I found it more or less at the same time as Hug. But APIStar used the OpenAPI standard.\n\nIt had automatic data validation, data serialization and OpenAPI schema generation based on the same type hints in several places.\n\nBody schema definitions didn't use the same Python type hints like Pydantic, it was a bit more similar to Marshmallow, so, editor support wouldn't be as good, but still, APIStar was the best available option.\n\nIt had the best performance benchmarks at the time (only surpassed by Starlette).\n\nAt first, it didn't have an automatic API documentation web UI, but I knew I could add Swagger UI to it.\n\nIt had a dependency injection system. It required pre-registration of components, as other tools discussed above. But still, it was a great feature.\n\nI was never able to use it in a full project, as it didn't have security integration, so, I couldn't replace all the features I was having with the full-stack generators based on Flask-apispec. I had in my backlog of projects to create a pull request adding that functionality.\n\nBut then, the project's focus shifted.\n\nIt was no longer an API web framework, as the creator needed to focus on Starlette.\n\nNow APIStar is a set of tools to validate OpenAPI specifications, not a web framework.\n\n/// info\n\nAPIStar was created by Tom Christie. The same guy that created:\n\n* Django REST Framework\n* Starlette (in which **FastAPI** is based)\n* Uvicorn (used by Starlette and **FastAPI**)\n\n///\n\n/// check | Inspired **FastAPI** to\n\nExist.\n\nThe idea of declaring multiple things (data validation, serialization and documentation) with the same Python types, that at the same time provided great editor support, was something I considered a brilliant idea.\n\nAnd after searching for a long time for a similar framework and testing many different alternatives, APIStar was the best option available.\n\nThen APIStar stopped to exist as a server and Starlette was created, and was a new better foundation for such a system. That was the final inspiration to build **FastAPI**.\n\nI consider **FastAPI** a \"spiritual successor\" to APIStar, while improving and increasing the features, typing system, and other parts, based on the learnings from all these previous tools.\n\n///",
-      "score": 1,
-      "signals": {}
+      "score": 0.031024531024531024,
+      "signals": {
+        "bm25": 51.78420807035755,
+        "dense": 0.477148634544756
+      }
     },
     {
       "id": "tutorial__header-params.md#4:automatic-conversion",
       "docPath": "tutorial__header-params.md",
       "section": "Automatic conversion",
       "text": "## Automatic conversion { #automatic-conversion }\n\n`Header` has a little extra functionality on top of what `Path`, `Query` and `Cookie` provide.\n\nMost of the standard headers are separated by a \"hyphen\" character, also known as the \"minus symbol\" (`-`).\n\nBut a variable like `user-agent` is invalid in Python.\n\nSo, by default, `Header` will convert the parameter names characters from underscore (`_`) to hyphen (`-`) to extract and document the headers.\n\nAlso, HTTP headers are case-insensitive, so, you can declare them with standard Python style (also known as \"snake_case\").\n\nSo, you can use `user_agent` as you normally would in Python code, instead of needing to capitalize the first letters as `User_Agent` or something similar.\n\nIf for some reason you need to disable automatic conversion of underscores to hyphens, set the parameter `convert_underscores` of `Header` to `False`:\n\n{* ../../docs_src/header_params/tutorial002_an_py310.py hl[10] *}\n\n/// warning\n\nBefore setting `convert_underscores` to `False`, bear in mind that some HTTP proxies and servers disallow the usage of headers with underscores.\n\n///",
-      "score": 1,
-      "signals": {}
+      "score": 0.03278688524590164,
+      "signals": {
+        "bm25": 139.76813274923433,
+        "dense": 0.4782113595770186
+      }
     },
     {
       "id": "tutorial__bigger-applications.md#16:include-the-apirouter-s-for-users-and-items",
       "docPath": "tutorial__bigger-applications.md",
       "section": "Include the `APIRouter`s for `users` and `items`",
       "text": "### Include the `APIRouter`s for `users` and `items` { #include-the-apirouters-for-users-and-items }\n\nNow, let's include the `router`s from the submodules `users` and `items`:\n\n{* ../../docs_src/bigger_applications/app_an_py310/main.py hl[10:11] title[\"app/main.py\"] *}\n\n/// info\n\n`users.router` contains the `APIRouter` inside of the file `app/routers/users.py`.\n\nAnd `items.router` contains the `APIRouter` inside of the file `app/routers/items.py`.\n\n///\n\nWith `app.include_router()` we can add each `APIRouter` to the main `FastAPI` application.\n\nIt will include all the routes from that router as part of it.\n\n/// note | Technical Details\n\nIt will actually internally create a *path operation* for each *path operation* that was declared in the `APIRouter`.\n\nSo, behind the scenes, it will actually work as if everything was the same single app.\n\n///\n\n/// check\n\nYou don't have to worry about performance when including routers.\n\nThis will take microseconds and will only happen at startup.\n\nSo it won't affect performance. ⚡\n\n///",
-      "score": 1,
-      "signals": {}
+      "score": 0.02803379416282642,
+      "signals": {
+        "bm25": 79.66027078706172,
+        "dense": 0.42233370125222136
+      }
     },
     {
       "id": "alternatives.md#8:swagger-https-swagger-io-openapi-https-github-com-oai-openapi-specification",
       "docPath": "alternatives.md",
       "section": "[Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/)",
       "text": "### [Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/) { #swagger-openapi }\n\nThe main feature I wanted from Django REST Framework was the automatic API documentation.\n\nThen I found that there was a standard to document APIs, using JSON (or YAML, an extension of JSON) called Swagger.\n\nAnd there was a web user interface for Swagger APIs already created. So, being able to generate Swagger documentation for an API would allow using this web user interface automatically.\n\nAt some point, Swagger was given to the Linux Foundation, to be renamed OpenAPI.\n\nThat's why when talking about version 2.0 it's common to say \"Swagger\", and for version 3+ \"OpenAPI\".\n\n/// check | Inspired **FastAPI** to\n\nAdopt and use an open standard for API specifications, instead of a custom schema.\n\nAnd integrate standards-based user interface tools:\n\n* [Swagger UI](https://github.com/swagger-api/swagger-ui)\n* [ReDoc](https://github.com/Rebilly/ReDoc)\n\nThese two were chosen for being fairly popular and stable, but doing a quick search, you could find dozens of alternative user interfaces for OpenAPI (that you can use with **FastAPI**).\n\n///",
-      "score": 1,
-      "signals": {}
+      "score": 0.02844163539403516,
+      "signals": {
+        "bm25": 36.833314066219096,
+        "dense": 0.5191230188225978
+      }
     }
   ],
+  "sourceIndex": {
+    "ticket:FAPI-1003": {
+      "id": "ticket:FAPI-1003",
+      "kind": "ticket",
+      "title": "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+      "url": null,
+      "files": []
+    },
+    "pr:15745": {
+      "id": "pr:15745",
+      "kind": "pr",
+      "title": "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances",
+      "url": "https://github.com/fastapi/fastapi/pull/15745",
+      "files": [
+        {
+          "path": "docs/en/docs/advanced/openapi-callbacks.md",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/docs/en/docs/advanced/openapi-callbacks.md"
+        },
+        {
+          "path": "docs/en/docs/advanced/path-operation-advanced-configuration.md",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/docs/en/docs/advanced/path-operation-advanced-configuration.md"
+        },
+        {
+          "path": "docs/en/docs/how-to/extending-openapi.md",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/docs/en/docs/how-to/extending-openapi.md"
+        },
+        {
+          "path": "docs/en/docs/release-notes.md",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/docs/en/docs/release-notes.md"
+        },
+        {
+          "path": "docs/en/docs/tutorial/bigger-applications.md",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/docs/en/docs/tutorial/bigger-applications.md"
+        },
+        {
+          "path": "docs_src/path_operation_advanced_configuration/tutorial002_py310.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/docs_src/path_operation_advanced_configuration/tutorial002_py310.py"
+        },
+        {
+          "path": "fastapi/applications.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/applications.py"
+        },
+        {
+          "path": "fastapi/openapi/utils.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/openapi/utils.py"
+        },
+        {
+          "path": "fastapi/routing.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/routing.py"
+        },
+        {
+          "path": "tests/test_custom_route_class.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/tests/test_custom_route_class.py"
+        },
+        {
+          "path": "tests/test_router_include_context.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/tests/test_router_include_context.py"
+        }
+      ]
+    },
+    "commit:8e1d774": {
+      "id": "commit:8e1d774",
+      "kind": "commit",
+      "title": "♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances (#15745)",
+      "url": "https://github.com/fastapi/fastapi/commit/8e1d774cef03ab9e2552c26e850cbfc0c63974c3",
+      "files": []
+    },
+    "ticket:FAPI-1006": {
+      "id": "ticket:FAPI-1006",
+      "kind": "ticket",
+      "title": "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+      "url": null,
+      "files": []
+    },
+    "pr:15785": {
+      "id": "pr:15785",
+      "kind": "pr",
+      "title": "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse)",
+      "url": "https://github.com/fastapi/fastapi/pull/15785",
+      "files": [
+        {
+          "path": "fastapi/openapi/utils.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/openapi/utils.py"
+        },
+        {
+          "path": "fastapi/routing.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/routing.py"
+        },
+        {
+          "path": "tests/test_router_include_context.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/tests/test_router_include_context.py"
+        }
+      ]
+    },
+    "commit:6ac1220": {
+      "id": "commit:6ac1220",
+      "kind": "commit",
+      "title": "✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse) (#15785)",
+      "url": "https://github.com/fastapi/fastapi/commit/6ac122071d2c9e6add587e1271eb010dd6acbed0",
+      "files": []
+    },
+    "ticket:FAPI-1004": {
+      "id": "ticket:FAPI-1004",
+      "kind": "ticket",
+      "title": "🐛 Fix bug, allow empty path in path operation in prefixless router",
+      "url": null,
+      "files": []
+    },
+    "pr:15763": {
+      "id": "pr:15763",
+      "kind": "pr",
+      "title": "🐛 Fix bug, allow empty path in path operation in prefixless router",
+      "url": "https://github.com/fastapi/fastapi/pull/15763",
+      "files": [
+        {
+          "path": "fastapi/routing.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/routing.py"
+        },
+        {
+          "path": "tests/test_router_include_context.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/tests/test_router_include_context.py"
+        }
+      ]
+    },
+    "commit:d8aad20": {
+      "id": "commit:d8aad20",
+      "kind": "commit",
+      "title": "🐛 Fix bug, allow empty path in path operation in prefixless router (#15763)",
+      "url": "https://github.com/fastapi/fastapi/commit/d8aad201eba558b20419a832e51a026b0e6ede0e",
+      "files": []
+    },
+    "ticket:FAPI-1005": {
+      "id": "ticket:FAPI-1005",
+      "kind": "ticket",
+      "title": "🚨 Fix typing checks for APIRoute",
+      "url": null,
+      "files": []
+    },
+    "pr:15765": {
+      "id": "pr:15765",
+      "kind": "pr",
+      "title": "🚨 Fix typing checks for APIRoute",
+      "url": "https://github.com/fastapi/fastapi/pull/15765",
+      "files": [
+        {
+          "path": "fastapi/routing.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/routing.py"
+        }
+      ]
+    },
+    "commit:b78c822": {
+      "id": "commit:b78c822",
+      "kind": "commit",
+      "title": "🚨 Fix typing checks for APIRoute (#15765)",
+      "url": "https://github.com/fastapi/fastapi/commit/b78c82262f5170831ebd3f27873b09d8e579bac2",
+      "files": []
+    },
+    "ticket:FAPI-1001": {
+      "id": "ticket:FAPI-1001",
+      "kind": "ticket",
+      "title": "♻️ Validate Server Sent Event fields to avoid applications from sending broken data",
+      "url": null,
+      "files": []
+    },
+    "pr:15588": {
+      "id": "pr:15588",
+      "kind": "pr",
+      "title": "♻️ Validate Server Sent Event fields to avoid applications from sending broken data",
+      "url": "https://github.com/fastapi/fastapi/pull/15588",
+      "files": [
+        {
+          "path": "fastapi/sse.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/sse.py"
+        },
+        {
+          "path": "tests/test_sse.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/tests/test_sse.py"
+        }
+      ]
+    },
+    "commit:c7fb785": {
+      "id": "commit:c7fb785",
+      "kind": "commit",
+      "title": "♻️ Validate Server Sent Event fields to avoid applications from sending broken data (#15588)",
+      "url": "https://github.com/fastapi/fastapi/commit/c7fb7851b3389f24c51701d705458989be53ccbb",
+      "files": []
+    },
+    "ticket:FAPI-1002": {
+      "id": "ticket:FAPI-1002",
+      "kind": "ticket",
+      "title": "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)",
+      "url": null,
+      "files": []
+    },
+    "pr:15589": {
+      "id": "pr:15589",
+      "kind": "pr",
+      "title": "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default)",
+      "url": "https://github.com/fastapi/fastapi/pull/15589",
+      "files": [
+        {
+          "path": "fastapi/dependencies/utils.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/dependencies/utils.py"
+        },
+        {
+          "path": "tests/test_query_cookie_header_model_extra_params.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/tests/test_query_cookie_header_model_extra_params.py"
+        }
+      ]
+    },
+    "commit:063b5bf": {
+      "id": "commit:063b5bf",
+      "kind": "commit",
+      "title": "♻️ Do not accept underscore headers when using `convert_underscores=True` (the default) (#15589)",
+      "url": "https://github.com/fastapi/fastapi/commit/063b5bf582d31fb155cc6bc6f88cf512329d0fd5",
+      "files": []
+    },
+    "ticket:FAPI-1000": {
+      "id": "ticket:FAPI-1000",
+      "kind": "ticket",
+      "title": "⬆️ Update Pydantic v2 code to address deprecations",
+      "url": null,
+      "files": []
+    },
+    "pr:15101": {
+      "id": "pr:15101",
+      "kind": "pr",
+      "title": "⬆️ Update Pydantic v2 code to address deprecations",
+      "url": "https://github.com/fastapi/fastapi/pull/15101",
+      "files": [
+        {
+          "path": "fastapi/_compat/__init__.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/_compat/__init__.py"
+        },
+        {
+          "path": "fastapi/_compat/v2.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/_compat/v2.py"
+        },
+        {
+          "path": "fastapi/dependencies/utils.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/dependencies/utils.py"
+        },
+        {
+          "path": "fastapi/encoders.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/fastapi/encoders.py"
+        },
+        {
+          "path": "tests/test_jsonable_encoder.py",
+          "url": "https://github.com/fastapi/fastapi/blob/0.137.2/tests/test_jsonable_encoder.py"
+        }
+      ]
+    },
+    "pr:13583": {
+      "id": "pr:13583",
+      "kind": "pr",
+      "title": "Speed up test suite via caching and fixture scopes to make it ~24% faster",
+      "url": "https://github.com/fastapi/fastapi/pull/13583",
+      "files": []
+    },
+    "pr:14781": {
+      "id": "pr:14781",
+      "kind": "pr",
+      "title": "Update `docs/en/docs/tutorial/security/oauth2-jwt.md`",
+      "url": "https://github.com/fastapi/fastapi/pull/14781",
+      "files": []
+    },
+    "pr:15174": {
+      "id": "pr:15174",
+      "kind": "pr",
+      "title": "Tweak translation script",
+      "url": "https://github.com/fastapi/fastapi/pull/15174",
+      "files": []
+    },
+    "pr:15263": {
+      "id": "pr:15263",
+      "kind": "pr",
+      "title": "Bump pygments from 2.19.2 to 2.20.0",
+      "url": "https://github.com/fastapi/fastapi/pull/15263",
+      "files": []
+    },
+    "pr:15282": {
+      "id": "pr:15282",
+      "kind": "pr",
+      "title": "Bump aiohttp from 3.13.3 to 3.13.4",
+      "url": "https://github.com/fastapi/fastapi/pull/15282",
+      "files": []
+    },
+    "pr:15316": {
+      "id": "pr:15316",
+      "kind": "pr",
+      "title": "Add zizmor and fix audit findings",
+      "url": "https://github.com/fastapi/fastapi/pull/15316",
+      "files": []
+    },
+    "pr:15333": {
+      "id": "pr:15333",
+      "kind": "pr",
+      "title": "Bump pillow from 12.1.1 to 12.2.0",
+      "url": "https://github.com/fastapi/fastapi/pull/15333",
+      "files": []
+    },
+    "pr:15334": {
+      "id": "pr:15334",
+      "kind": "pr",
+      "title": "Bump pytest from 9.0.2 to 9.0.3",
+      "url": "https://github.com/fastapi/fastapi/pull/15334",
+      "files": []
+    },
+    "pr:15360": {
+      "id": "pr:15360",
+      "kind": "pr",
+      "title": "Bump python-multipart from 0.0.22 to 0.0.26",
+      "url": "https://github.com/fastapi/fastapi/pull/15360",
+      "files": []
+    },
+    "pr:15368": {
+      "id": "pr:15368",
+      "kind": "pr",
+      "title": "Update sponsors: remove Speakeasy",
+      "url": "https://github.com/fastapi/fastapi/pull/15368",
+      "files": []
+    },
+    "pr:15369": {
+      "id": "pr:15369",
+      "kind": "pr",
+      "title": "Update sponsors: remove Zuplo",
+      "url": "https://github.com/fastapi/fastapi/pull/15369",
+      "files": []
+    },
+    "pr:15373": {
+      "id": "pr:15373",
+      "kind": "pr",
+      "title": "Bump authlib from 1.6.9 to 1.6.11",
+      "url": "https://github.com/fastapi/fastapi/pull/15373",
+      "files": []
+    }
+  },
+  "docIndex": {
+    "alternatives.md": {
+      "docPath": "alternatives.md",
+      "sourcePath": "docs/en/docs/alternatives.md",
+      "url": "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/alternatives.md"
+    },
+    "tutorial__header-params.md": {
+      "docPath": "tutorial__header-params.md",
+      "sourcePath": "docs/en/docs/tutorial/header-params.md",
+      "url": "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/header-params.md"
+    },
+    "tutorial__bigger-applications.md": {
+      "docPath": "tutorial__bigger-applications.md",
+      "sourcePath": "docs/en/docs/tutorial/bigger-applications.md",
+      "url": "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/bigger-applications.md"
+    }
+  },
   "trace": [
     {
       "agent": "digester",
@@ -931,7 +1285,7 @@
     {
       "agent": "doc-reviewer",
       "provider": "mock",
-      "ms": 19,
+      "ms": 20,
       "inputSummary": "60 existing docs",
       "outputSummary": "4 documentation updates",
       "tokens": null

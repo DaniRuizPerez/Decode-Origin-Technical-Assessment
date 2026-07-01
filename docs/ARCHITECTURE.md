@@ -67,7 +67,7 @@ flowchart TB
     docReviewer -.->|"generate / verify / repair"| grounding
     provider -.->|"complete"| grounding
 
-    writer -->|"changelog + notes"| assemble["Assemble + annotate<br/>doc-debt + retrieval evidence + trace"]
+    writer -->|"changelog + notes"| assemble["Assemble + annotate<br/>retrieval evidence + trace"]
     docReviewer -->|"doc updates"| assemble
     connector -.->|"changedDocPaths"| assemble
 
@@ -91,16 +91,12 @@ flowchart TB
     groundTruth --> runEval
 ```
 
-**Two coordinator-owned steps** in `runPipeline` (not in any single agent):
+**A coordinator-owned step** in `runPipeline` (not in any single agent):
 
 - **Observability trace.** Every stage is wall-clock timed and recorded as an
-  `AgentCallTrace` carrying the active provider name, so the UI can show how the
-  artifacts were produced and "mock vs anthropic" is visible per stage.
-- **Doc-debt annotation.** The Documentation Reviewer never sees what the project
-  actually changed (that would leak eval ground truth into generation). The
-  pipeline cross-references each suggestion's `docPath` against the harvested
-  `changedDocPaths`; a recommended doc the project did *not* touch is flagged
-  `isPossibleDocDebt` — surfaced as a find, never hidden.
+  `AgentCallTrace` carrying the active provider name, recorded in the exported
+  package so a reviewer can see how the artifacts were produced and "mock vs
+  anthropic" per stage.
 
 ---
 
@@ -160,15 +156,14 @@ actual public exports.
 | [`lib/llm`](../lib/llm/index.ts) | LLM provider port wiring + the two adapters + trace helper. | `getProvider()`, `MockProvider`, `AnthropicProvider`, `summarize()` |
 | [`lib/rag`](../lib/rag/index.ts) | Hybrid retrieval: chunk → BM25 + dense embed → RRF fusion → validated `RetrievedChunk`s. | `buildRetriever()`, `Retriever` (`create`, `index`, `retrieve`), `chunkDoc`/`chunkDocs`, `Bm25Index`, `tokenize`, `HashingEmbeddingProvider`, `defaultEmbeddingProvider`, `createEmbeddingProvider`, `cosineSimilarity`; types `Chunk`, `EmbeddingProvider`, `Retriever` |
 | [`lib/grounding`](../lib/grounding/index.ts) | The faithfulness guarantee: a deterministic citation verifier + the in-loop generate→verify→repair controller. | `groundedGenerate()`, `verifyReferences()`, `verifyItems()`; types `FaithfulnessReport`, `FlaggedItem`, `ReferenceCheck` |
-| [`lib/agents/digester`](../lib/agents/digester.ts) | Stage 1 — raw `ReleaseInput` → normalized, deduplicated, grounded `ChangeSet` (type inference, component inference, confidence, noise collapsing). | `digest()`, `buildDeterministicChangeSet()` |
+| [`lib/agents/digester`](../lib/agents/digester.ts) | Stage 1 — raw `ReleaseInput` → normalized, deduplicated, grounded `ChangeSet` (type inference, component inference, noise collapsing). | `digest()`, `buildDeterministicChangeSet()` |
 | [`lib/agents/planner`](../lib/agents/planner.ts) | Stage 2 — `ChangeSet` → `ReleasePlan`: themes, affected systems, *explainable* risk (level + reasons), ticket-coverage accounting. | `plan()`, `buildDeterministicPlan()` |
 | [`lib/agents/writer`](../lib/agents/writer.ts) | Stage 3 — `ChangeSet` + `ReleasePlan` → changelog + internal notes + customer notes (three grounded generations; customer prose is scrubbed of internal ids). | `write()` (returns `WriterOutput`) |
 | [`lib/agents/docReviewer`](../lib/agents/docReviewer.ts) | Stage 4 — retrieval-driven section-level `DocUpdate[]`: query the retriever per change, pick an eligible target chunk, ground on real source ids. | `reviewDocs()` |
 | [`lib/agents`](../lib/agents/index.ts) | Barrel re-exporting the four agents in execution order. | `digest`, `plan`, `write`, `reviewDocs`, `buildDeterministic*` |
-| [`lib/pipeline.ts`](../lib/pipeline.ts) | The orchestration: chains the agents, builds the retriever, runs Writer ‖ Doc-Reviewer, owns the trace + doc-debt annotation + retrieval evidence, validates the final `ReleasePackage`. | `runPipeline()`; type `PipelineOptions` |
+| [`lib/pipeline.ts`](../lib/pipeline.ts) | The orchestration: chains the agents, builds the retriever, runs Writer ‖ Doc-Reviewer, owns the trace + retrieval evidence, validates the final `ReleasePackage`. | `runPipeline()`; type `PipelineOptions` |
 | [`lib/eval`](../lib/eval/index.ts) | Out-of-band evaluation: scores a `ReleasePackage` against curated gold + harvested ground truth; CLI printer. | `runEval()`, `hallucinationRate()`, `ticketCoverage()`, `docRecommendationAccuracy()`, `changelogRecall()`, `parsePrNumber`/`parseTicketKey`, `SUBSTANTIVE_CATEGORIES`, `main()`, `formatReport()` |
 | [`lib/export.ts`](../lib/export.ts) | Pure mapping from internal camelCase `ReleaseArtifacts` → the spec's snake_case output shape (preserving `sources`). | `toSpecOutput()`; type `SpecOutput` |
-| [`lib/sample/releasePackage.ts`](../lib/sample/releasePackage.ts) | A schema-valid, real-derived sample `ReleasePackage` (used to develop the UI in isolation; `.parse()`d at import). | `SAMPLE_PACKAGE` |
 
 ### `app/` (Next.js App Router)
 
@@ -185,13 +180,12 @@ actual public exports.
 |---|---|
 | [`Dashboard`](../components/Dashboard.tsx) | Client component owning the editable artifact draft + edit-mode state; passes values + typed `onEdit` callbacks to dumb leaf panels. The single seam between server-produced `pkg` and the UI. |
 | [`ReviewBar`](../components/ReviewBar.tsx) | Sticky approve/export control surface; builds the snake_case export from the current draft via `toSpecOutput` and downloads it client-side. |
-| [`ReleaseHeader`](../components/ReleaseHeader.tsx) | At-a-glance verdict: risk level **with reasons**, ticket coverage + avg-confidence meters, affected systems, the incomplete-information signal. |
-| [`ChangelogList`](../components/ChangelogList.tsx) | Changelog grouped by category; per-entry editable text + source-evidence chip. |
+| [`ReleaseHeader`](../components/ReleaseHeader.tsx) | Minimal Release summary: project · version · tag window · change count; risk + affected systems now live inside the Internal Release Notes. |
+| [`ChangelogList`](../components/ChangelogList.tsx) | Changelog grouped by category; per-entry editable text + source-evidence chip + a per-entry "N files changed" view (files linked to GitHub, resolved via `sourceIndex`). |
 | [`NotesSections`](../components/NotesSections.tsx) | Internal vs customer notes in two visually distinct panels (the audience-split failure mode made obvious). |
-| [`DocumentationUpdates`](../components/DocumentationUpdates.tsx) | Doc update suggestions with the resolved retrieved-chunk evidence and the `possible doc debt` badge. |
+| [`DocumentationUpdates`](../components/DocumentationUpdates.tsx) | Doc update suggestions with the resolved retrieved-chunk evidence. |
 | [`SourceEvidence`](../components/SourceEvidence.tsx) | The visible face of grounding: a chip that expands to the exact `sources[]` ids (classified by `commit:`/`pr:`/`ticket:`/`chunk:`), with a loud "no sources" state. |
-| [`PipelineTrace`](../components/PipelineTrace.tsx) | Collapsible observability view: one row per `AgentCallTrace` (agent, provider, latency, token usage). |
-| [`ui.tsx`](../components/ui.tsx) | Stateless presentational primitives: `RiskBadge`, `DocDebtBadge`, `Meter`, `CodeChip`, `Panel`. |
+| [`ui.tsx`](../components/ui.tsx) | Stateless presentational primitives: `RiskBadge`, `Meter`, `CodeChip`, `Panel`. |
 
 > Supporting (not part of the runtime): `scripts/harvest.ts` (one-time tool that
 > harvests the real OSS window into `data/mocks/`) and `scripts/eval.ts` (thin
@@ -253,8 +247,9 @@ validated by the schema), so the free-form `sources[]` verifier doesn't apply.
 `AgentCallTrace` — `{ agent, provider, ms, inputSummary, outputSummary, tokens }`
 — onto the package's `trace[]`. Provider name and token usage come straight from
 whichever adapter ran (mock reports `tokens: null`; Anthropic reports
-`usage.input_tokens`/`output_tokens`). `PipelineTrace` renders this so a reviewer
-can see *how* and *with which provider* every artifact was produced.
+`usage.input_tokens`/`output_tokens`). The trace ships as data in the exported
+`ReleasePackage`, recording *how* and *with which provider* every artifact was
+produced — timing, active provider, and token usage per stage.
 
 ---
 

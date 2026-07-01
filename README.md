@@ -16,7 +16,7 @@ npm install        # install dependencies
 npm run dev        # start the dev server, then open http://localhost:3000
                    #   the dashboard renders a REAL release end-to-end on load
 
-npm test           # 186 unit tests (vitest), all offline
+npm test           # 180 unit tests (vitest), all offline
 npm run eval       # run the LIVE pipeline over the real fixtures and score it
 npm run build      # production build (next build)
 ```
@@ -39,7 +39,7 @@ npm run dev          # same UI, now backed by claude-opus-4-8
 
 The pipeline ([`lib/pipeline.ts`](lib/pipeline.ts)) is a chain of typed contract hand-offs. Each stage consumes and produces a value validated against the shared [Zod schema contract](lib/schemas/index.ts), so stages are built and tested in isolation:
 
-1. **Digester** ([`lib/agents/digester.ts`](lib/agents/digester.ts)) — links commits ↔ PRs ↔ tickets and normalizes them into a deduplicated `ChangeSet`. Every change carries non-empty `sourceIds` (grounding by construction) and a `confidence` score that drops when evidence is thin. Artifacts with no linked ticket are surfaced as `unlinkedArtifactIds`, not hidden.
+1. **Digester** ([`lib/agents/digester.ts`](lib/agents/digester.ts)) — links commits ↔ PRs ↔ tickets and normalizes them into a deduplicated `ChangeSet`. Every change carries non-empty `sourceIds` (grounding by construction). Artifacts with no linked ticket are surfaced as `unlinkedArtifactIds`, not hidden.
 2. **Planner** ([`lib/agents/planner.ts`](lib/agents/planner.ts)) — groups changes into themes, infers affected systems, computes **explainable risk** (a level plus the concrete reasons), and accounts for **ticket coverage**.
 3. **Release Writer** ([`lib/agents/writer.ts`](lib/agents/writer.ts)) — writes the changelog and the internal/customer release notes, each item citing its sources.
 4. **Documentation Reviewer** ([`lib/agents/docReviewer.ts`](lib/agents/docReviewer.ts)) — retrieves relevant existing-doc sections and suggests section-level updates.
@@ -48,7 +48,7 @@ The pipeline ([`lib/pipeline.ts`](lib/pipeline.ts)) is a chain of typed contract
 
 **Grounding** ([`lib/grounding`](lib/grounding/index.ts)): generation is wrapped in a **generate → verify → bounded-repair** loop. The verifier is deterministic — it checks that every cited id resolves to a real source artifact — and an unfaithful draft gets one chance to repair before being accepted, with any residual failure reported rather than swallowed.
 
-**Provider split** ([`lib/llm`](lib/llm/index.ts)): the `LLMProvider` port is part of the shared contract, with two adapters — `MockProvider` (deterministic extractive baseline, offline) and `AnthropicProvider` (`claude-opus-4-8`, abstractive, with adaptive thinking + structured outputs + prompt-cached system prompt). The pipeline records an observability **trace** per stage (timing + active provider name) so "mock vs anthropic" is visible at a glance in the UI.
+**Provider split** ([`lib/llm`](lib/llm/index.ts)): the `LLMProvider` port is part of the shared contract, with two adapters — `MockProvider` (deterministic extractive baseline, offline) and `AnthropicProvider` (`claude-opus-4-8`, abstractive, with adaptive thinking + structured outputs + prompt-cached system prompt). The pipeline records an observability **trace** per stage (timing, active provider, token usage) in the exported package.
 
 For the full picture, see **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** (diagram) and **[`docs/DESIGN.md`](docs/DESIGN.md)** (decisions and tradeoffs).
 
@@ -97,8 +97,8 @@ Where to find each grading criterion. All paths are confirmed to exist in this r
 | Criterion | Where to look |
 |---|---|
 | **Engineering — code quality & architecture** | Shared Zod **contract** that every stage codes against: [`lib/schemas/index.ts`](lib/schemas/index.ts). Hexagonal **ports/adapters**: the `LLMProvider` port + `getProvider()` ([`lib/llm`](lib/llm/index.ts)) and the `Connector` port + `getConnector()` ([`lib/connectors`](lib/connectors/index.ts)) — each a single swap-point. Orchestration: [`lib/pipeline.ts`](lib/pipeline.ts). |
-| **Engineering — maintainability & testing** | **149 tests** across [`lib/**/*.test.ts`](lib) (run `npm test`); pure-function metrics and agents tested in isolation against the schema contract. Production build is green (`npm run build`). |
-| **Product — handling incomplete info** | `findUnlinkedArtifactIds` ([`lib/connectors/connector.ts`](lib/connectors/connector.ts)) flags PRs/commits with no ticket; per-change `confidence` scoring ([`lib/agents/digester.ts`](lib/agents/digester.ts)) lowers trust when evidence is thin; ticketless work is surfaced as a signal, not dropped. |
+| **Engineering — maintainability & testing** | **180 tests** across [`lib/**/*.test.ts`](lib) (run `npm test`); pure-function metrics and agents tested in isolation against the schema contract. Production build is green (`npm run build`). |
+| **Product — handling incomplete info** | `findUnlinkedArtifactIds` ([`lib/connectors/connector.ts`](lib/connectors/connector.ts)) flags PRs/commits with no ticket; ticketless work is surfaced as a signal, not dropped. |
 | **Product — UX / review workflow** | The dashboard ([`app/page.tsx`](app/page.tsx), [`components/`](components)), inline editing + **approve/export** ([`components/ReviewBar.tsx`](components/ReviewBar.tsx)), and the approve endpoint that re-validates and stamps the package ([`app/api/approve/route.ts`](app/api/approve/route.ts)). |
 | **AI — prompt design** | Agent system prompts + per-call prompts in [`lib/agents/`](lib/agents) (e.g. `WRITER_SYSTEM` in [`writer.ts`](lib/agents/writer.ts)). |
 | **AI — retrieval** | Hybrid RAG (BM25 + embeddings + RRF) in [`lib/rag/`](lib/rag/index.ts). |
