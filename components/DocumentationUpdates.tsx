@@ -19,6 +19,7 @@
 import { useState } from "react";
 import type { DocRef, DocUpdate, RetrievedChunk } from "@/lib/schemas";
 import { SourceEvidence } from "./SourceEvidence";
+import { LineDiff } from "./Diff";
 import { Panel, CodeChip } from "./ui";
 
 /**
@@ -104,6 +105,37 @@ function RetrievalEvidence({
   );
 }
 
+/**
+ * Before→after diff of a suggested doc edit: the current section text vs the
+ * proposed version. Offline the proposal is the current section with a grounded
+ * note inserted (a "suggested addition", not a full rewrite); a keyed run would
+ * integrate the change into the prose.
+ */
+function SuggestedEdit({ before, after }: { before: string; after: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-1 text-[11px] font-medium text-gray-500 hover:text-gray-700"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          className={`h-3 w-3 transition-transform ${open ? "rotate-90" : ""}`}
+          fill="currentColor"
+          aria-hidden
+        >
+          <path d="M6 4l4 4-4 4V4z" />
+        </svg>
+        suggested edit (diff)
+      </button>
+      {open ? <LineDiff before={before} after={after} /> : null}
+    </div>
+  );
+}
+
 export function DocumentationUpdates({
   updates,
   retrieval,
@@ -126,6 +158,11 @@ export function DocumentationUpdates({
       title="Documentation updates"
       subtitle="Suggested edits to existing docs, grounded in retrieved sections."
     >
+      {updates.length === 0 ? (
+        <p className="text-sm text-gray-500">
+          No documentation updates were suggested for this release.
+        </p>
+      ) : (
       <ul className="space-y-4">
         {updates.map((u, index) => {
           const chunk = u.retrievedChunkId
@@ -157,7 +194,7 @@ export function DocumentationUpdates({
                   aria-label={`Edit suggestion for ${u.docPath}`}
                 />
               ) : (
-                <p className="mt-2 text-sm leading-relaxed text-gray-700">
+                <p className="mt-2 text-sm leading-relaxed text-gray-700 break-words">
                   {u.suggestion}
                 </p>
               )}
@@ -165,6 +202,9 @@ export function DocumentationUpdates({
               <div className="mt-2 flex flex-wrap items-center gap-3">
                 <SourceEvidence sources={u.sources} />
               </div>
+              {u.proposedText && chunk ? (
+                <SuggestedEdit before={chunk.text} after={u.proposedText} />
+              ) : null}
               {chunk ? (
                 <RetrievalEvidence
                   chunk={chunk}
@@ -175,6 +215,7 @@ export function DocumentationUpdates({
           );
         })}
       </ul>
+      )}
     </Panel>
   );
 }

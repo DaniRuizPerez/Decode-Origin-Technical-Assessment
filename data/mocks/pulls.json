@@ -38,11 +38,36 @@
       "upgrade"
     ],
     "files": [
-      "fastapi/_compat/__init__.py",
-      "fastapi/_compat/v2.py",
-      "fastapi/dependencies/utils.py",
-      "fastapi/encoders.py",
-      "tests/test_jsonable_encoder.py"
+      {
+        "path": "fastapi/_compat/__init__.py",
+        "patch": "@@ -26,7 +26,7 @@\n from .v2 import Url as Url\n from .v2 import copy_field_info as copy_field_info\n from .v2 import create_body_model as create_body_model\n-from .v2 import evaluate_forwardref as evaluate_forwardref  # ty: ignore[deprecated]\n+from .v2 import evaluate_forwardref as evaluate_forwardref\n from .v2 import get_cached_model_fields as get_cached_model_fields\n from .v2 import get_definitions as get_definitions\n from .v2 import get_flat_models_from_fields as get_flat_models_from_fields",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "fastapi/_compat/v2.py",
+        "patch": "@@ -22,10 +22,10 @@\n from pydantic import PydanticSchemaGenerationError as PydanticSchemaGenerationError\n from pydantic import PydanticUndefinedAnnotation as PydanticUndefinedAnnotation\n from pydantic import ValidationError as ValidationError\n+from pydantic._internal import _typing_extra as _pydantic_typing_extra\n from pydantic._internal._schema_generation_shared import (  # type: ignore[attr-defined]  # ty: ignore[unused-ignore-comment]\n     GetJsonSchemaHandler as GetJsonSchemaHandler,\n )\n-from pydantic._internal._typing_extra import eval_type_lenient  # ty: ignore[deprecated]\n from pydantic.fields import FieldInfo as FieldInfo\n from pydantic.json_schema import GenerateJsonSchema as _GenerateJsonSchema\n from pydantic.json_schema import JsonSchemaValue as JsonSchemaValue\n@@ -38,7 +38,20 @@\n \n RequiredParam = PydanticUndefined\n Undefined = PydanticUndefined\n-evaluate_forwardref = eval_type_lenient  # ty: ignore[deprecated]\n+\n+\n+def evaluate_forwardref(\n+    value: Any,\n+    globalns: dict[str, Any] | None = None,\n+    localns: dict[str, Any] | None = None,\n+) -> Any:\n+    # eval_type_lenient has been deprecated since Pydantic v2.10.0b1 (PR #10530)\n+    try_eval_type = getattr(_pydantic_typing_extra, \"try_eval_type\", None)\n+    if try_eval_type is not None:\n+        return try_eval_type(value, globalns, localns)[0]\n+    return _pydantic_typing_extra.eval_type_lenient(  # ty: ignore[deprecated]\n+        value, globalns, localns\n+    )\n \n \n class GenerateJsonSchema(_GenerateJsonSchema):",
+        "additions": 15,
+        "deletions": 2
+      },
+      {
+        "path": "fastapi/dependencies/utils.py",
+        "patch": "@@ -33,7 +33,7 @@\n     Undefined,\n     copy_field_info,\n     create_body_model,\n-    evaluate_forwardref,  # ty: ignore[deprecated]\n+    evaluate_forwardref,\n     field_annotation_is_scalar,\n     field_annotation_is_scalar_sequence,\n     field_annotation_is_sequence,\n@@ -245,7 +245,7 @@ def get_typed_signature(call: Callable[..., Any]) -> inspect.Signature:\n def get_typed_annotation(annotation: Any, globalns: dict[str, Any]) -> Any:\n     if isinstance(annotation, str):\n         annotation = ForwardRef(annotation)\n-        annotation = evaluate_forwardref(annotation, globalns, globalns)  # ty: ignore[deprecated]\n+        annotation = evaluate_forwardref(annotation, globalns, globalns)\n         if annotation is type(None):\n             return None\n     return annotation",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "fastapi/encoders.py",
+        "patch": "@@ -22,7 +22,6 @@\n from fastapi.exceptions import PydanticV1NotSupportedError\n from fastapi.types import IncEx\n from pydantic import BaseModel\n-from pydantic.color import Color  # ty: ignore[deprecated]\n from pydantic.networks import AnyUrl, NameEmail\n from pydantic.types import SecretBytes, SecretStr\n from pydantic_core import PydanticUndefinedType\n@@ -32,6 +31,23 @@\n     is_pydantic_v1_model_instance,\n )\n \n+try:\n+    # pydantic.color.Color is deprecated since v2.0b3, but supporting for bwd-compat\n+    from pydantic.color import Color  # ty: ignore[deprecated]\n+except ImportError:  # pragma: no cover\n+\n+    class Color:  # type: ignore[no-redef]  # ty: ignore[unused-ignore-comment]\n+        pass\n+\n+\n+try:\n+    # Supporting the new Color format for newer versions of Pydantic\n+    from pydantic_extra_types.color import Color as PyExtraColor\n+except ImportError:  # pragma: no cover\n+\n+    class PyExtraColor:  # type: ignore[no-redef]  # ty: ignore[unused-ignore-comment]\n+        pass\n+\n \n # Taken from Pydantic v1 as is\n def isoformat(o: datetime.date | datetime.time) -> str:\n@@ -67,7 +83,8 @@ def decimal_encoder(dec_value: Decimal) -> int | float:\n \n ENCODERS_BY_TYPE: dict[type[Any], Callable[[Any], Any]] = {\n     bytes: lambda o: o.decode(),\n-    Color: str,  # ty: ignore[deprecated]\n+    Color: str,\n+    PyExtraColor: str,\n     datetime.date: isoformat,\n     datetime.datetime: isoformat,\n     datetime.time: isoformat,",
+        "additions": 19,
+        "deletions": 2
+      },
+      {
+        "path": "tests/test_jsonable_encoder.py",
+        "patch": "@@ -311,3 +311,21 @@ class Model(BaseModel):\n def test_encode_pydantic_undefined():\n     data = {\"value\": Undefined}\n     assert jsonable_encoder(data) == {\"value\": None}\n+\n+\n+@pytest.mark.filterwarnings(\"ignore::DeprecationWarning\")\n+@pytest.mark.parametrize(\n+    \"module_path\",\n+    [\n+        pytest.param(\"pydantic.color\"),\n+        pytest.param(\"pydantic_extra_types.color\"),\n+    ],\n+)\n+def test_encode_color(module_path):\n+    try:\n+        Color = __import__(module_path, fromlist=[\"Color\"]).Color\n+    except ImportError:  # pragma: no cover\n+        pytest.skip(f\"{module_path} not available\")\n+\n+    data = {\"color\": Color(\"blue\")}\n+    assert jsonable_encoder(data) == {\"color\": \"blue\"}",
+        "additions": 18,
+        "deletions": 0
+      }
     ],
     "commitShas": [],
     "ticketKeys": [
@@ -1116,8 +1141,18 @@
       "refactor"
     ],
     "files": [
-      "fastapi/sse.py",
-      "tests/test_sse.py"
+      {
+        "path": "fastapi/sse.py",
+        "patch": "@@ -33,10 +33,20 @@ class EventSourceResponse(StreamingResponse):\n     media_type = \"text/event-stream\"\n \n \n-def _check_id_no_null(v: str | None) -> str | None:\n+def _check_single_line(v: str | None, field_name: str) -> str | None:\n+    if v is not None and (\"\\r\" in v or \"\\n\" in v):\n+        raise ValueError(f\"SSE '{field_name}' must be a single line\")\n+    return v\n+\n+\n+def _check_event_single_line(v: str | None) -> str | None:\n+    return _check_single_line(v, \"event\")\n+\n+\n+def _check_id_valid(v: str | None) -> str | None:\n     if v is not None and \"\\0\" in v:\n         raise ValueError(\"SSE 'id' must not contain null characters\")\n-    return v\n+    return _check_single_line(v, \"id\")\n \n \n class ServerSentEvent(BaseModel):\n@@ -86,24 +96,27 @@ class ServerSentEvent(BaseModel):\n     ] = None\n     event: Annotated[\n         str | None,\n+        AfterValidator(_check_event_single_line),\n         Doc(\n             \"\"\"\n             Optional event type name.\n \n             Maps to `addEventListener(event, ...)` on the browser. When omitted,\n-            the browser dispatches on the generic `message` event.\n+            the browser dispatches on the generic `message` event. Must be a\n+            single line.\n             \"\"\"\n         ),\n     ] = None\n     id: Annotated[\n         str | None,\n-        AfterValidator(_check_id_no_null),\n+        AfterValidator(_check_id_valid),\n         Doc(\n             \"\"\"\n             Optional event ID.\n \n             The browser sends this value back as the `Last-Event-ID` header on\n-            automatic reconnection. **Must not contain null (`\\\\0`) characters.**\n+            automatic reconnection. **Must be a single line** and must not contain\n+            null (`\\\\0`) characters.\n             \"\"\"\n         ),\n     ] = None",
+        "additions": 18,
+        "deletions": 5
+      },
+      {
+        "path": "tests/test_sse.py",
+        "patch": "@@ -221,6 +221,15 @@ def test_server_sent_event_null_id_rejected():\n         ServerSentEvent(data=\"test\", id=\"has\\0null\")\n \n \n+@pytest.mark.parametrize(\"field_name\", [\"event\", \"id\"])\n+@pytest.mark.parametrize(\"value\", [\"first\\nsecond\", \"first\\rsecond\", \"first\\r\\nsecond\"])\n+def test_server_sent_event_single_line_fields_reject_newlines(\n+    field_name: str, value: str\n+):\n+    with pytest.raises(ValueError, match=f\"SSE '{field_name}' must be a single line\"):\n+        ServerSentEvent(data=\"test\", **{field_name: value})\n+\n+\n def test_server_sent_event_negative_retry_rejected():\n     with pytest.raises(ValueError):\n         ServerSentEvent(data=\"test\", retry=-1)",
+        "additions": 9,
+        "deletions": 0
+      }
     ],
     "commitShas": [
       "c7fb7851b3389f24c51701d705458989be53ccbb"
@@ -1137,8 +1172,18 @@
       "refactor"
     ],
     "files": [
-      "fastapi/dependencies/utils.py",
-      "tests/test_query_cookie_header_model_extra_params.py"
+      {
+        "path": "fastapi/dependencies/utils.py",
+        "patch": "@@ -826,6 +826,10 @@ def request_params_to_args(\n         if value is not None:\n             params_to_process[get_validation_alias(field)] = value\n         processed_keys.add(alias or get_validation_alias(field))\n+        # For headers with convert_underscores=True, mark both the converted\n+        # header name and the original field alias as processed to avoid\n+        # accepting the original alias as an extra header.\n+        processed_keys.add(get_validation_alias(field))\n \n     for key in received_params.keys():\n         if key not in processed_keys:",
+        "additions": 4,
+        "deletions": 0
+      },
+      {
+        "path": "tests/test_query_cookie_header_model_extra_params.py",
+        "patch": "@@ -11,6 +11,10 @@ class Model(BaseModel):\n     model_config = {\"extra\": \"allow\"}\n \n \n+class AuthHeaders(BaseModel):\n+    x_user_id: str\n+\n+\n @app.get(\"/query\")\n async def query_model_with_extra(data: Model = Query()):\n     return data\n@@ -26,6 +30,11 @@ async def cookies_model_with_extra(data: Model = Cookie()):\n     return data\n \n \n+@app.get(\"/header-requires-hyphen\")\n+async def header_model_requires_hyphen(data: AuthHeaders = Header()):\n+    return data\n+\n+\n def test_query_pass_extra_list():\n     client = TestClient(app)\n     resp = client.get(\n@@ -91,6 +100,32 @@ def test_header_pass_extra_single():\n     assert resp_json[\"param2\"] == \"456\"\n \n \n+def test_header_model_prefers_hyphenated_header_with_convert_underscores():\n+    client = TestClient(app)\n+\n+    resp = client.get(\n+        \"/header-requires-hyphen\",\n+        headers=[\n+            (\"x-user-id\", \"hyphenated-value\"),\n+            (\"x_user_id\", \"underscore-value\"),\n+        ],\n+    )\n+\n+    assert resp.status_code == 200\n+    assert resp.json() == {\"x_user_id\": \"hyphenated-value\"}\n+\n+\n+def test_header_model_rejects_underscore_header_with_convert_underscores():\n+    client = TestClient(app)\n+\n+    resp = client.get(\n+        \"/header-requires-hyphen\", headers={\"x_user_id\": \"underscore-value\"}\n+    )\n+\n+    assert resp.status_code == 422\n+    assert resp.json()[\"detail\"][0][\"loc\"] == [\"header\", \"x_user_id\"]\n+\n+\n def test_cookie_pass_extra_list():\n     client = TestClient(app)\n     client.cookies = [",
+        "additions": 35,
+        "deletions": 0
+      }
     ],
     "commitShas": [
       "063b5bf582d31fb155cc6bc6f88cf512329d0fd5"
@@ -1608,7 +1653,12 @@
       "python:uv"
     ],
     "files": [
-      "uv.lock"
+      {
+        "path": "uv.lock",
+        "patch": "@@ -5174,15 +5174,15 @@ wheels = [\n \n [[package]]\n name = \"starlette\"\n-version = \"1.1.0\"\n+version = \"1.2.1\"\n source = { registry = \"https://pypi.org/simple\" }\n dependencies = [\n     { name = \"anyio\" },\n     { name = \"typing-extensions\", marker = \"python_full_version < '3.13'\" },\n ]\n-sdist = { url = \"https://files.pythonhosted.org/packages/95/66/4d20cdf39a8d6a51e663b7038e3b828ff211d3891a43a713fe7e4643f3a8/starlette-1.1.0.tar.gz\", hash = \"sha256:e83c7fe0ddecd8719c5b840080325aec0260acec86e9832899e377b91d65e90f\", size = 2660060, upload-time = \"2026-05-23T16:55:41.376Z\" }\n+sdist = { url = \"https://files.pythonhosted.org/packages/25/44/ec35f1b6e83094b997da438a02c8c9b0ade2b1e84cfc48bd4656780760a6/starlette-1.2.1.tar.gz\", hash = \"sha256:9b9b5ebb992e67d6093741e63c2f59e4f6fff986f81163c087867bd7b924b3f6\", size = 2701854, upload-time = \"2026-05-31T01:07:51.847Z\" }\n wheels = [\n-    { url = \"https://files.pythonhosted.org/packages/93/79/920b8e0a8b20f793e8d64855095cb8febabf6175b8550b6f7a547d813891/starlette-1.1.0-py3-none-any.whl\", hash = \"sha256:7f0dfd38e428aad5cb6f9f667f0ca1d2d8ca3f3385dccac8305f79ec98458382\", size = 72899, upload-time = \"2026-05-23T16:55:39.201Z\" },\n+    { url = \"https://files.pythonhosted.org/packages/1c/54/196d0c1db10af76baa4f64894448505d60d3cdf70ef92cbb35f46a4e4c71/starlette-1.2.1-py3-none-any.whl\", hash = \"sha256:4de0082d08c8f6764a85a54cf1120d6939507a19905c7768acad2a9f875d2b89\", size = 73350, upload-time = \"2026-05-31T01:07:50.09Z\" },\n ]\n \n [[package]]",
+        "additions": 3,
+        "deletions": 3
+      }
     ],
     "commitShas": [
       "8b80abfbf3bb93f5af2f1b25fbbffcb5177d7e1c"
@@ -1628,7 +1678,12 @@
       "python:uv"
     ],
     "files": [
-      "uv.lock"
+      {
+        "path": "uv.lock",
+        "patch": "@@ -4361,11 +4361,11 @@ wheels = [\n \n [[package]]\n name = \"python-multipart\"\n-version = \"0.0.29\"\n+version = \"0.0.30\"\n source = { registry = \"https://pypi.org/simple\" }\n-sdist = { url = \"https://files.pythonhosted.org/packages/4e/fe/70bd71a6738b09a0bdf6480ca6436b167469ca4578b2a0efbe390b4b0e70/python_multipart-0.0.29.tar.gz\", hash = \"sha256:643e93849196645e2dbdd81a0f8829a23123ad7f797a84a364c6fb3563f18904\", size = 45678, upload-time = \"2026-05-17T17:29:47.654Z\" }\n+sdist = { url = \"https://files.pythonhosted.org/packages/4b/82/c8cd43a6e0719bf5a3b034f6726dd701f75829c08944c83d4b95d02ed0e8/python_multipart-0.0.30.tar.gz\", hash = \"sha256:0edfe0475c1f46ddd3ff7785a626f6118af32bdcf359bb21260367313bb32118\", size = 46316, upload-time = \"2026-05-31T19:24:55.198Z\" }\n wheels = [\n-    { url = \"https://files.pythonhosted.org/packages/8f/cb/769cfc37177252872a45a71f3fbdde9d51b471a3f3c14bfe95dde3407386/python_multipart-0.0.29-py3-none-any.whl\", hash = \"sha256:2ddcc971cef266225f54f552d8fa10bcfbb1f14446caec199060daac59ff2d69\", size = 29640, upload-time = \"2026-05-17T17:29:45.69Z\" },\n+    { url = \"https://files.pythonhosted.org/packages/1c/fd/0318007beb234790993d3ec5afd051d1dbceb733e81e3afe2b981ece3f37/python_multipart-0.0.30-py3-none-any.whl\", hash = \"sha256:830964def8c90607ac5daa00514e3987815865713ade8d20febc9177ac0c3c5b\", size = 29730, upload-time = \"2026-05-31T19:24:53.814Z\" },\n ]\n \n [[package]]",
+        "additions": 3,
+        "deletions": 3
+      }
     ],
     "commitShas": [
       "2015b63561b47b52306563c02590748db1d03eaf"
@@ -1646,10 +1701,30 @@
       "docs"
     ],
     "files": [
-      "README.md",
-      "docs/en/docs/deployment/fastapicloud.md",
-      "docs/en/docs/index.md",
-      "docs/en/docs/tutorial/first-steps.md"
+      {
+        "path": "README.md",
+        "patch": "@@ -450,9 +450,7 @@ For a more complete example including more features, see the <a href=\"https://fa\n \n ### Deploy your app (optional)\n \n-You can optionally deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com), go and join the waiting list if you haven't. 🚀\n-\n-If you already have a **FastAPI Cloud** account (we invited you from the waiting list 😉), you can deploy your application with one command.\n+You can optionally deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com) with a single command. 🚀\n \n <div class=\"termy\">\n \n@@ -468,6 +466,8 @@ Deploying to FastAPI Cloud...\n \n </div>\n \n+The CLI will automatically detect your FastAPI application and deploy it to the cloud. If you are not logged in, your browser will open to complete the authentication process.\n+\n That's it! Now you can access your app at that URL. ✨\n \n #### About FastAPI Cloud",
+        "additions": 3,
+        "deletions": 3
+      },
+      {
+        "path": "docs/en/docs/deployment/fastapicloud.md",
+        "patch": "@@ -1,26 +1,6 @@\n # FastAPI Cloud { #fastapi-cloud }\n \n-You can deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com) with **one command**, go and join the waiting list if you haven't. 🚀\n-\n-## Login { #login }\n-\n-Make sure you already have a **FastAPI Cloud** account (we invited you from the waiting list 😉).\n-\n-Then log in:\n-\n-<div class=\"termy\">\n-\n-```console\n-$ fastapi login\n-\n-You are logged in to FastAPI Cloud 🚀\n-```\n-\n-</div>\n-\n-## Deploy { #deploy }\n-\n-Now deploy your app, with **one command**:\n+You can deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com) with just **one command**. 🚀\n \n <div class=\"termy\">\n \n@@ -36,6 +16,8 @@ Deploying to FastAPI Cloud...\n \n </div>\n \n+The CLI will automatically detect your FastAPI application and deploy it to the cloud. If you are not logged in, your browser will open to complete the authentication process.\n+\n That's it! Now you can access your app at that URL. ✨\n \n ## About FastAPI Cloud { #about-fastapi-cloud }",
+        "additions": 3,
+        "deletions": 21
+      },
+      {
+        "path": "docs/en/docs/index.md",
+        "patch": "@@ -492,9 +492,7 @@ For a more complete example including more features, see the <a href=\"https://fa\n \n ### Deploy your app (optional) { #deploy-your-app-optional }\n \n-You can optionally deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com), go and join the waiting list if you haven't. 🚀\n-\n-If you already have a **FastAPI Cloud** account (we invited you from the waiting list 😉), you can deploy your application with one command.\n+You can optionally deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com) with a single command. 🚀\n \n <div class=\"termy\">\n \n@@ -510,6 +508,8 @@ Deploying to FastAPI Cloud...\n \n </div>\n \n+The CLI will automatically detect your FastAPI application and deploy it to the cloud. If you are not logged in, your browser will open to complete the authentication process.\n+\n That's it! Now you can access your app at that URL. ✨\n \n #### About FastAPI Cloud { #about-fastapi-cloud }",
+        "additions": 3,
+        "deletions": 3
+      },
+      {
+        "path": "docs/en/docs/tutorial/first-steps.md",
+        "patch": "@@ -200,23 +200,7 @@ Additionally, other tools might not be able to find it, for example the [VS Code\n \n ### Deploy your app (optional) { #deploy-your-app-optional }\n \n-You can optionally deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com), go and join the waiting list if you haven't. 🚀\n-\n-If you already have a **FastAPI Cloud** account (we invited you from the waiting list 😉), you can deploy your application with one command.\n-\n-Before deploying, make sure you are logged in:\n-\n-<div class=\"termy\">\n-\n-```console\n-$ fastapi login\n-\n-You are logged in to FastAPI Cloud 🚀\n-```\n-\n-</div>\n-\n-Then deploy your app:\n+You can optionally deploy your FastAPI app to [FastAPI Cloud](https://fastapicloud.com) with a single command. 🚀\n \n <div class=\"termy\">\n \n@@ -232,6 +216,8 @@ Deploying to FastAPI Cloud...\n \n </div>\n \n+The CLI will automatically detect your FastAPI application and deploy it to the cloud. If you are not logged in, your browser will open to complete the authentication process.\n+\n That's it! Now you can access your app at that URL. ✨\n \n ## Recap, step by step { #recap-step-by-step }",
+        "additions": 3,
+        "deletions": 17
+      }
     ],
     "commitShas": [
       "71ea74fb8f331e6c24cc0a8cdcd28a8cc76d2a35"
@@ -1667,9 +1742,24 @@
       "internal"
     ],
     "files": [
-      "README.md",
-      "docs/en/data/sponsors.yml",
-      "docs/en/overrides/main.html"
+      {
+        "path": "README.md",
+        "patch": "@@ -52,7 +52,6 @@ The key features are:\n ### Gold Sponsors\n \n <a href=\"https://blockbee.io?ref=fastapi\" target=\"_blank\" title=\"BlockBee Cryptocurrency Payment Gateway\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/blockbee.png\"></a>\n-<a href=\"https://github.com/scalar/scalar/?utm_source=fastapi&utm_medium=website&utm_campaign=main-badge\" target=\"_blank\" title=\"Scalar: Beautiful Open-Source API References from Swagger/OpenAPI files\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/scalar.svg\"></a>\n <a href=\"https://www.propelauth.com/?utm_source=fastapi&utm_campaign=1223&utm_medium=mainbadge\" target=\"_blank\" title=\"Auth, user management and more for your B2B product\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/propelauth.png\"></a>\n <a href=\"https://liblab.com?utm_source=fastapi\" target=\"_blank\" title=\"liblab - Generate SDKs from FastAPI\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/liblab.png\"></a>\n <a href=\"https://docs.render.com/deploy-fastapi?utm_source=deploydoc&utm_medium=referral&utm_campaign=fastapi\" target=\"_blank\" title=\"Deploy & scale any full-stack web app on Render. Focus on building apps, not infra.\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/render.svg\"></a>",
+        "additions": 0,
+        "deletions": 1
+      },
+      {
+        "path": "docs/en/data/sponsors.yml",
+        "patch": "@@ -6,9 +6,6 @@ gold:\n   - url: https://blockbee.io?ref=fastapi\n     title: BlockBee Cryptocurrency Payment Gateway\n     img: https://fastapi.tiangolo.com/img/sponsors/blockbee.png\n-  - url: https://github.com/scalar/scalar/?utm_source=fastapi&utm_medium=website&utm_campaign=main-badge\n-    title: \"Scalar: Beautiful Open-Source API References from Swagger/OpenAPI files\"\n-    img: https://fastapi.tiangolo.com/img/sponsors/scalar.svg\n   - url: https://www.propelauth.com/?utm_source=fastapi&utm_campaign=1223&utm_medium=mainbadge\n     title: Auth, user management and more for your B2B product\n     img: https://fastapi.tiangolo.com/img/sponsors/propelauth.png",
+        "additions": 0,
+        "deletions": 3
+      },
+      {
+        "path": "docs/en/overrides/main.html",
+        "patch": "@@ -46,12 +46,6 @@\n         <img class=\"sponsor-image\" src=\"/img/sponsors/blockbee-banner.png\" />\n       </a>\n     </div>\n-    <div class=\"item\">\n-      <a title=\"Scalar: Beautiful Open-Source API References from Swagger/OpenAPI files\" style=\"display: block; position: relative;\" href=\"https://github.com/scalar/scalar/?utm_source=fastapi&utm_medium=website&utm_campaign=top-banner\" target=\"_blank\">\n-        <span class=\"sponsor-badge\">sponsor</span>\n-        <img class=\"sponsor-image\" src=\"/img/sponsors/scalar-banner.svg\" />\n-      </a>\n-    </div>\n     <div class=\"item\">\n       <a title=\"Auth, user management and more for your B2B product\" style=\"display: block; position: relative;\" href=\"https://www.propelauth.com/?utm_source=fastapi&utm_campaign=1223&utm_medium=topbanner\" target=\"_blank\">\n         <span class=\"sponsor-badge\">sponsor</span>",
+        "additions": 0,
+        "deletions": 6
+      }
     ],
     "commitShas": [
       "e52919282ab7ae101bcea400542088ff5791f4c4"
@@ -1687,10 +1777,30 @@
       "internal"
     ],
     "files": [
-      "README.md",
-      "docs/en/data/sponsors.yml",
-      "docs/en/docs/advanced/generate-clients.md",
-      "docs/en/overrides/main.html"
+      {
+        "path": "README.md",
+        "patch": "@@ -53,7 +53,6 @@ The key features are:\n \n <a href=\"https://blockbee.io?ref=fastapi\" target=\"_blank\" title=\"BlockBee Cryptocurrency Payment Gateway\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/blockbee.png\"></a>\n <a href=\"https://www.propelauth.com/?utm_source=fastapi&utm_campaign=1223&utm_medium=mainbadge\" target=\"_blank\" title=\"Auth, user management and more for your B2B product\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/propelauth.png\"></a>\n-<a href=\"https://liblab.com?utm_source=fastapi\" target=\"_blank\" title=\"liblab - Generate SDKs from FastAPI\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/liblab.png\"></a>\n <a href=\"https://docs.render.com/deploy-fastapi?utm_source=deploydoc&utm_medium=referral&utm_campaign=fastapi\" target=\"_blank\" title=\"Deploy & scale any full-stack web app on Render. Focus on building apps, not infra.\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/render.svg\"></a>\n <a href=\"https://www.coderabbit.ai/?utm_source=fastapi&utm_medium=badge&utm_campaign=fastapi\" target=\"_blank\" title=\"Cut Code Review Time & Bugs in Half with CodeRabbit\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/coderabbit.png\"></a>\n <a href=\"https://subtotal.com/?utm_source=fastapi&utm_medium=sponsorship&utm_campaign=open-source\" target=\"_blank\" title=\"The Gold Standard in Retail Account Linking\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/subtotal.svg\"></a>",
+        "additions": 0,
+        "deletions": 1
+      },
+      {
+        "path": "docs/en/data/sponsors.yml",
+        "patch": "@@ -9,9 +9,6 @@ gold:\n   - url: https://www.propelauth.com/?utm_source=fastapi&utm_campaign=1223&utm_medium=mainbadge\n     title: Auth, user management and more for your B2B product\n     img: https://fastapi.tiangolo.com/img/sponsors/propelauth.png\n-  - url: https://liblab.com?utm_source=fastapi\n-    title: liblab - Generate SDKs from FastAPI\n-    img: https://fastapi.tiangolo.com/img/sponsors/liblab.png\n   - url: https://docs.render.com/deploy-fastapi?utm_source=deploydoc&utm_medium=referral&utm_campaign=fastapi\n     title: Deploy & scale any full-stack web app on Render. Focus on building apps, not infra.\n     img: https://fastapi.tiangolo.com/img/sponsors/render.svg",
+        "additions": 0,
+        "deletions": 3
+      },
+      {
+        "path": "docs/en/docs/advanced/generate-clients.md",
+        "patch": "@@ -31,7 +31,6 @@ Their sponsorship also demonstrates a strong commitment to the FastAPI **communi\n For example, you might want to try:\n \n * [Stainless](https://www.stainless.com/?utm_source=fastapi&utm_medium=referral)\n-* [liblab](https://developers.liblab.com/tutorials/sdk-for-fastapi?utm_source=fastapi)\n \n Some of these solutions may also be open source or offer free tiers, so you can try them without a financial commitment. Other commercial SDK generators are available and can be found online. 🤓\n ",
+        "additions": 0,
+        "deletions": 1
+      },
+      {
+        "path": "docs/en/overrides/main.html",
+        "patch": "@@ -52,12 +52,6 @@\n         <img class=\"sponsor-image\" src=\"/img/sponsors/propelauth-banner.png\" />\n       </a>\n     </div>\n-    <div class=\"item\">\n-      <a title=\"liblab - Generate SDKs from FastAPI\" style=\"display: block; position: relative;\" href=\"https://liblab.com?utm_source=fastapi\" target=\"_blank\">\n-        <span class=\"sponsor-badge\">sponsor</span>\n-        <img class=\"sponsor-image\" src=\"/img/sponsors/liblab-banner.png\" />\n-      </a>\n-    </div>\n     <div class=\"item\">\n       <a title=\"Deploy & scale any full-stack web app on Render. Focus on building apps, not infra.\" style=\"display: block; position: relative;\" href=\"https://docs.render.com/deploy-fastapi?utm_source=deploydoc&utm_medium=referral&utm_campaign=fastapi\" target=\"_blank\">\n         <span class=\"sponsor-badge\">sponsor</span>",
+        "additions": 0,
+        "deletions": 6
+      }
     ],
     "commitShas": [
       "ee036a111ed1e96a7cb425158bda3dc0b45e3d0e"
@@ -1708,8 +1818,18 @@
       "internal"
     ],
     "files": [
-      "README.md",
-      "docs/en/data/sponsors.yml"
+      {
+        "path": "README.md",
+        "patch": "@@ -66,7 +66,6 @@ The key features are:\n <a href=\"https://www.svix.com/\" target=\"_blank\" title=\"Svix - Webhooks as a service\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/svix.svg\"></a>\n <a href=\"https://www.stainlessapi.com/?utm_source=fastapi&utm_medium=referral\" target=\"_blank\" title=\"Stainless | Generate best-in-class SDKs\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/stainless.png\"></a>\n <a href=\"https://www.permit.io/blog/implement-authorization-in-fastapi?utm_source=github&utm_medium=referral&utm_campaign=fastapi\" target=\"_blank\" title=\"Fine-Grained Authorization for FastAPI\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/permit.png\"></a>\n-<a href=\"https://www.interviewpal.com/?utm_source=fastapi&utm_medium=open-source&utm_campaign=dev-hiring\" target=\"_blank\" title=\"InterviewPal - AI Interview Coach for Engineers and Devs\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/interviewpal.png\"></a>\n <a href=\"https://dribia.com/en/\" target=\"_blank\" title=\"Dribia - Data Science within your reach\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/dribia.png\"></a>\n <a href=\"https://talordata.com/?campaignid=oh5dVZ3Zc3YGiAI2&utm_source=fastapi&utm_term=fastapi\" target=\"_blank\" title=\"TalorData SERP API - Multi-Engine Search Results Data\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/talordata.png\"></a>\n <a href=\"https://www.rapidproxy.io/?ref=fastapi\" target=\"_blank\" title=\"Try RapidProxy for free - Residential Proxies with 90M+ Global IPs. Starting from $0.65/GB for web scraping, automation, and data collection.\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/rapidproxy.png\"></a>",
+        "additions": 0,
+        "deletions": 1
+      },
+      {
+        "path": "docs/en/data/sponsors.yml",
+        "patch": "@@ -40,9 +40,6 @@ silver:\n   - url: https://www.permit.io/blog/implement-authorization-in-fastapi?utm_source=github&utm_medium=referral&utm_campaign=fastapi\n     title: Fine-Grained Authorization for FastAPI\n     img: https://fastapi.tiangolo.com/img/sponsors/permit.png\n-  - url: https://www.interviewpal.com/?utm_source=fastapi&utm_medium=open-source&utm_campaign=dev-hiring\n-    title: InterviewPal - AI Interview Coach for Engineers and Devs\n-    img: https://fastapi.tiangolo.com/img/sponsors/interviewpal.png\n   - url: https://dribia.com/en/\n     title: Dribia - Data Science within your reach\n     img: https://fastapi.tiangolo.com/img/sponsors/dribia.png",
+        "additions": 0,
+        "deletions": 3
+      }
     ],
     "commitShas": [
       "5d2dae82c4c6ff107147167d70d4fdbd35bc0706"
@@ -1727,8 +1847,18 @@
       "internal"
     ],
     "files": [
-      "docs/en/data/sponsors.yml",
-      "docs/en/docs/fastapi-people.md"
+      {
+        "path": "docs/en/data/sponsors.yml",
+        "patch": "@@ -50,9 +50,6 @@ silver:\n     title: Try RapidProxy for free - Residential Proxies with 90M+ Global IPs. Starting from $0.65/GB for web scraping, automation, and data collection.\n     img: https://fastapi.tiangolo.com/img/sponsors/rapidproxy.png\n bronze:\n-  - url: https://www.exoflare.com/open-source/?utm_source=FastAPI&utm_campaign=open_source\n-    title: Biosecurity risk assessments made easy.\n-    img: https://fastapi.tiangolo.com/img/sponsors/exoflare.png\n   # - url: https://testdriven.io/courses/tdd-fastapi/\n   #   title: Learn to build high-quality web apps with best practices\n   #   img: https://fastapi.tiangolo.com/img/sponsors/testdriven.svg",
+        "additions": 0,
+        "deletions": 3
+      },
+      {
+        "path": "docs/en/docs/fastapi-people.md",
+        "patch": "@@ -250,16 +250,6 @@ They are supporting my work with **FastAPI** (and others), mainly through [GitHu\n <a href=\"{{ sponsor.url }}\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor.img }}\" style=\"border-radius:15px\"></a>\n {% endfor %}\n {% endif %}\n-\n-{% if sponsors.bronze %}\n-\n-### Bronze Sponsors\n-\n-{% for sponsor in sponsors.bronze -%}\n-<a href=\"{{ sponsor.url }}\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor.img }}\" style=\"border-radius:15px\"></a>\n-{% endfor %}\n-{% endif %}\n-\n {% endif %}\n \n ### Individual Sponsors",
+        "additions": 0,
+        "deletions": 10
+      }
     ],
     "commitShas": [
       "e4b6a36c4fc0d0b37871fe317ab29fe074a3cdbe"
@@ -1746,8 +1876,18 @@
       "internal"
     ],
     "files": [
-      "README.md",
-      "docs/en/data/sponsors.yml"
+      {
+        "path": "README.md",
+        "patch": "@@ -67,7 +67,6 @@ The key features are:\n <a href=\"https://www.stainlessapi.com/?utm_source=fastapi&utm_medium=referral\" target=\"_blank\" title=\"Stainless | Generate best-in-class SDKs\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/stainless.png\"></a>\n <a href=\"https://www.permit.io/blog/implement-authorization-in-fastapi?utm_source=github&utm_medium=referral&utm_campaign=fastapi\" target=\"_blank\" title=\"Fine-Grained Authorization for FastAPI\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/permit.png\"></a>\n <a href=\"https://dribia.com/en/\" target=\"_blank\" title=\"Dribia - Data Science within your reach\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/dribia.png\"></a>\n-<a href=\"https://talordata.com/?campaignid=oh5dVZ3Zc3YGiAI2&utm_source=fastapi&utm_term=fastapi\" target=\"_blank\" title=\"TalorData SERP API - Multi-Engine Search Results Data\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/talordata.png\"></a>\n <a href=\"https://www.rapidproxy.io/?ref=fastapi\" target=\"_blank\" title=\"Try RapidProxy for free - Residential Proxies with 90M+ Global IPs. Starting from $0.65/GB for web scraping, automation, and data collection.\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/rapidproxy.png\"></a>\n \n <!-- /sponsors -->",
+        "additions": 0,
+        "deletions": 1
+      },
+      {
+        "path": "docs/en/data/sponsors.yml",
+        "patch": "@@ -43,9 +43,6 @@ silver:\n   - url: https://dribia.com/en/\n     title: Dribia - Data Science within your reach\n     img: https://fastapi.tiangolo.com/img/sponsors/dribia.png\n-  - url: https://talordata.com/?campaignid=oh5dVZ3Zc3YGiAI2&utm_source=fastapi&utm_term=fastapi\n-    title: TalorData SERP API - Multi-Engine Search Results Data\n-    img: https://fastapi.tiangolo.com/img/sponsors/talordata.png\n   - url: https://www.rapidproxy.io/?ref=fastapi\n     title: Try RapidProxy for free - Residential Proxies with 90M+ Global IPs. Starting from $0.65/GB for web scraping, automation, and data collection.\n     img: https://fastapi.tiangolo.com/img/sponsors/rapidproxy.png",
+        "additions": 0,
+        "deletions": 3
+      }
     ],
     "commitShas": [
       "e2fcd5562f41f2a0d01b1ff43773711bbeeb19e8"
@@ -1765,17 +1905,72 @@
       "breaking"
     ],
     "files": [
-      "docs/en/docs/advanced/openapi-callbacks.md",
-      "docs/en/docs/advanced/path-operation-advanced-configuration.md",
-      "docs/en/docs/how-to/extending-openapi.md",
-      "docs/en/docs/release-notes.md",
-      "docs/en/docs/tutorial/bigger-applications.md",
-      "docs_src/path_operation_advanced_configuration/tutorial002_py310.py",
-      "fastapi/applications.py",
-      "fastapi/openapi/utils.py",
-      "fastapi/routing.py",
-      "tests/test_custom_route_class.py",
-      "tests/test_router_include_context.py"
+      {
+        "path": "docs/en/docs/advanced/openapi-callbacks.md",
+        "patch": "@@ -167,13 +167,13 @@ Notice how the callback URL used contains the URL received as a query parameter\n \n At this point you have the *callback path operation(s)* needed (the one(s) that the *external developer*  should implement in the *external API*) in the callback router you created above.\n \n-Now use the parameter `callbacks` in *your API's path operation decorator* to pass the attribute `.routes` (that's actually just a `list` of routes/*path operations*) from that callback router:\n+Now use the parameter `callbacks` in *your API's path operation decorator* to pass the attribute `.routes` from that callback router:\n \n {* ../../docs_src/openapi_callbacks/tutorial001_py310.py hl[33] *}\n \n /// tip\n \n-Notice that you are not passing the router itself (`invoices_callback_router`) to `callback=`, but the attribute `.routes`, as in `invoices_callback_router.routes`.\n+Notice that you are not passing the router itself (`invoices_callback_router`) to `callbacks=`, but its `.routes`, as in `invoices_callback_router.routes`. FastAPI will use those routes to generate the callback OpenAPI documentation.\n \n ///\n ",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "docs/en/docs/advanced/path-operation-advanced-configuration.md",
+        "patch": "@@ -16,17 +16,11 @@ You would have to make sure that it is unique for each operation.\n \n ### Using the *path operation function* name as the operationId { #using-the-path-operation-function-name-as-the-operationid }\n \n-If you want to use your APIs' function names as `operationId`s, you can iterate over all of them and override each *path operation's* `operation_id` using their `APIRoute.name`.\n+If you want to use your APIs' function names as `operationId`s, you can pass a custom `generate_unique_id_function` to `FastAPI`.\n \n-You should do it after adding all your *path operations*.\n+The function receives each `APIRoute` and returns the `operationId` to use for that path operation.\n \n-{* ../../docs_src/path_operation_advanced_configuration/tutorial002_py310.py hl[2, 12:21, 24] *}\n-\n-/// tip\n-\n-If you manually call `app.openapi()`, you should update the `operationId`s before that.\n-\n-///\n+{* ../../docs_src/path_operation_advanced_configuration/tutorial002_py310.py hl[2,5:6,9] *}\n \n /// warning\n ",
+        "additions": 3,
+        "deletions": 9
+      },
+      {
+        "path": "docs/en/docs/how-to/extending-openapi.md",
+        "patch": "@@ -25,7 +25,15 @@ And that function `get_openapi()` receives as parameters:\n * `openapi_version`: The version of the OpenAPI specification used. By default, the latest: `3.1.0`.\n * `summary`: A short summary of the API.\n * `description`: The description of your API, this can include markdown and will be shown in the docs.\n-* `routes`: A list of routes, these are each of the registered *path operations*. They are taken from `app.routes`.\n+* `routes`: The routes from the application, taken from `app.routes`. FastAPI uses them to collect the registered *path operations*, including those from included routers.\n+\n+/// tip | Technical Details\n+\n+`app.routes` is a lower-level route tree. It can include route candidates that FastAPI uses internally for included routers, not only final `APIRoute` objects.\n+\n+You can still pass `app.routes` to `get_openapi()`. FastAPI will traverse that route tree to collect the effective path operations.\n+\n+///\n \n /// note\n ",
+        "additions": 9,
+        "deletions": 1
+      },
+      {
+        "path": "docs/en/docs/release-notes.md",
+        "patch": "@@ -7,6 +7,55 @@ hide:\n \n ## Latest Changes\n \n+♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances\n+\n+Unblocks ✨ SO MANY THINGS ✨\n+\n+Before this, `router.include_router(other_router)` would take each path operation from `other_router` and \"clone\" it, or recreate it from scratch.\n+\n+This would mean that in the end there was only one top level router, part of the app.\n+\n+The way it is structured here is that there are a few additional classes to handle intermediate metadata for router and route inclusion. That way the information of \"router X includes Y and Y includes Z\" is stored somewhere, without affecting (recreating / clonning) the final route.\n+\n+#### Non Objectives\n+\n+Dependencies for 404: previously I intended to support dependencies that would be executed even for 404, but that would conflict with the fact that a router could _not_ find a match, but the next router _did_ find a match. Executing dependencies in the router that did not find a match would not make sense, they could consume the request, body, etc. This original idea was discarded.\n+\n+#### Breaking Changes\n+\n+Now `router.routes` is no longer a plain list of `APIRoute` objects, it can contain these intermediate objects that can contain additional routers, forming a tree.\n+\n+Any logic that depended on iterating on the `router.routes` directly would be affected, that logic cannot expect to be able to extract data from a plain list of routes, as it's no longer a plain list but a tree.\n+\n+Additionally, any logic that iterated on `router.routes` to modify them would now also see these new objects, and would not see all the routes in the app.\n+\n+`router.routes` should be considered an internal implementation detail, only passed around to the FastAPI functions that need it.\n+\n+#### Features\n+\n+* Adding routes (path operations) after a router is included now works, they are reflected as they are not copied.\n+* Including `subrouter` in `mainrouter` can be done before adding routes (path operations) to `subrouter`, because now the the entire object is stored instead of copying the routes.\n+* As routes are not copied, in some cases that might save some memory.\n+\n+#### Alpha Features\n+\n+This is not documented yet, so it's not officially supported yet and could change in the future.\n+\n+But, as `APIRoute` and `APIRouter` instances are now preserved, they could be customized.\n+\n+`APIRouter` has two new methods, `.matches()` and `.handle()`, counterpart to the existing ones in `APIRoute`. With this a router could customize how it matches and handles requests. For example, it could match only requests that include some specific header, for example for handling versions in headers.\n+\n+Still, for now, consider this very experimental and potentially changing and breaking in the future.\n+\n+#### Future Features Enabled\n+\n+* Custom `APIRoute` subclasses (undocumented, but alraedy works as desccribed above)\n+* Custom `APIRouter` subclasses (undocumented, but already works as described above)\n+* Dependencies per router\n+* Exception handlers per router\n+* Middleware per router\n+* Other features planned\n+\n ### Docs\n \n * 📝 Update FastAPI Cloud deployment instructions. PR [#15724](https://github.com/fastapi/fastapi/pull/15724) by [@alejsdev](https://github.com/alejsdev).",
+        "additions": 49,
+        "deletions": 0
+      },
+      {
+        "path": "docs/en/docs/tutorial/bigger-applications.md",
+        "patch": "@@ -396,17 +396,17 @@ It will include all the routes from that router as part of it.\n \n /// note | Technical Details\n \n-It will actually internally create a *path operation* for each *path operation* that was declared in the `APIRouter`.\n+FastAPI keeps the original `APIRouter` and its `APIRoute`s active when the router is included in the main application.\n \n-So, behind the scenes, it will actually work as if everything was the same single app.\n+That means custom `APIRouter` and `APIRoute` subclasses can still participate after the router is included.\n \n ///\n \n /// tip\n \n You don't have to worry about performance when including routers.\n \n-This will take microseconds and will only happen at startup.\n+This is designed to be lightweight and to avoid adding overhead to each request.\n \n So it won't affect performance. ⚡\n \n@@ -461,7 +461,7 @@ The `APIRouter`s are not \"mounted\", they are not isolated from the rest of the a\n \n This is because we want to include their *path operations* in the OpenAPI schema and the user interfaces.\n \n-As we cannot just isolate them and \"mount\" them independently of the rest, the *path operations* are \"cloned\" (re-created), not included directly.\n+FastAPI keeps the original routers and path operations active, and combines the router prefixes, dependencies, tags, responses, and other metadata when handling requests and generating OpenAPI.\n \n ///\n \n@@ -532,4 +532,16 @@ The same way you can include an `APIRouter` in a `FastAPI` application, you can\n router.include_router(other_router)\n ```\n \n-Make sure you do it before including `router` in the `FastAPI` app, so that the *path operations* from `other_router` are also included.\n+You can do this before or after including `router` in the `FastAPI` app. FastAPI will still include the *path operations* from `other_router` in routing and OpenAPI.\n+\n+The same applies to *path operations* added later to the routers. They will be visible through the earlier inclusion too.\n+\n+/// warning | Technical Details\n+\n+Avoid directly mutating `router.routes` after including a router. FastAPI treats router inclusion as live, so the original router and its routes remain part of routing and OpenAPI generation.\n+\n+Use documented APIs such as path operation decorators and `.include_router()` to add routes and routers.\n+\n+Treat `router.routes` as a lower-level route tree that can contain route definitions and included routers, and avoid relying on it as a flat list of final path operations.\n+\n+///",
+        "additions": 17,
+        "deletions": 5
+      },
+      {
+        "path": "docs_src/path_operation_advanced_configuration/tutorial002_py310.py",
+        "patch": "@@ -1,24 +1,14 @@\n from fastapi import FastAPI\n from fastapi.routing import APIRoute\n \n-app = FastAPI()\n \n-\n-@app.get(\"/items/\")\n-async def read_items():\n-    return [{\"item_id\": \"Foo\"}]\n+def custom_generate_unique_id(route: APIRoute) -> str:\n+    return route.name\n \n \n-def use_route_names_as_operation_ids(app: FastAPI) -> None:\n-    \"\"\"\n-    Simplify operation IDs so that generated API clients have simpler function\n-    names.\n+app = FastAPI(generate_unique_id_function=custom_generate_unique_id)\n \n-    Should be called only after all routes have been added.\n-    \"\"\"\n-    for route in app.routes:\n-        if isinstance(route, APIRoute):\n-            route.operation_id = route.name  # in this case, 'read_items'\n \n-\n-use_route_names_as_operation_ids(app)\n+@app.get(\"/items/\")\n+async def read_items():\n+    return [{\"item_id\": \"Foo\"}]",
+        "additions": 6,
+        "deletions": 16
+      },
+      {
+        "path": "fastapi/applications.py",
+        "patch": "@@ -921,6 +921,7 @@ class Item(BaseModel):\n             ),\n         ] = \"3.1.0\"\n         self.openapi_schema: dict[str, Any] | None = None\n+        self._openapi_routes_version: int | None = None\n         if self.openapi_url:\n             assert self.title, \"A title must be provided for OpenAPI, e.g.: 'My API'\"\n             assert self.version, \"A version must be provided for OpenAPI, e.g.: '2.1.0'\"\n@@ -1079,7 +1080,8 @@ def openapi(self) -> dict[str, Any]:\n         Read more in the\n         [FastAPI docs for OpenAPI](https://fastapi.tiangolo.com/how-to/extending-openapi/).\n         \"\"\"\n-        if not self.openapi_schema:\n+        routes_version = self.router._get_routes_version()\n+        if not self.openapi_schema or self._openapi_routes_version != routes_version:\n             self.openapi_schema = get_openapi(\n                 title=self.title,\n                 version=self.version,\n@@ -1096,6 +1098,7 @@ def openapi(self) -> dict[str, Any]:\n                 separate_input_output_schemas=self.separate_input_output_schemas,\n                 external_docs=self.openapi_external_docs,\n             )\n+            self._openapi_routes_version = routes_version\n         return self.openapi_schema\n \n     def setup(self) -> None:",
+        "additions": 4,
+        "deletions": 1
+      },
+      {
+        "path": "fastapi/openapi/utils.py",
+        "patch": "@@ -213,7 +213,7 @@ def get_openapi_operation_request_body(\n \n \n def generate_operation_id(\n-    *, route: routing.APIRoute, method: str\n+    *, route: routing._APIRouteLike, method: str\n ) -> str:  # pragma: nocover\n     warnings.warn(\n         message=\"fastapi.openapi.utils.generate_operation_id() was deprecated, \"\n@@ -227,14 +227,14 @@ def generate_operation_id(\n     return generate_operation_id_for_path(name=route.name, path=path, method=method)\n \n \n-def generate_operation_summary(*, route: routing.APIRoute, method: str) -> str:\n+def generate_operation_summary(*, route: routing._APIRouteLike, method: str) -> str:\n     if route.summary:\n         return route.summary\n     return route.name.replace(\"_\", \" \").title()\n \n \n def get_openapi_operation_metadata(\n-    *, route: routing.APIRoute, method: str, operation_ids: set[str]\n+    *, route: routing._APIRouteLike, method: str, operation_ids: set[str]\n ) -> dict[str, Any]:\n     operation: dict[str, Any] = {}\n     if route.tags:\n@@ -259,7 +259,7 @@ def get_openapi_operation_metadata(\n \n def get_openapi_path(\n     *,\n-    route: routing.APIRoute,\n+    route: routing._APIRouteLike,\n     operation_ids: set[str],\n     model_name_map: ModelNameMap,\n     field_mapping: dict[\n@@ -329,7 +329,7 @@ def get_openapi_path(\n                             cb_security_schemes,\n                             cb_definitions,\n                         ) = get_openapi_path(\n-                            route=callback,\n+                            route=cast(routing._APIRouteLike, callback),\n                             operation_ids=operation_ids,\n                             model_name_map=model_name_map,\n                             field_mapping=field_mapping,\n@@ -478,31 +478,44 @@ def get_openapi_path(\n     return path, security_schemes, definitions\n \n \n+def _get_api_route_for_openapi(\n+    route: BaseRoute, route_context: routing._EffectiveRouteContext | None\n+) -> routing._APIRouteLike | None:\n+    if route_context is not None and isinstance(\n+        route_context.original_route, routing.APIRoute\n+    ):\n+        return cast(routing._APIRouteLike, route_context)\n+    if isinstance(route, routing.APIRoute):\n+        return cast(routing._APIRouteLike, route)\n+    return None\n+\n+\n def get_fields_from_routes(\n     routes: Sequence[BaseRoute],\n ) -> list[ModelField]:\n     body_fields_from_routes: list[ModelField] = []\n     responses_from_routes: list[ModelField] = []\n     request_fields_from_routes: list[ModelField] = []\n     callback_flat_models: list[ModelField] = []\n-    for route in routes:\n-        if not isinstance(route, routing.APIRoute):\n+    for route, route_context in routing._iter_routes_with_context(routes):\n+        api_route = _get_api_route_for_openapi(route, route_context)\n+        if api_route is None:\n             continue\n-        if route.include_in_schema:\n-            if route.body_field:\n-                assert isinstance(route.body_field, ModelField), (\n+        if api_route.include_in_schema:\n+            if api_route.body_field:\n+                assert isinstance(api_route.body_field, ModelField), (\n                     \"A request body must be a Pydantic Field\"\n                 )\n-                body_fields_from_routes.append(route.body_field)\n-            if route.response_field:\n-                responses_from_routes.append(route.response_field)\n-            if route.response_fields:\n-                responses_from_routes.extend(route.response_fields.values())\n-            if route.stream_item_field:\n-                responses_from_routes.append(route.stream_item_field)\n-            if route.callbacks:\n-                callback_flat_models.extend(get_fields_from_routes(route.callbacks))\n-            params = get_flat_params(route.dependant)\n+                body_fields_from_routes.append(api_route.body_field)\n+            if api_route.response_field:\n+                responses_from_routes.append(api_route.response_field)\n+            if api_route.response_fields:\n+                responses_from_routes.extend(api_route.response_fields.values())\n+            if api_route.stream_item_field:\n+                responses_from_routes.append(api_route.stream_item_field)\n+            if api_route.callbacks:\n+                callback_flat_models.extend(get_fields_from_routes(api_route.callbacks))\n+            params = get_flat_params(api_route.dependant)\n             request_fields_from_routes.extend(params)\n \n     flat_models = callback_flat_models + list(\n@@ -546,18 +559,19 @@ def get_openapi(\n     paths: dict[str, dict[str, Any]] = {}\n     webhook_paths: dict[str, dict[str, Any]] = {}\n     operation_ids: set[str] = set()\n-    all_fields = get_fields_from_routes(list(routes or []) + list(webhooks or []))\n+    all_fields = get_fields_from_routes(list(routes) + list(webhooks or []))\n     flat_models = get_flat_models_from_fields(all_fields, known_models=set())\n     model_name_map = get_model_name_map(flat_models)\n     field_mapping, definitions = get_definitions(\n         fields=all_fields,\n         model_name_map=model_name_map,\n         separate_input_output_schemas=separate_input_output_schemas,\n     )\n-    for route in routes or []:\n-        if isinstance(route, routing.APIRoute):\n+    for route, route_context in routing._iter_routes_with_context(routes):\n+        api_route = _get_api_route_for_openapi(route, route_context)\n+        if api_route is not None:\n             result = get_openapi_path(\n-                route=route,\n+                route=api_route,\n                 operation_ids=operation_ids,\n                 model_name_map=model_name_map,\n                 field_mapping=field_mapping,\n@@ -566,17 +580,18 @@ def get_openapi(\n             if result:\n                 path, security_schemes, path_definitions = result\n                 if path:\n-                    paths.setdefault(route.path_format, {}).update(path)\n+                    paths.setdefault(api_route.path_format, {}).update(path)\n                 if security_schemes:\n                     components.setdefault(\"securitySchemes\", {}).update(\n                         security_schemes\n                     )\n                 if path_definitions:\n                     definitions.update(path_definitions)\n-    for webhook in webhooks or []:\n-        if isinstance(webhook, routing.APIRoute):\n+    for webhook, webhook_context in routing._iter_routes_with_context(webhooks or []):\n+        api_webhook = _get_api_route_for_openapi(webhook, webhook_context)\n+        if api_webhook is not None:\n             result = get_openapi_path(\n-                route=webhook,\n+                route=api_webhook,\n                 operation_ids=operation_ids,\n                 model_name_map=model_name_map,\n                 field_mapping=field_mapping,\n@@ -585,7 +600,7 @@ def get_openapi(\n             if result:\n                 path, security_schemes, path_definitions = result\n                 if path:\n-                    webhook_paths.setdefault(webhook.path_format, {}).update(path)\n+                    webhook_paths.setdefault(api_webhook.path_format, {}).update(path)\n                 if security_schemes:\n                     components.setdefault(\"securitySchemes\", {}).update(\n                         security_schemes",
+        "additions": 44,
+        "deletions": 29
+      },
+      {
+        "path": "fastapi/routing.py",
+        "patch": null,
+        "additions": 885,
+        "deletions": 245
+      },
+      {
+        "path": "tests/test_custom_route_class.py",
+        "patch": "@@ -3,7 +3,6 @@\n from fastapi.routing import APIRoute\n from fastapi.testclient import TestClient\n from inline_snapshot import snapshot\n-from starlette.routing import Route\n \n app = FastAPI()\n \n@@ -63,13 +62,9 @@ def test_get_path(path, expected_status, expected_response):\n \n \n def test_route_classes():\n-    routes = {}\n-    for r in app.router.routes:\n-        assert isinstance(r, Route)\n-        routes[r.path] = r\n-    assert getattr(routes[\"/a/\"], \"x_type\") == \"A\"  # noqa: B009\n-    assert getattr(routes[\"/a/b/\"], \"x_type\") == \"B\"  # noqa: B009\n-    assert getattr(routes[\"/a/b/c/\"], \"x_type\") == \"C\"  # noqa: B009\n+    assert isinstance(router_a.routes[0], APIRouteA)\n+    assert isinstance(router_b.routes[0], APIRouteB)\n+    assert isinstance(router_c.routes[0], APIRouteC)\n \n \n def test_openapi_schema():",
+        "additions": 3,
+        "deletions": 8
+      },
+      {
+        "path": "tests/test_router_include_context.py",
+        "patch": null,
+        "additions": 855,
+        "deletions": 0
+      }
     ],
     "commitShas": [
       "8e1d774cef03ab9e2552c26e850cbfc0c63974c3"
@@ -1795,7 +1990,12 @@
       "docs"
     ],
     "files": [
-      "docs/en/docs/release-notes.md"
+      {
+        "path": "docs/en/docs/release-notes.md",
+        "patch": "@@ -7,7 +7,9 @@ hide:\n \n ## Latest Changes\n \n-♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances\n+### Breaking Changes\n+\n+* ♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances. PR [#15745](https://github.com/fastapi/fastapi/pull/15745) by [@tiangolo](https://github.com/tiangolo).\n \n Unblocks ✨ SO MANY THINGS ✨\n \n@@ -21,7 +23,7 @@ The way it is structured here is that there are a few additional classes to hand\n \n Dependencies for 404: previously I intended to support dependencies that would be executed even for 404, but that would conflict with the fact that a router could _not_ find a match, but the next router _did_ find a match. Executing dependencies in the router that did not find a match would not make sense, they could consume the request, body, etc. This original idea was discarded.\n \n-#### Breaking Changes\n+#### Specific Breaking Changes\n \n Now `router.routes` is no longer a plain list of `APIRoute` objects, it can contain these intermediate objects that can contain additional routers, forming a tree.\n \n@@ -56,10 +58,6 @@ Still, for now, consider this very experimental and potentially changing and bre\n * Middleware per router\n * Other features planned\n \n-### Breaking Changes\n-\n-* ♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances. PR [#15745](https://github.com/fastapi/fastapi/pull/15745) by [@tiangolo](https://github.com/tiangolo).\n-\n ### Docs\n \n * 📝 Update FastAPI Cloud deployment instructions. PR [#15724](https://github.com/fastapi/fastapi/pull/15724) by [@alejsdev](https://github.com/alejsdev).",
+        "additions": 4,
+        "deletions": 6
+      }
     ],
     "commitShas": [
       "31d097f286b63c2c7bc9954aa605571e0f3d1e15"
@@ -1813,8 +2013,18 @@
       "release"
     ],
     "files": [
-      "docs/en/docs/release-notes.md",
-      "fastapi/__init__.py"
+      {
+        "path": "docs/en/docs/release-notes.md",
+        "patch": "@@ -7,6 +7,8 @@ hide:\n \n ## Latest Changes\n \n+## 0.137.0 (2026-06-14)\n+\n ### Breaking Changes\n \n * ♻️ Refactor internals to preserve `APIRouter` and `APIRoute` instances. PR [#15745](https://github.com/fastapi/fastapi/pull/15745) by [@tiangolo](https://github.com/tiangolo).",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "fastapi/__init__.py",
+        "patch": "@@ -1,6 +1,6 @@\n \"\"\"FastAPI framework, high performance, easy to learn, fast to code, ready for production\"\"\"\n \n-__version__ = \"0.136.3\"\n+__version__ = \"0.137.0\"\n \n from starlette import status as status\n ",
+        "additions": 1,
+        "deletions": 1
+      }
     ],
     "commitShas": [
       "9a9c4ad5d06f5fe8ee6775a5aeaa2f83c854f263"
@@ -1986,8 +2196,18 @@
       "bug"
     ],
     "files": [
-      "fastapi/routing.py",
-      "tests/test_router_include_context.py"
+      {
+        "path": "fastapi/routing.py",
+        "patch": "@@ -2435,9 +2435,16 @@ def read_users():\n                 \"A path prefix must not end with '/', as the routes will start with '/'\"\n             )\n         else:\n-            for r in _iter_included_route_candidates(router.routes):\n-                path = getattr(r, \"path\", None)\n-                name = getattr(r, \"name\", \"unknown\")\n+            for route, route_context in _iter_routes_with_context(router.routes):\n+                if route_context is None:\n+                    path = getattr(route, \"path\", None)\n+                    name = getattr(route, \"name\", \"unknown\")\n+                elif route_context.starlette_route is not None:\n+                    path = getattr(route_context.starlette_route, \"path\", None)\n+                    name = getattr(route_context.starlette_route, \"name\", \"unknown\")\n+                else:\n+                    path = route_context.path\n+                    name = route_context.name\n                 if path is not None and not path:\n                     raise FastAPIError(\n                         f\"Prefix and path cannot be both empty (path operation: {name})\"",
+        "additions": 10,
+        "deletions": 3
+      },
+      {
+        "path": "tests/test_router_include_context.py",
+        "patch": "@@ -2,6 +2,7 @@\n \n import pytest\n from fastapi import APIRouter, Body, Depends, FastAPI, Request\n+from fastapi.exceptions import FastAPIError\n from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse\n from fastapi.routing import (\n     APIRoute,\n@@ -807,6 +808,60 @@ def endpoint(request):  # pragma: no cover\n     assert cast(Route, candidates[0]).path == \"/child/items\"\n \n \n+def test_no_prefix_include_validation_sees_effective_api_route_path():\n+    leaf_router = APIRouter()\n+\n+    @leaf_router.get(\"\")\n+    def read_items():\n+        return []\n+\n+    parent_router = APIRouter()\n+    parent_router.include_router(leaf_router, prefix=\"/items\")\n+\n+    # for coverage\n+    candidates = list(_iter_included_route_candidates(parent_router.routes))\n+    assert cast(APIRoute, candidates[0]).path == \"\"\n+\n+    app = FastAPI()\n+    app.include_router(parent_router)\n+    client = TestClient(app)\n+\n+    response = client.get(\"/items\")\n+\n+    assert response.status_code == 200, response.text\n+    assert response.json() == []\n+\n+\n+def test_no_prefix_include_validation_sees_effective_starlette_route_path():\n+    def endpoint(request):\n+        return PlainTextResponse(\"ok\")\n+\n+    child_router = APIRouter(routes=[Route(\"/items\", endpoint, name=\"read_items\")])\n+    parent_router = APIRouter()\n+    parent_router.include_router(child_router, prefix=\"/child\")\n+\n+    app = FastAPI()\n+    app.include_router(parent_router)\n+    client = TestClient(app)\n+\n+    response = client.get(\"/child/items\")\n+\n+    assert response.status_code == 200, response.text\n+    assert response.text == \"ok\"\n+\n+\n+def test_no_prefix_include_validation_rejects_empty_effective_api_route_path():\n+    router = APIRouter()\n+\n+    @router.get(\"\")\n+    def read_items():  # pragma: no cover\n+        return []\n+\n+    app = FastAPI()\n+    with pytest.raises(FastAPIError):\n+        app.include_router(router)\n+\n+\n def test_apirouter_matches_fallback_without_include_context():\n     router = APIRouter()\n ",
+        "additions": 55,
+        "deletions": 0
+      }
     ],
     "commitShas": [
       "d8aad201eba558b20419a832e51a026b0e6ede0e"
@@ -2007,7 +2227,12 @@
       "bug"
     ],
     "files": [
-      "fastapi/routing.py"
+      {
+        "path": "fastapi/routing.py",
+        "patch": "@@ -1062,6 +1062,41 @@ def _populate_api_route_state(\n \n \n class APIRoute(routing.Route):\n+    stream_item_type: Any | None\n+    response_model: Any\n+    summary: str | None\n+    response_description: str\n+    deprecated: bool | None\n+    operation_id: str | None\n+    response_model_include: IncEx | None\n+    response_model_exclude: IncEx | None\n+    response_model_by_alias: bool\n+    response_model_exclude_unset: bool\n+    response_model_exclude_defaults: bool\n+    response_model_exclude_none: bool\n+    include_in_schema: bool\n+    response_class: type[Response] | DefaultPlaceholder\n+    dependency_overrides_provider: Any | None\n+    callbacks: list[BaseRoute] | None\n+    openapi_extra: dict[str, Any] | None\n+    generate_unique_id_function: Callable[[Any], str] | DefaultPlaceholder\n+    strict_content_type: bool | DefaultPlaceholder\n+    tags: list[str | Enum]\n+    responses: dict[int | str, dict[str, Any]]\n+    unique_id: str\n+    status_code: int | None\n+    response_field: ModelField | None\n+    stream_item_field: ModelField | None\n+    dependencies: list[params.Depends]\n+    description: str\n+    response_fields: dict[int | str, ModelField]\n+    dependant: Dependant\n+    _flat_dependant: Dependant\n+    _embed_body_fields: bool\n+    body_field: ModelField | None\n+    is_sse_stream: bool\n+    is_json_stream: bool\n+\n     def __init__(\n         self,\n         path: str,",
+        "additions": 35,
+        "deletions": 0
+      }
     ],
     "commitShas": [
       "b78c82262f5170831ebd3f27873b09d8e579bac2"
@@ -2027,8 +2252,18 @@
       "release"
     ],
     "files": [
-      "docs/en/docs/release-notes.md",
-      "fastapi/__init__.py"
+      {
+        "path": "docs/en/docs/release-notes.md",
+        "patch": "@@ -7,6 +7,8 @@ hide:\n \n ## Latest Changes\n \n+## 0.137.1 (2026-06-15)\n+\n ### Fixes\n \n * 🚨 Fix typing checks for APIRoute. PR [#15765](https://github.com/fastapi/fastapi/pull/15765) by [@tiangolo](https://github.com/tiangolo).",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "fastapi/__init__.py",
+        "patch": "@@ -1,6 +1,6 @@\n \"\"\"FastAPI framework, high performance, easy to learn, fast to code, ready for production\"\"\"\n \n-__version__ = \"0.137.0\"\n+__version__ = \"0.137.1\"\n \n from starlette import status as status\n ",
+        "additions": 1,
+        "deletions": 1
+      }
     ],
     "commitShas": [
       "a82e5f2fac102a8b12c0795da80b2cb1d2a8b016"
@@ -2046,9 +2281,24 @@
       "internal"
     ],
     "files": [
-      ".pre-commit-config.yaml",
-      "pyproject.toml",
-      "scripts/lint.sh"
+      {
+        "path": ".pre-commit-config.yaml",
+        "patch": "@@ -45,7 +45,7 @@ repos:\n \n       - id: local-ty\n         name: ty check\n-        entry: uv run ty check fastapi\n+        entry: uv run ty check fastapi docs_src --force-exclude\n         require_serial: true\n         language: unsupported\n         pass_filenames: false",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "pyproject.toml",
+        "patch": "@@ -349,5 +349,41 @@ havin = \"havin\"\n Ines = \"Ines\"\n ser = \"ser\"\n \n+[tool.ty.src]\n+exclude = [\n+    # These docs examples are intentionally partial, dynamic, environment-driven,\n+    # deprecated, or currently require broader tutorial rewrites to satisfy ty.\n+    \"docs_src/additional_status_codes/\",\n+    \"docs_src/app_testing/tutorial003_py310.py\",\n+    \"docs_src/body_multiple_params/\",\n+    \"docs_src/body_updates/tutorial002_py310.py\",\n+    \"docs_src/custom_docs_ui/\",\n+    \"docs_src/custom_response/tutorial001_py310.py\",\n+    \"docs_src/custom_response/tutorial001b_py310.py\",\n+    \"docs_src/custom_response/tutorial009c_py310.py\",\n+    \"docs_src/dependencies/tutorial007_py310.py\",\n+    \"docs_src/dependencies/tutorial008_an_py310.py\",\n+    \"docs_src/dependencies/tutorial008_py310.py\",\n+    \"docs_src/dependencies/tutorial010_py310.py\",\n+    \"docs_src/events/\",\n+    \"docs_src/extending_openapi/tutorial001_py310.py\",\n+    \"docs_src/path_params_numeric_validations/\",\n+    \"docs_src/pydantic_v1_in_v2/tutorial004_an_py310.py\",\n+    \"docs_src/python_types/tutorial003_py310.py\",\n+    \"docs_src/python_types/tutorial011_py310.py\",\n+    \"docs_src/query_params_str_validations/\",\n+    \"docs_src/response_model/tutorial006_py310.py\",\n+    \"docs_src/security/tutorial003_an_py310.py\",\n+    \"docs_src/security/tutorial003_py310.py\",\n+    \"docs_src/security/tutorial004_an_py310.py\",\n+    \"docs_src/security/tutorial004_py310.py\",\n+    \"docs_src/security/tutorial005_an_py310.py\",\n+    \"docs_src/security/tutorial005_py310.py\",\n+    \"docs_src/settings/\",\n+    \"docs_src/sql_databases/\",\n+    \"docs_src/using_request_directly/tutorial001_py310.py\",\n+    \"docs_src/wsgi/tutorial001_py310.py\",\n+]\n+\n [tool.ty.terminal]\n error-on-warning = true",
+        "additions": 36,
+        "deletions": 0
+      },
+      {
+        "path": "scripts/lint.sh",
+        "patch": "@@ -4,6 +4,6 @@ set -e\n set -x\n \n mypy fastapi\n-ty check fastapi\n+ty check fastapi docs_src --force-exclude\n ruff check fastapi tests docs_src scripts\n ruff format fastapi tests --check",
+        "additions": 1,
+        "deletions": 1
+      }
     ],
     "commitShas": [
       "76876e5a812268860148ba3a2059795b4d65ae55"
@@ -2066,50 +2316,270 @@
       "internal"
     ],
     "files": [
-      ".pre-commit-config.yaml",
-      "scripts/contributors.py",
-      "scripts/deploy_docs_status.py",
-      "scripts/doc_parsing_utils.py",
-      "scripts/docs.py",
-      "scripts/label_approved.py",
-      "scripts/lint.sh",
-      "scripts/notify_translations.py",
-      "scripts/people.py",
-      "scripts/sponsors.py",
-      "scripts/topic_repos.py",
-      "tests/test_compat.py",
-      "tests/test_custom_middleware_exception.py",
-      "tests/test_datastructures.py",
-      "tests/test_default_response_class.py",
-      "tests/test_deprecated_responses.py",
-      "tests/test_inherited_custom_class.py",
-      "tests/test_jsonable_encoder.py",
-      "tests/test_local_docs.py",
-      "tests/test_openapi_schema_type.py",
-      "tests/test_orjson_response_class.py",
-      "tests/test_response_model_as_return_annotation.py",
-      "tests/test_router_events.py",
-      "tests/test_schema_compat_pydantic_v2.py",
-      "tests/test_serialize_response_model.py",
-      "tests/test_skip_defaults.py",
-      "tests/test_sse.py",
-      "tests/test_starlette_urlconvertors.py",
-      "tests/test_stream_cancellation.py",
-      "tests/test_swagger_ui_escape.py",
-      "tests/test_tutorial/test_body/test_tutorial001.py",
-      "tests/test_tutorial/test_body_nested_models/test_tutorial001_tutorial002_tutorial003.py",
-      "tests/test_tutorial/test_custom_response/test_tutorial008.py",
-      "tests/test_tutorial/test_custom_response/test_tutorial009.py",
-      "tests/test_tutorial/test_custom_response/test_tutorial009b.py",
-      "tests/test_tutorial/test_debugging/test_tutorial001.py",
-      "tests/test_tutorial/test_openapi_webhooks/test_tutorial001.py",
-      "tests/test_tutorial/test_python_types/test_tutorial003.py",
-      "tests/test_tutorial/test_python_types/test_tutorial005.py",
-      "tests/test_tutorial/test_security/test_tutorial005.py",
-      "tests/test_tutorial/test_sql_databases/test_tutorial001.py",
-      "tests/test_tutorial/test_sql_databases/test_tutorial002.py",
-      "tests/test_webhooks_security.py",
-      "tests/utils.py"
+      {
+        "path": ".pre-commit-config.yaml",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/contributors.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/deploy_docs_status.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/doc_parsing_utils.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "scripts/docs.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "scripts/label_approved.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/lint.sh",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/notify_translations.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/people.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/sponsors.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "scripts/topic_repos.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_compat.py",
+        "patch": null,
+        "additions": 13,
+        "deletions": 5
+      },
+      {
+        "path": "tests/test_custom_middleware_exception.py",
+        "patch": null,
+        "additions": 3,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_datastructures.py",
+        "patch": null,
+        "additions": 4,
+        "deletions": 3
+      },
+      {
+        "path": "tests/test_default_response_class.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_deprecated_responses.py",
+        "patch": null,
+        "additions": 5,
+        "deletions": 5
+      },
+      {
+        "path": "tests/test_inherited_custom_class.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_jsonable_encoder.py",
+        "patch": null,
+        "additions": 5,
+        "deletions": 5
+      },
+      {
+        "path": "tests/test_local_docs.py",
+        "patch": null,
+        "additions": 10,
+        "deletions": 10
+      },
+      {
+        "path": "tests/test_openapi_schema_type.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_orjson_response_class.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "tests/test_response_model_as_return_annotation.py",
+        "patch": null,
+        "additions": 13,
+        "deletions": 13
+      },
+      {
+        "path": "tests/test_router_events.py",
+        "patch": null,
+        "additions": 9,
+        "deletions": 9
+      },
+      {
+        "path": "tests/test_schema_compat_pydantic_v2.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_serialize_response_model.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "tests/test_skip_defaults.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_sse.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "tests/test_starlette_urlconvertors.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": "tests/test_stream_cancellation.py",
+        "patch": null,
+        "additions": 5,
+        "deletions": 4
+      },
+      {
+        "path": "tests/test_swagger_ui_escape.py",
+        "patch": null,
+        "additions": 3,
+        "deletions": 3
+      },
+      {
+        "path": "tests/test_tutorial/test_body/test_tutorial001.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_tutorial/test_body_nested_models/test_tutorial001_tutorial002_tutorial003.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_tutorial/test_custom_response/test_tutorial008.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_tutorial/test_custom_response/test_tutorial009.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_tutorial/test_custom_response/test_tutorial009b.py",
+        "patch": null,
+        "additions": 2,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_tutorial/test_debugging/test_tutorial001.py",
+        "patch": null,
+        "additions": 4,
+        "deletions": 6
+      },
+      {
+        "path": "tests/test_tutorial/test_openapi_webhooks/test_tutorial001.py",
+        "patch": null,
+        "additions": 4,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_tutorial/test_python_types/test_tutorial003.py",
+        "patch": null,
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "tests/test_tutorial/test_python_types/test_tutorial005.py",
+        "patch": null,
+        "additions": 4,
+        "deletions": 4
+      },
+      {
+        "path": "tests/test_tutorial/test_security/test_tutorial005.py",
+        "patch": null,
+        "additions": 5,
+        "deletions": 3
+      },
+      {
+        "path": "tests/test_tutorial/test_sql_databases/test_tutorial001.py",
+        "patch": null,
+        "additions": 9,
+        "deletions": 5
+      },
+      {
+        "path": "tests/test_tutorial/test_sql_databases/test_tutorial002.py",
+        "patch": null,
+        "additions": 9,
+        "deletions": 5
+      },
+      {
+        "path": "tests/test_webhooks_security.py",
+        "patch": null,
+        "additions": 4,
+        "deletions": 1
+      },
+      {
+        "path": "tests/utils.py",
+        "patch": null,
+        "additions": 3,
+        "deletions": 3
+      }
     ],
     "commitShas": [
       "b7de2b7feb207b0a157b81c237b5a0cba6e21cb9"
@@ -2127,10 +2597,30 @@
       "internal"
     ],
     "files": [
-      "scripts/coverage.sh",
-      "scripts/format.sh",
-      "scripts/lint.sh",
-      "scripts/test-cov-html.sh"
+      {
+        "path": "scripts/coverage.sh",
+        "patch": "@@ -1,8 +0,0 @@\n-#!/usr/bin/env bash\n-\n-set -e\n-set -x\n-\n-coverage combine\n-coverage report\n-coverage html",
+        "additions": 0,
+        "deletions": 8
+      },
+      {
+        "path": "scripts/format.sh",
+        "patch": "@@ -1,5 +0,0 @@\n-#!/usr/bin/env bash\n-set -x\n-\n-ruff check fastapi tests docs_src scripts --fix\n-ruff format fastapi tests docs_src scripts",
+        "additions": 0,
+        "deletions": 5
+      },
+      {
+        "path": "scripts/lint.sh",
+        "patch": "@@ -1,9 +0,0 @@\n-#!/usr/bin/env bash\n-\n-set -e\n-set -x\n-\n-mypy fastapi\n-ty check\n-ruff check fastapi tests docs_src scripts\n-ruff format fastapi tests --check",
+        "additions": 0,
+        "deletions": 9
+      },
+      {
+        "path": "scripts/test-cov-html.sh",
+        "patch": "@@ -1,6 +0,0 @@\n-#!/usr/bin/env bash\n-\n-set -e\n-set -x\n-\n-bash scripts/test-cov.sh --cov-report=term-missing --cov-report=html ${@}",
+        "additions": 0,
+        "deletions": 6
+      }
     ],
     "commitShas": [
       "c054476c6f26ce3377eb58cd1ddae28b1c85607a"
@@ -2148,9 +2638,24 @@
       "internal"
     ],
     "files": [
-      "scripts/format.sh",
-      "scripts/lint.sh",
-      "scripts/test-cov-html.sh"
+      {
+        "path": "scripts/format.sh",
+        "patch": "@@ -0,0 +1,5 @@\n+#!/usr/bin/env bash\n+set -x\n+\n+ruff check fastapi tests docs_src scripts --fix\n+ruff format fastapi tests docs_src scripts",
+        "additions": 5,
+        "deletions": 0
+      },
+      {
+        "path": "scripts/lint.sh",
+        "patch": "@@ -0,0 +1,9 @@\n+#!/usr/bin/env bash\n+\n+set -e\n+set -x\n+\n+mypy fastapi\n+ty check\n+ruff check fastapi tests docs_src scripts\n+ruff format fastapi tests --check",
+        "additions": 9,
+        "deletions": 0
+      },
+      {
+        "path": "scripts/test-cov-html.sh",
+        "patch": "@@ -0,0 +1,6 @@\n+#!/usr/bin/env bash\n+\n+set -e\n+set -x\n+\n+bash scripts/test-cov.sh --cov-report=term-missing --cov-report=html ${@}",
+        "additions": 6,
+        "deletions": 0
+      }
     ],
     "commitShas": [
       "818b97a68b7956e2a409203193110082046508cb"
@@ -2184,7 +2689,12 @@
       "pre-commit"
     ],
     "files": [
-      ".pre-commit-config.yaml"
+      {
+        "path": ".pre-commit-config.yaml",
+        "patch": "@@ -15,7 +15,7 @@ repos:\n       - id: trailing-whitespace\n \n   - repo: https://github.com/crate-ci/typos\n-    rev: 44e2070e6017f834bf069503acb35ca0ca0b75f2 # v1.47.1\n+    rev: 37bb98842b0d8c4ffebdb75301a13db0267cef89 # v1.47.2\n     hooks:\n       - id: typos\n         args: [--force-exclude]",
+        "additions": 1,
+        "deletions": 1
+      }
     ],
     "commitShas": [
       "5ebf2ab2d17bacd95154a2c87caa182fa34c6c85"
@@ -2204,21 +2714,96 @@
       "internal"
     ],
     "files": [
-      ".github/workflows/build-docs.yml",
-      ".github/workflows/contributors.yml",
-      ".github/workflows/create-draft-release.yml",
-      ".github/workflows/deploy-docs.yml",
-      ".github/workflows/label-approved.yml",
-      ".github/workflows/notify-translations.yml",
-      ".github/workflows/people.yml",
-      ".github/workflows/pre-commit.yml",
-      ".github/workflows/prepare-release.yml",
-      ".github/workflows/publish.yml",
-      ".github/workflows/smokeshow.yml",
-      ".github/workflows/sponsors.yml",
-      ".github/workflows/test.yml",
-      ".github/workflows/topic-repos.yml",
-      ".github/workflows/translate.yml"
+      {
+        "path": ".github/workflows/build-docs.yml",
+        "patch": "@@ -55,11 +55,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml\n@@ -94,11 +94,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 4,
+        "deletions": 4
+      },
+      {
+        "path": ".github/workflows/contributors.yml",
+        "patch": "@@ -31,11 +31,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/create-draft-release.yml",
+        "patch": "@@ -31,11 +31,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Install uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n       - name: Extract release details\n         id: release-details\n         run: |",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/deploy-docs.yml",
+        "patch": "@@ -30,11 +30,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: false\n       - name: Install GitHub Actions dependencies\n         run: uv sync --locked --no-dev --group github-actions",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/label-approved.yml",
+        "patch": "@@ -27,11 +27,11 @@ jobs:\n       with:\n         python-version-file: \".python-version\"\n     - name: Setup uv\n-      uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+      uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n       with:\n         # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n         # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-        version: \"0.11.4\"\n+        version: \"0.11.18\"\n         enable-cache: true\n         cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/notify-translations.yml",
+        "patch": "@@ -38,11 +38,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/people.yml",
+        "patch": "@@ -31,11 +31,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/pre-commit.yml",
+        "patch": "@@ -47,11 +47,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           cache-dependency-glob: |\n             pyproject.toml\n             uv.lock",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/prepare-release.yml",
+        "patch": "@@ -43,11 +43,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Install uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n       - name: Prepare release\n         env:\n           PREPARE_RELEASE_BUMP: ${{ inputs.bump }}",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/publish.yml",
+        "patch": "@@ -27,11 +27,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Install uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: \"false\"\n       - name: Build distribution\n         run: uv build",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/smokeshow.yml",
+        "patch": "@@ -26,11 +26,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           cache-dependency-glob: |\n             pyproject.toml\n             uv.lock",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/sponsors.yml",
+        "patch": "@@ -32,11 +32,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/test.yml",
+        "patch": "@@ -118,11 +118,11 @@ jobs:\n         with:\n           python-version: ${{ matrix.python-version }}\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml\n@@ -182,11 +182,11 @@ jobs:\n         with:\n           python-version: \"3.13\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml\n@@ -216,11 +216,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 6,
+        "deletions": 6
+      },
+      {
+        "path": ".github/workflows/topic-repos.yml",
+        "patch": "@@ -27,11 +27,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           enable-cache: true\n           cache-dependency-glob: |\n             pyproject.toml",
+        "additions": 2,
+        "deletions": 2
+      },
+      {
+        "path": ".github/workflows/translate.yml",
+        "patch": "@@ -58,11 +58,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           cache-dependency-glob: |\n             pyproject.toml\n             uv.lock\n@@ -101,11 +101,11 @@ jobs:\n         with:\n           python-version-file: \".python-version\"\n       - name: Setup uv\n-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0\n+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0\n         with:\n           # Before upgrading uv version, make sure astral-sh/setup-uv knows its checksum.\n           # See: https://github.com/astral-sh/setup-uv/issues/851#issuecomment-4282017837\n-          version: \"0.11.4\"\n+          version: \"0.11.18\"\n           cache-dependency-glob: |\n             pyproject.toml\n             uv.lock",
+        "additions": 4,
+        "deletions": 4
+      }
     ],
     "commitShas": [
       "2c77ae3f76a2ec9db0f9ae9b114583a7881fa368"
@@ -2238,7 +2823,12 @@
       "python:uv"
     ],
     "files": [
-      "uv.lock"
+      {
+        "path": "uv.lock",
+        "patch": null,
+        "additions": 93,
+        "deletions": 93
+      }
     ],
     "commitShas": [
       "e26e64381c35ac6cf3d25bf6accb53b94a66dd8f"
@@ -2258,7 +2848,12 @@
       "python:uv"
     ],
     "files": [
-      "uv.lock"
+      {
+        "path": "uv.lock",
+        "patch": "@@ -4361,11 +4361,11 @@ wheels = [\n \n [[package]]\n name = \"python-multipart\"\n-version = \"0.0.30\"\n+version = \"0.0.32\"\n source = { registry = \"https://pypi.org/simple\" }\n-sdist = { url = \"https://files.pythonhosted.org/packages/4b/82/c8cd43a6e0719bf5a3b034f6726dd701f75829c08944c83d4b95d02ed0e8/python_multipart-0.0.30.tar.gz\", hash = \"sha256:0edfe0475c1f46ddd3ff7785a626f6118af32bdcf359bb21260367313bb32118\", size = 46316, upload-time = \"2026-05-31T19:24:55.198Z\" }\n+sdist = { url = \"https://files.pythonhosted.org/packages/5b/42/55c32bb9b12693c092ad250a0e82edb5b31ddeda6eb772de5f308b3804ad/python_multipart-0.0.32.tar.gz\", hash = \"sha256:be54b7f3fa167bb83e4fcd936b887b708f4e57fe75911c02aebf53efaf8d938e\", size = 46881, upload-time = \"2026-06-04T16:18:58.647Z\" }\n wheels = [\n-    { url = \"https://files.pythonhosted.org/packages/1c/fd/0318007beb234790993d3ec5afd051d1dbceb733e81e3afe2b981ece3f37/python_multipart-0.0.30-py3-none-any.whl\", hash = \"sha256:830964def8c90607ac5daa00514e3987815865713ade8d20febc9177ac0c3c5b\", size = 29730, upload-time = \"2026-05-31T19:24:53.814Z\" },\n+    { url = \"https://files.pythonhosted.org/packages/e1/04/e8135ebd1ad02c56ec633277529b2602ff99ff634be76cdba5744cf554fd/python_multipart-0.0.32-py3-none-any.whl\", hash = \"sha256:ff6d3f776f16878c894e52e107296ffc890e913c611b1a4ec6c44e2821fe2e23\", size = 30042, upload-time = \"2026-06-04T16:18:57.319Z\" },\n ]\n \n [[package]]",
+        "additions": 3,
+        "deletions": 3
+      }
     ],
     "commitShas": [
       "9ca069f2be3e619fcda6d33fb1ed7025d6f9a419"
@@ -2278,7 +2873,12 @@
       "python:uv"
     ],
     "files": [
-      "uv.lock"
+      {
+        "path": "uv.lock",
+        "patch": null,
+        "additions": 51,
+        "deletions": 51
+      }
     ],
     "commitShas": [
       "705324ed2977f99dec4df45175ee27a2bf26c17f"
@@ -2298,7 +2898,12 @@
       "python:uv"
     ],
     "files": [
-      "uv.lock"
+      {
+        "path": "uv.lock",
+        "patch": "@@ -5174,15 +5174,15 @@ wheels = [\n \n [[package]]\n name = \"starlette\"\n-version = \"1.2.1\"\n+version = \"1.3.1\"\n source = { registry = \"https://pypi.org/simple\" }\n dependencies = [\n     { name = \"anyio\" },\n     { name = \"typing-extensions\", marker = \"python_full_version < '3.13'\" },\n ]\n-sdist = { url = \"https://files.pythonhosted.org/packages/25/44/ec35f1b6e83094b997da438a02c8c9b0ade2b1e84cfc48bd4656780760a6/starlette-1.2.1.tar.gz\", hash = \"sha256:9b9b5ebb992e67d6093741e63c2f59e4f6fff986f81163c087867bd7b924b3f6\", size = 2701854, upload-time = \"2026-05-31T01:07:51.847Z\" }\n+sdist = { url = \"https://files.pythonhosted.org/packages/eb/e3/7c1dc7381d9f8ab7d854328ebfa884e62cb3f3d8549ddfd37c7814f42afa/starlette-1.3.1.tar.gz\", hash = \"sha256:05d0213193f2fbaae60e2ecb593b4add4262ad4e46536b54abe36f11a71724e0\", size = 2703240, upload-time = \"2026-06-12T09:23:11.602Z\" }\n wheels = [\n-    { url = \"https://files.pythonhosted.org/packages/1c/54/196d0c1db10af76baa4f64894448505d60d3cdf70ef92cbb35f46a4e4c71/starlette-1.2.1-py3-none-any.whl\", hash = \"sha256:4de0082d08c8f6764a85a54cf1120d6939507a19905c7768acad2a9f875d2b89\", size = 73350, upload-time = \"2026-05-31T01:07:50.09Z\" },\n+    { url = \"https://files.pythonhosted.org/packages/ec/bb/2799cc2ede3ed41131f8975621e7213dfc7ef4acbbaadfa440f32500c370/starlette-1.3.1-py3-none-any.whl\", hash = \"sha256:c7372aae11c3c3f26a42df7bd626cec2f47d03483d261d369516a615a53714c6\", size = 73632, upload-time = \"2026-06-12T09:23:10.017Z\" },\n ]\n \n [[package]]",
+        "additions": 3,
+        "deletions": 3
+      }
     ],
     "commitShas": [
       "69f8d87fb7aa2d6028331af16ec28d7b02636183"
@@ -2318,7 +2923,12 @@
       "python:uv"
     ],
     "files": [
-      "uv.lock"
+      {
+        "path": "uv.lock",
+        "patch": null,
+        "additions": 121,
+        "deletions": 121
+      }
     ],
     "commitShas": [
       "84304df58f837352cdd9503bef4f46f0da852111"
@@ -2336,9 +2946,24 @@
       "feature"
     ],
     "files": [
-      "fastapi/openapi/utils.py",
-      "fastapi/routing.py",
-      "tests/test_router_include_context.py"
+      {
+        "path": "fastapi/openapi/utils.py",
+        "patch": "@@ -479,26 +479,22 @@ def get_openapi_path(\n \n \n def _get_api_route_for_openapi(\n-    route: BaseRoute, route_context: routing._EffectiveRouteContext | None\n+    route_context: routing.RouteContext,\n ) -> routing._APIRouteLike | None:\n-    if route_context is not None and isinstance(\n-        route_context.original_route, routing.APIRoute\n-    ):\n+    if isinstance(route_context.original_route, routing.APIRoute):\n         return cast(routing._APIRouteLike, route_context)\n-    if isinstance(route, routing.APIRoute):\n-        return cast(routing._APIRouteLike, route)\n     return None\n \n \n def get_fields_from_routes(\n-    routes: Sequence[BaseRoute],\n+    routes: Sequence[BaseRoute | routing.RouteContext],\n ) -> list[ModelField]:\n     body_fields_from_routes: list[ModelField] = []\n     responses_from_routes: list[ModelField] = []\n     request_fields_from_routes: list[ModelField] = []\n     callback_flat_models: list[ModelField] = []\n-    for route, route_context in routing._iter_routes_with_context(routes):\n-        api_route = _get_api_route_for_openapi(route, route_context)\n+    for route_context in routing.iter_route_contexts(routes):\n+        api_route = _get_api_route_for_openapi(route_context)\n         if api_route is None:\n             continue\n         if api_route.include_in_schema:\n@@ -531,8 +527,8 @@ def get_openapi(\n     openapi_version: str = \"3.1.0\",\n     summary: str | None = None,\n     description: str | None = None,\n-    routes: Sequence[BaseRoute],\n-    webhooks: Sequence[BaseRoute] | None = None,\n+    routes: Sequence[BaseRoute | routing.RouteContext],\n+    webhooks: Sequence[BaseRoute | routing.RouteContext] | None = None,\n     tags: list[dict[str, Any]] | None = None,\n     servers: list[dict[str, str | Any]] | None = None,\n     terms_of_service: str | None = None,\n@@ -567,8 +563,8 @@ def get_openapi(\n         model_name_map=model_name_map,\n         separate_input_output_schemas=separate_input_output_schemas,\n     )\n-    for route, route_context in routing._iter_routes_with_context(routes):\n-        api_route = _get_api_route_for_openapi(route, route_context)\n+    for route_context in routing.iter_route_contexts(routes):\n+        api_route = _get_api_route_for_openapi(route_context)\n         if api_route is not None:\n             result = get_openapi_path(\n                 route=api_route,\n@@ -587,8 +583,8 @@ def get_openapi(\n                     )\n                 if path_definitions:\n                     definitions.update(path_definitions)\n-    for webhook, webhook_context in routing._iter_routes_with_context(webhooks or []):\n-        api_webhook = _get_api_route_for_openapi(webhook, webhook_context)\n+    for webhook_context in routing.iter_route_contexts(webhooks or []):\n+        api_webhook = _get_api_route_for_openapi(webhook_context)\n         if api_webhook is not None:\n             result = get_openapi_path(\n                 route=api_webhook,",
+        "additions": 11,
+        "deletions": 15
+      },
+      {
+        "path": "fastapi/routing.py",
+        "patch": "@@ -1454,6 +1454,47 @@ def url_path_for(self, name: str, /, **path_params: Any) -> Any:\n         return URLPath(path=path, protocol=\"http\")\n \n \n+@dataclass(frozen=True)\n+class RouteContext:\n+    route: BaseRoute\n+    _route_context: _EffectiveRouteContext | None = field(default=None, repr=False)\n+\n+    @property\n+    def original_route(self) -> BaseRoute:\n+        if self._route_context is not None:\n+            return self._route_context.original_route\n+        return self.route\n+\n+    @property\n+    def _effective_route(self) -> BaseRoute | _EffectiveRouteContext:\n+        if self._route_context is not None:\n+            return self._route_context\n+        return self.route\n+\n+    @property\n+    def path(self) -> str | None:\n+        return getattr(self._effective_route, \"path\", None)\n+\n+    @property\n+    def path_format(self) -> str | None:\n+        return getattr(self._effective_route, \"path_format\", None)\n+\n+    @property\n+    def name(self) -> str | None:\n+        return getattr(self._effective_route, \"name\", None)\n+\n+    @property\n+    def methods(self) -> set[str] | None:\n+        return getattr(self._effective_route, \"methods\", None)\n+\n+    @property\n+    def endpoint(self) -> Callable[..., Any] | None:\n+        return getattr(self._effective_route, \"endpoint\", None)\n+\n+    def __getattr__(self, name: str) -> Any:\n+        return getattr(self._effective_route, name)\n+\n+\n @dataclass\n class _IncludedRouter(BaseRoute):\n     original_router: \"APIRouter\"\n@@ -1654,6 +1695,20 @@ def _iter_included_route_candidates(routes: Sequence[BaseRoute]) -> Iterator[Bas\n             yield route\n \n \n+def iter_route_contexts(\n+    routes: Sequence[BaseRoute | RouteContext],\n+) -> Iterator[RouteContext]:\n+    for route in routes:\n+        if isinstance(route, RouteContext):\n+            yield route\n+            continue\n+        for original_route, route_context in _iter_routes_with_context([route]):\n+            if route_context is None:\n+                yield RouteContext(original_route)\n+            else:\n+                yield RouteContext(original_route, route_context)\n+\n+\n def _iter_routes_with_context(\n     routes: Sequence[BaseRoute],\n ) -> Iterator[tuple[BaseRoute, _EffectiveRouteContext | None]]:",
+        "additions": 55,
+        "deletions": 0
+      },
+      {
+        "path": "tests/test_router_include_context.py",
+        "patch": "@@ -1,16 +1,21 @@\n from typing import Annotated, cast\n \n import pytest\n-from fastapi import APIRouter, Body, Depends, FastAPI, Request\n+from fastapi import APIRouter, Body, Depends, FastAPI, Request, Security\n from fastapi.exceptions import FastAPIError\n+from fastapi.openapi.utils import get_openapi\n from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse\n from fastapi.routing import (\n     APIRoute,\n+    RouteContext,\n     _IncludedRouter,\n     _iter_included_route_candidates,\n     _restore_fastapi_scope_key,\n+    iter_route_contexts,\n )\n+from fastapi.security import HTTPBearer\n from fastapi.testclient import TestClient\n+from pydantic import BaseModel\n from starlette.routing import BaseRoute, Host, Match, Mount, NoMatchFound, Route, Router\n \n \n@@ -30,6 +35,104 @@ def unique_id_b(route: APIRoute) -> str:\n     return f\"b_{route.name}\"\n \n \n+def test_iter_route_contexts_returns_direct_route_context():\n+    router = APIRouter()\n+\n+    @router.get(\"/items/{item_id}\")\n+    def read_item(item_id: str):  # pragma: no cover\n+        return {\"item_id\": item_id}\n+\n+    contexts = list(iter_route_contexts(router.routes))\n+\n+    assert len(contexts) == 1\n+    assert isinstance(contexts[0], RouteContext)\n+    assert contexts[0].original_route is router.routes[0]\n+    assert contexts[0].path == \"/items/{item_id}\"\n+    assert contexts[0].path_format == \"/items/{item_id}\"\n+    assert contexts[0].methods == {\"GET\"}\n+    assert contexts[0].endpoint is read_item\n+\n+\n+def test_iter_route_contexts_supports_nested_conflict_detection():\n+    existing_router = APIRouter()\n+    nested_router = APIRouter()\n+\n+    @nested_router.get(\"/{username}\")\n+    def read_user(username: str):  # pragma: no cover\n+        return {\"username\": username}\n+\n+    existing_router.include_router(nested_router, prefix=\"/auth/user\")\n+\n+    new_router = APIRouter()\n+\n+    @new_router.get(\"/auth/user/{username}\")\n+    def read_user_again(username: str):  # pragma: no cover\n+        return {\"username\": username}\n+\n+    existing_paths = {\n+        context.path for context in iter_route_contexts(existing_router.routes)\n+    }\n+    new_paths = {context.path for context in iter_route_contexts(new_router.routes)}\n+\n+    assert existing_paths & new_paths == {\"/auth/user/{username}\"}\n+\n+\n+def test_get_openapi_accepts_filtered_route_contexts_with_effective_paths():\n+    router = APIRouter()\n+    bearer_scheme = HTTPBearer()\n+\n+    @router.get(\"/public\", tags=[\"public\"])\n+    def read_public(token: Annotated[str, Security(bearer_scheme)]):  # pragma: no cover\n+        return {\"public\": True}\n+\n+    @router.get(\"/private\", tags=[\"private\"])\n+    def read_private():  # pragma: no cover\n+        return {\"private\": True}\n+\n+    app = FastAPI()\n+    app.include_router(router, prefix=\"/api\")\n+\n+    public_routes = [\n+        context\n+        for context in iter_route_contexts(app.routes)\n+        if \"public\" in getattr(context, \"tags\", [])\n+    ]\n+    schema = get_openapi(\n+        title=\"Public API\",\n+        version=\"1.0.0\",\n+        routes=public_routes,\n+    )\n+\n+    assert set(schema[\"paths\"]) == {\"/api/public\"}\n+    assert \"HTTPBearer\" in schema[\"components\"][\"securitySchemes\"]\n+\n+\n+def test_get_openapi_accepts_webhook_route_contexts():\n+    app = FastAPI()\n+    bearer_scheme = HTTPBearer()\n+\n+    class Subscription(BaseModel):\n+        username: str\n+\n+    @app.webhooks.post(\"new-subscription\")\n+    def new_subscription(\n+        body: Subscription, token: Annotated[str, Security(bearer_scheme)]\n+    ):  # pragma: no cover\n+        return None\n+\n+    webhook_contexts = list(iter_route_contexts(app.webhooks.routes))\n+    schema = get_openapi(\n+        title=\"Webhook API\",\n+        version=\"1.0.0\",\n+        routes=[],\n+        webhooks=webhook_contexts,\n+    )\n+\n+    assert set(schema[\"webhooks\"]) == {\"new-subscription\"}\n+    assert \"HTTPBearer\" in schema[\"components\"][\"securitySchemes\"]\n+    assert \"Subscription\" in schema[\"components\"][\"schemas\"]\n+\n+\n def test_router_include_context_matches_flattened_include_metadata():\n     callback_router = APIRouter()\n ",
+        "additions": 104,
+        "deletions": 1
+      }
     ],
     "commitShas": [
       "6ac122071d2c9e6add587e1271eb010dd6acbed0"
@@ -2358,8 +2983,18 @@
       "internal"
     ],
     "files": [
-      "docs/en/data/sponsors.yml",
-      "scripts/docs.py"
+      {
+        "path": "docs/en/data/sponsors.yml",
+        "patch": "@@ -1,51 +1,51 @@\n keystone:\n   - url: https://fastapicloud.com\n     title: FastAPI Cloud. By the same team behind FastAPI. You code. We Cloud.\n-    img: https://fastapi.tiangolo.com/img/sponsors/fastapicloud.png\n+    img: /img/sponsors/fastapicloud.png\n gold:\n   - url: https://blockbee.io?ref=fastapi\n     title: BlockBee Cryptocurrency Payment Gateway\n-    img: https://fastapi.tiangolo.com/img/sponsors/blockbee.png\n+    img: /img/sponsors/blockbee.png\n   - url: https://www.propelauth.com/?utm_source=fastapi&utm_campaign=1223&utm_medium=mainbadge\n     title: Auth, user management and more for your B2B product\n-    img: https://fastapi.tiangolo.com/img/sponsors/propelauth.png\n+    img: /img/sponsors/propelauth.png\n   - url: https://docs.render.com/deploy-fastapi?utm_source=deploydoc&utm_medium=referral&utm_campaign=fastapi\n     title: Deploy & scale any full-stack web app on Render. Focus on building apps, not infra.\n-    img: https://fastapi.tiangolo.com/img/sponsors/render.svg\n+    img: /img/sponsors/render.svg\n   - url: https://www.coderabbit.ai/?utm_source=fastapi&utm_medium=badge&utm_campaign=fastapi\n     title: Cut Code Review Time & Bugs in Half with CodeRabbit\n-    img: https://fastapi.tiangolo.com/img/sponsors/coderabbit.png\n+    img: /img/sponsors/coderabbit.png\n   - url: https://subtotal.com/?utm_source=fastapi&utm_medium=sponsorship&utm_campaign=open-source\n     title: The Gold Standard in Retail Account Linking\n-    img: https://fastapi.tiangolo.com/img/sponsors/subtotal.svg\n+    img: /img/sponsors/subtotal.svg\n   - url: https://docs.railway.com/guides/fastapi?utm_medium=integration&utm_source=docs&utm_campaign=fastapi\n     title: Deploy enterprise applications at startup speed\n-    img: https://fastapi.tiangolo.com/img/sponsors/railway.png\n+    img: /img/sponsors/railway.png\n   - url: https://serpapi.com/?utm_source=fastapi_website\n     title: \"SerpApi: Web Search API\"\n-    img: https://fastapi.tiangolo.com/img/sponsors/serpapi.png\n+    img: /img/sponsors/serpapi.png\n   - url: https://www.greptile.com/?utm_source=fastapi&utm_medium=sponsorship&utm_campaign=fastapi_sponsor_page\n     title: \"Greptile: The AI Code Reviewer\"\n-    img: https://fastapi.tiangolo.com/img/sponsors/greptile.png\n+    img: /img/sponsors/greptile.png\n silver:\n   - url: https://databento.com/?utm_source=fastapi&utm_medium=sponsor&utm_content=display\n     title: Pay as you go for market data\n-    img: https://fastapi.tiangolo.com/img/sponsors/databento.svg\n+    img: /img/sponsors/databento.svg\n   - url: https://www.svix.com/\n     title: Svix - Webhooks as a service\n-    img: https://fastapi.tiangolo.com/img/sponsors/svix.svg\n+    img: /img/sponsors/svix.svg\n   - url: https://www.stainlessapi.com/?utm_source=fastapi&utm_medium=referral\n     title: Stainless | Generate best-in-class SDKs\n-    img: https://fastapi.tiangolo.com/img/sponsors/stainless.png\n+    img: /img/sponsors/stainless.png\n   - url: https://www.permit.io/blog/implement-authorization-in-fastapi?utm_source=github&utm_medium=referral&utm_campaign=fastapi\n     title: Fine-Grained Authorization for FastAPI\n-    img: https://fastapi.tiangolo.com/img/sponsors/permit.png\n+    img: /img/sponsors/permit.png\n   - url: https://dribia.com/en/\n     title: Dribia - Data Science within your reach\n-    img: https://fastapi.tiangolo.com/img/sponsors/dribia.png\n+    img: /img/sponsors/dribia.png\n   - url: https://www.rapidproxy.io/?ref=fastapi\n     title: Try RapidProxy for free - Residential Proxies with 90M+ Global IPs. Starting from $0.65/GB for web scraping, automation, and data collection.\n-    img: https://fastapi.tiangolo.com/img/sponsors/rapidproxy.png\n+    img: /img/sponsors/rapidproxy.png\n bronze:\n   # - url: https://testdriven.io/courses/tdd-fastapi/\n   #   title: Learn to build high-quality web apps with best practices",
+        "additions": 15,
+        "deletions": 15
+      },
+      {
+        "path": "scripts/docs.py",
+        "patch": "@@ -311,22 +311,26 @@ def copy_zensical_stage_to_site(lang: str) -> None:\n ### Keystone Sponsor\n \n {% for sponsor in sponsors.keystone -%}\n-<a href=\"{{ sponsor.url }}\" target=\"_blank\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor.img }}\"></a>\n+<a href=\"{{ sponsor.url }}\" target=\"_blank\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor_img_url(sponsor.img) }}\"></a>\n {% endfor %}\n ### Gold Sponsors\n \n {% for sponsor in sponsors.gold -%}\n-<a href=\"{{ sponsor.url }}\" target=\"_blank\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor.img }}\"></a>\n+<a href=\"{{ sponsor.url }}\" target=\"_blank\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor_img_url(sponsor.img) }}\"></a>\n {% endfor %}\n ### Silver Sponsors\n \n {% for sponsor in sponsors.silver -%}\n-<a href=\"{{ sponsor.url }}\" target=\"_blank\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor.img }}\"></a>\n+<a href=\"{{ sponsor.url }}\" target=\"_blank\" title=\"{{ sponsor.title }}\"><img src=\"{{ sponsor_img_url(sponsor.img) }}\"></a>\n {% endfor %}\n \n \"\"\"\n \n \n+def sponsor_img_url(img: str) -> str:\n+    return f\"https://fastapi.tiangolo.com{img}\"\n+\n+\n def remove_header_permalinks(content: str):\n     lines: list[str] = []\n     for line in content.split(\"\\n\"):\n@@ -355,7 +359,7 @@ def generate_readme_content() -> str:\n     pre_end = match_start.end()\n     post_start = match_end.start()\n     template = Template(index_sponsors_template)\n-    message = template.render(sponsors=sponsors)\n+    message = template.render(sponsors=sponsors, sponsor_img_url=sponsor_img_url)\n     pre_content = content[frontmatter_end:pre_end]\n     post_content = content[post_start:]\n     new_content = pre_content + message + post_content",
+        "additions": 8,
+        "deletions": 4
+      }
     ],
     "commitShas": [
       "32d711f6d24224f2aed3395cac428222cbe9b1fb"
@@ -2377,9 +3012,24 @@
       "internal"
     ],
     "files": [
-      "README.md",
-      "docs/en/data/sponsors.yml",
-      "docs/en/docs/img/sponsors/bairesdev.svg"
+      {
+        "path": "README.md",
+        "patch": "@@ -68,6 +68,7 @@ The key features are:\n <a href=\"https://www.permit.io/blog/implement-authorization-in-fastapi?utm_source=github&utm_medium=referral&utm_campaign=fastapi\" target=\"_blank\" title=\"Fine-Grained Authorization for FastAPI\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/permit.png\"></a>\n <a href=\"https://dribia.com/en/\" target=\"_blank\" title=\"Dribia - Data Science within your reach\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/dribia.png\"></a>\n <a href=\"https://www.rapidproxy.io/?ref=fastapi\" target=\"_blank\" title=\"Try RapidProxy for free - Residential Proxies with 90M+ Global IPs. Starting from $0.65/GB for web scraping, automation, and data collection.\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/rapidproxy.png\"></a>\n+<a href=\"https://www.bairesdev.com/\" target=\"_blank\" title=\"BairesDev | Nearshore Software Development & Staff Augmentation Company\"><img src=\"https://fastapi.tiangolo.com/img/sponsors/bairesdev.svg\"></a>\n \n <!-- /sponsors -->\n ",
+        "additions": 1,
+        "deletions": 0
+      },
+      {
+        "path": "docs/en/data/sponsors.yml",
+        "patch": "@@ -46,7 +46,10 @@ silver:\n   - url: https://www.rapidproxy.io/?ref=fastapi\n     title: Try RapidProxy for free - Residential Proxies with 90M+ Global IPs. Starting from $0.65/GB for web scraping, automation, and data collection.\n     img: /img/sponsors/rapidproxy.png\n+  - url: https://www.bairesdev.com/\n+    title: \"BairesDev | Nearshore Software Development & Staff Augmentation Company\"\n+    img: /img/sponsors/bairesdev.svg\n bronze:\n   # - url: https://testdriven.io/courses/tdd-fastapi/\n   #   title: Learn to build high-quality web apps with best practices\n-  #   img: https://fastapi.tiangolo.com/img/sponsors/testdriven.svg\n+  #   img: /img/sponsors/testdriven.svg",
+        "additions": 4,
+        "deletions": 1
+      },
+      {
+        "path": "docs/en/docs/img/sponsors/bairesdev.svg",
+        "patch": "@@ -0,0 +1,16 @@\n+<svg width=\"240\" height=\"100\" viewBox=\"0 0 240 100\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n+<rect width=\"240\" height=\"100\" fill=\"#0B1020\"/>\n+<g transform=\"translate(22.1 35.15) scale(1.1)\">\n+<path d=\"M16.7799 0.19017C23.9999 0.19017 29.85 6.19016 29.85 13.5902C29.85 20.9902 23.9999 26.9902 16.7799 26.9902V0.180176V0.19017Z\" fill=\"#F66135\"/>\n+<path d=\"M7.52991 0C14.4399 2.13 18.3599 9.61 16.2799 16.7C14.1999 23.79 6.91 27.8 0 25.67L7.52991 0Z\" fill=\"#F66135\"/>\n+<path d=\"M45.0299 20.8301C46.9999 20.8301 48.3899 19.8401 48.3899 17.6901C48.3899 15.5401 46.7599 14.6101 44.9099 14.6101H41.46V20.8301H45.0299ZM44.9399 11.5301C46.7799 11.5301 47.9299 10.3801 47.9299 8.70007C47.9299 7.02007 46.75 6.00008 45 6.00008H41.46V11.5301H44.9399ZM45.4199 2.58008C49.5299 2.58008 51.9199 5.03008 51.9199 8.30008C51.9199 10.2901 50.9499 11.9101 49.4399 12.8101V13.0001C50.8299 13.5901 52.62 15.1401 52.62 18.0301C52.62 22.0401 49.5299 24.3401 46.0299 24.3401H37.59V2.58008H45.4299H45.4199Z\" fill=\"white\"/>\n+<path d=\"M66.7799 16.1998C66.7799 13.1198 64.96 11.2598 62.48 11.2598C60 11.2598 58.24 13.3098 58.24 16.1998C58.24 19.0898 59.96 21.1098 62.5 21.1098C65.04 21.1098 66.7599 18.9298 66.7599 16.1998M54.25 16.2598C54.25 11.1298 57.28 7.58984 61.63 7.58984C64.38 7.58984 65.92 9.26985 66.47 10.1098H66.6799V7.99985H70.61V24.3499H66.74V22.2699H66.5299C66.0799 22.9499 64.65 24.7598 61.75 24.7598C57.3 24.7598 54.25 21.3398 54.25 16.2798V16.2598Z\" fill=\"white\"/>\n+<path d=\"M73.8899 7.99013H77.8199V24.3401H73.8899V7.99013ZM73.4299 3.45012C73.4299 2.05012 74.43 1.12012 75.85 1.12012C77.27 1.12012 78.2699 2.05012 78.2699 3.45012C78.2699 4.85012 77.27 5.81012 75.85 5.81012C74.43 5.81012 73.4299 4.91012 73.4299 3.45012Z\" fill=\"white\"/>\n+<path d=\"M81.08 7.99017H84.7999V10.6602H85.0399C85.5599 9.39017 87.01 7.93018 89.21 7.93018H90.6599V11.7802H89.0299C86.5199 11.7802 85.0099 13.6802 85.0099 16.6002V24.3402H81.08V7.99017Z\" fill=\"white\"/>\n+<path d=\"M103.92 14.4899C103.74 12.2799 102.08 10.8199 99.7799 10.8199C97.4799 10.8199 95.8799 12.4399 95.6399 14.4899H103.93H103.92ZM91.7599 16.2598C91.7599 11.0998 95.1199 7.58984 99.7799 7.58984C104.89 7.58984 107.67 11.4799 107.67 16.0699V17.3499H95.5699C95.6899 19.8399 97.3499 21.5098 99.8999 21.5098C101.84 21.5098 103.32 20.5799 103.86 19.2399H107.52C106.73 22.5699 103.89 24.7399 99.7799 24.7399C95.0899 24.7399 91.7599 21.1298 91.7599 16.2598Z\" fill=\"white\"/>\n+<path d=\"M109.49 19.4299H113.12C113.27 20.8299 114.36 21.5699 116.15 21.5699C117.94 21.5699 118.99 20.7598 118.99 19.6098C118.99 16.1298 109.86 19.4198 109.86 12.5898C109.86 9.81984 112.19 7.58984 116.12 7.58984C119.57 7.58984 122.14 9.38985 122.38 12.6599H118.9C118.72 11.4799 117.81 10.6998 116.09 10.6998C114.49 10.6998 113.46 11.4098 113.46 12.4698C113.46 15.5798 122.81 12.3198 122.81 19.3998C122.81 22.5098 120.36 24.7498 116.1 24.7498C111.84 24.7498 109.66 22.6698 109.51 19.4398\" fill=\"white\"/>\n+<path d=\"M132.8 20.7301C136.52 20.7301 139.58 18.4901 139.58 13.3901C139.58 8.29008 136.55 6.18008 132.8 6.18008H129.84V20.7301H132.8ZM125.82 2.58008H132.96C139.71 2.58008 143.76 7.05007 143.76 13.4001C143.76 20.1401 139.71 24.3401 132.96 24.3401H125.82V2.58008Z\" fill=\"white\"/>\n+<path d=\"M157.7 14.4899C157.52 12.2799 155.86 10.8199 153.56 10.8199C151.26 10.8199 149.66 12.4399 149.42 14.4899H157.71H157.7ZM145.54 16.2598C145.54 11.0998 148.9 7.58984 153.56 7.58984C158.67 7.58984 161.45 11.4799 161.45 16.0699V17.3499H149.35C149.47 19.8399 151.13 21.5098 153.68 21.5098C155.62 21.5098 157.1 20.5799 157.64 19.2399H161.3C160.51 22.5699 157.67 24.7399 153.56 24.7399C148.87 24.7399 145.54 21.1298 145.54 16.2598Z\" fill=\"white\"/>\n+<path d=\"M161.9 7.99023H166.02L169.8 19.5202H170.04L173.79 7.99023H177.99L172.16 24.3402H167.71L161.9 7.99023Z\" fill=\"white\"/>\n+</g>\n+</svg>",
+        "additions": 16,
+        "deletions": 0
+      }
     ],
     "commitShas": [
       "d514109e42fc90590a7050e982a37ac6ecf561ab"
@@ -2397,8 +3047,18 @@
       "release"
     ],
     "files": [
-      "docs/en/docs/release-notes.md",
-      "fastapi/__init__.py"
+      {
+        "path": "docs/en/docs/release-notes.md",
+        "patch": "@@ -7,6 +7,8 @@ hide:\n \n ## Latest Changes\n \n+## 0.137.2 (2026-06-18)\n+\n ### Features\n \n * ✨ Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse). PR [#15785](https://github.com/fastapi/fastapi/pull/15785) by [@tiangolo](https://github.com/tiangolo).",
+        "additions": 2,
+        "deletions": 0
+      },
+      {
+        "path": "fastapi/__init__.py",
+        "patch": "@@ -1,6 +1,6 @@\n \"\"\"FastAPI framework, high performance, easy to learn, fast to code, ready for production\"\"\"\n \n-__version__ = \"0.137.1\"\n+__version__ = \"0.137.2\"\n \n from starlette import status as status\n ",
+        "additions": 1,
+        "deletions": 1
+      }
     ],
     "commitShas": [
       "6a0ba7bb1f5015383cdceb3822ca1abed6e32b82"

@@ -97,30 +97,36 @@ export function Dashboard({ pkg }: { pkg: ReleasePackage }) {
           dirty={dirty}
         />
 
-        <div className="space-y-6">
+        <div className={`space-y-6 ${editing ? "rounded-xl bg-indigo-50/30 p-1" : ""}`}>
           <ReleaseHeader pkg={pkg} />
 
-          <ChangelogList
-            entries={artifacts.changelog}
-            editing={editing}
-            onEditText={editChangelogText}
-          />
+          <div id="changelog" className="scroll-mt-4">
+            <ChangelogList
+              entries={artifacts.changelog}
+              editing={editing}
+              onEditText={editChangelogText}
+            />
+          </div>
 
-          <NotesSections
-            internal={artifacts.internalReleaseNotes}
-            customer={artifacts.customerReleaseNotes}
-            editing={editing}
-            onEditInternal={editInternalBody}
-            onEditCustomer={editCustomerBody}
-          />
+          <div id="notes" className="space-y-6 scroll-mt-4">
+            <NotesSections
+              internal={artifacts.internalReleaseNotes}
+              customer={artifacts.customerReleaseNotes}
+              editing={editing}
+              onEditInternal={editInternalBody}
+              onEditCustomer={editCustomerBody}
+            />
+          </div>
 
-          <DocumentationUpdates
-            updates={artifacts.documentationUpdates}
-            retrieval={pkg.retrieval}
-            docIndex={pkg.docIndex}
-            editing={editing}
-            onEditSuggestion={editDocSuggestion}
-          />
+          <div id="docs" className="scroll-mt-4">
+            <DocumentationUpdates
+              updates={artifacts.documentationUpdates}
+              retrieval={pkg.retrieval}
+              docIndex={pkg.docIndex}
+              editing={editing}
+              onEditSuggestion={editDocSuggestion}
+            />
+          </div>
         </div>
       </main>
     </SourceIndexProvider>

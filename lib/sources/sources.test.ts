@@ -71,15 +71,17 @@ describe("buildSourceIndex", () => {
     expect(Object.keys(index)).toEqual(["pr:15745"]);
   });
 
-  it("attaches changed files (as GitHub blob urls at the release ref) to a PR", () => {
-    // A substantive PR whose file list was harvested.
-    const pull = input.pullRequests.find((p) => p.files.length > 0);
-    expect(pull, "expected at least one harvested PR with files").toBeDefined();
+  it("carries changed files (path, blob url, patch, counts) through to the SourceRef", () => {
+    // A PR whose files include a real unified-diff patch.
+    const pull = input.pullRequests.find((p) => p.files.some((f) => f.patch));
+    expect(pull, "expected a harvested PR with a patch").toBeDefined();
     const ref = buildSourceIndex(input, [pull!.id])[pull!.id];
-    expect(ref.files.map((f) => f.path)).toEqual(pull!.files);
-    const f0 = ref.files[0];
-    expect(f0.url).toBe(
-      `https://github.com/fastapi/fastapi/blob/${input.release.headRef}/${f0.path}`,
+    expect(ref.files.map((f) => f.path)).toEqual(pull!.files.map((f) => f.path));
+    const patched = ref.files.find((f) => f.patch);
+    expect(patched).toBeDefined();
+    expect(patched!.patch).toContain("@@"); // a unified-diff hunk header
+    expect(patched!.url).toBe(
+      `https://github.com/fastapi/fastapi/blob/${input.release.headRef}/${patched!.path}`,
     );
   });
 

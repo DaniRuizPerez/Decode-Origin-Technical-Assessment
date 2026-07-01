@@ -161,10 +161,10 @@ function fileToComponent(path: string): string | null {
 }
 
 /** Distinct components across a set of changed files, in first-seen order. */
-function inferComponents(files: string[]): string[] {
+function inferComponents(files: { path: string }[]): string[] {
   const seen = new Set<string>();
   for (const f of files) {
-    const c = fileToComponent(f);
+    const c = fileToComponent(f.path);
     if (c && !seen.has(c)) seen.add(c);
   }
   return [...seen];
@@ -257,7 +257,7 @@ const NOISE_LABELS = new Set([
  */
 function touchesSubstantiveSource(pr: PullRequest): boolean {
   return pr.files.some(
-    (f) => f.startsWith("fastapi/") && !f.endsWith("__init__.py"),
+    (f) => f.path.startsWith("fastapi/") && !f.path.endsWith("__init__.py"),
   );
 }
 

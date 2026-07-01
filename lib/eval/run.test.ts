@@ -66,6 +66,7 @@ describe("formatReport", () => {
           suggestion: "Update include_router examples",
           retrievedChunkId: null,
           sources: ["pr:15745"],
+          proposedText: null,
         },
       ],
     });

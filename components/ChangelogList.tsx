@@ -14,7 +14,17 @@ import { useState } from "react";
 import type { ChangelogEntry } from "@/lib/schemas";
 import { SourceEvidence } from "./SourceEvidence";
 import { useSourceIndex } from "./SourceIndexContext";
+import { PatchView } from "./Diff";
 import { Panel } from "./ui";
+
+/** A resolved changed-file entry from the package `sourceIndex`. */
+type FileRef = {
+  path: string;
+  url: string;
+  patch: string | null;
+  additions: number;
+  deletions: number;
+};
 
 /**
  * Group entries by category while preserving first-seen order. WHY preserve
@@ -34,11 +44,64 @@ function groupByCategory(
 }
 
 /**
+ * One changed file: path + line counts, and — when a unified-diff `patch` was
+ * harvested — an expandable inline diff (zero-dep colored `<pre>`). Files with no
+ * patch (binary/huge, or not captured) still show counts + a GitHub link.
+ */
+function ChangedFile({ file }: { file: FileRef }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <div className="flex flex-wrap items-center gap-2 text-[11px]">
+        {file.patch ? (
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            className="inline-flex min-w-0 items-center gap-1 font-mono text-indigo-700 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            title="Show the diff"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              className={`h-3 w-3 shrink-0 transition-transform ${open ? "rotate-90" : ""}`}
+              fill="currentColor"
+              aria-hidden
+            >
+              <path d="M6 4l4 4-4 4V4z" />
+            </svg>
+            <span className="truncate">{file.path}</span>
+          </button>
+        ) : (
+          <span className="truncate font-mono text-gray-700" title={file.path}>
+            {file.path}
+          </span>
+        )}
+        {file.additions > 0 ? (
+          <span className="tabular-nums text-emerald-600">+{file.additions}</span>
+        ) : null}
+        {file.deletions > 0 ? (
+          <span className="tabular-nums text-rose-600">−{file.deletions}</span>
+        ) : null}
+        <a
+          href={file.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-400 underline-offset-2 hover:text-indigo-600 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          title={`Open ${file.path} on GitHub`}
+        >
+          GitHub
+        </a>
+      </div>
+      {open && file.patch ? <PatchView patch={file.patch} /> : null}
+    </div>
+  );
+}
+
+/**
  * Collapsible "N files changed" for a changelog entry: the union of the files its
- * cited PRs/commits touched (resolved via the package's `sourceIndex`), each linked
- * to the file on GitHub at the release ref — a concrete "view the actual changes"
- * affordance alongside the source link. Renders nothing when no file data is
- * available (an entry citing only tickets, or PRs whose files weren't harvested).
+ * cited PRs/commits touched (via the package `sourceIndex`), each expandable to its
+ * real unified diff (when harvested) and linked to GitHub. Renders nothing when no
+ * file data is available (an entry citing only tickets, or PRs whose files weren't harvested).
  */
 function ChangedFiles({ sources }: { sources: string[] }) {
   const [open, setOpen] = useState(false);
@@ -46,17 +109,17 @@ function ChangedFiles({ sources }: { sources: string[] }) {
 
   // Union across the entry's sources, deduped by path (a PR and its commits often
   // report overlapping files).
-  const byPath = new Map<string, string>();
+  const byPath = new Map<string, FileRef>();
   for (const id of sources) {
     for (const f of sourceIndex[id]?.files ?? []) {
-      if (!byPath.has(f.path)) byPath.set(f.path, f.url);
+      if (!byPath.has(f.path)) byPath.set(f.path, f);
     }
   }
-  const files = [...byPath.entries()];
+  const files = [...byPath.values()];
   if (files.length === 0) return null;
 
   return (
-    <span className="inline-block align-middle">
+    <span className="inline-block w-full align-middle">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -76,18 +139,9 @@ function ChangedFiles({ sources }: { sources: string[] }) {
       </button>
 
       {open ? (
-        <span className="mt-1.5 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 p-2">
-          {files.map(([path, url]) => (
-            <a
-              key={path}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="truncate font-mono text-[11px] text-indigo-700 underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-              title={path}
-            >
-              {path}
-            </a>
+        <span className="mt-1.5 flex flex-col gap-1.5 rounded-lg border border-gray-200 bg-gray-50 p-2">
+          {files.map((f) => (
+            <ChangedFile key={f.path} file={f} />
           ))}
         </span>
       ) : null}
@@ -112,6 +166,11 @@ export function ChangelogList({
       title="Changelog"
       subtitle="Grouped by category. Expand any entry's chip to inspect the source evidence."
     >
+      {entries.length === 0 ? (
+        <p className="text-sm text-gray-500">
+          No changelog entries were generated for this release.
+        </p>
+      ) : (
       <div className="space-y-6">
         {groups.map(({ category, items }) => (
           <div key={category}>
@@ -133,7 +192,7 @@ export function ChangelogList({
                       aria-label={`Edit changelog entry in ${category}`}
                     />
                   ) : (
-                    <p className="text-sm leading-relaxed text-gray-800">
+                    <p className="text-sm leading-relaxed text-gray-800 break-words">
                       {entry.text}
                     </p>
                   )}
@@ -147,6 +206,7 @@ export function ChangelogList({
           </div>
         ))}
       </div>
+      )}
     </Panel>
   );
 }

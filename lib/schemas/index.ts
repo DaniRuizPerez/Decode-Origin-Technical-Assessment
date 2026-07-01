@@ -27,6 +27,19 @@ import { z } from "zod";
  * committed as JSON. The runtime only ever reads local files — never the network.
  * ========================================================================== */
 
+/**
+ * A changed file in a commit/PR: its path plus the unified-diff `patch` and line
+ * counts (when harvested). `patch` is null for binary/huge files or when dropped by
+ * the size cap — the UI then shows the path + counts + a GitHub link, no inline diff.
+ */
+export const FileChangeSchema = z.object({
+  path: z.string(),
+  patch: z.string().nullable().default(null),
+  additions: z.number().default(0),
+  deletions: z.number().default(0),
+});
+export type FileChange = z.infer<typeof FileChangeSchema>;
+
 /** A git commit in the release window. */
 export const CommitSchema = z.object({
   /** Canonical artifact id, e.g. "commit:1a2b3c4". */
@@ -36,8 +49,8 @@ export const CommitSchema = z.object({
   author: z.string(),
   /** ISO-8601 timestamp. */
   date: z.string(),
-  /** Changed file paths — used to infer affected components and risk signals. */
-  files: z.array(z.string()).default([]),
+  /** Changed files (path + optional patch/line-counts) — infer components + show diffs. */
+  files: z.array(FileChangeSchema).default([]),
   /** PR numbers referenced by this commit (inferred during linkage). */
   prNumbers: z.array(z.number()).default([]),
   /** Ticket keys referenced in the commit message (inferred during linkage). */
@@ -56,7 +69,7 @@ export const PullRequestSchema = z.object({
   /** ISO-8601 timestamp, or null if not merged. */
   mergedAt: z.string().nullable().default(null),
   labels: z.array(z.string()).default([]),
-  files: z.array(z.string()).default([]),
+  files: z.array(FileChangeSchema).default([]),
   commitShas: z.array(z.string()).default([]),
   /** Ticket keys referenced by this PR (inferred during linkage). */
   ticketKeys: z.array(z.string()).default([]),
@@ -240,6 +253,12 @@ export const DocUpdateSchema = z.object({
   /** The retrieved chunk that grounds this suggestion, if any. */
   retrievedChunkId: z.string().nullable().default(null),
   sources: z.array(z.string()).default([]),
+  /**
+   * A concrete proposed new version of the section, for a before→after diff.
+   * Offline: the current section with a grounded note inserted; keyed: Claude's
+   * integrated rewrite. Null when not produced. UI-only — eval does not score it.
+   */
+  proposedText: z.string().nullable().default(null),
 });
 export type DocUpdate = z.infer<typeof DocUpdateSchema>;
 
@@ -297,7 +316,17 @@ export const SourceRefSchema = z.object({
    * alongside the source link. Empty for tickets and for sources whose file list
    * wasn't harvested.
    */
-  files: z.array(z.object({ path: z.string(), url: z.string() })).default([]),
+  files: z
+    .array(
+      z.object({
+        path: z.string(),
+        url: z.string(),
+        patch: z.string().nullable().default(null),
+        additions: z.number().default(0),
+        deletions: z.number().default(0),
+      }),
+    )
+    .default([]),
 });
 export type SourceRef = z.infer<typeof SourceRefSchema>;
 

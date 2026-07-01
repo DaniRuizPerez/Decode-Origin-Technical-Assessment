@@ -16,7 +16,7 @@ npm install        # install dependencies
 npm run dev        # start the dev server, then open http://localhost:3000
                    #   the dashboard renders a REAL release end-to-end on load
 
-npm test           # 180 unit tests (vitest), all offline
+npm test           # 183 unit tests (vitest), all offline
 npm run eval       # run the LIVE pipeline over the real fixtures and score it
 npm run build      # production build (next build)
 ```
@@ -39,10 +39,10 @@ npm run dev          # same UI, now backed by claude-opus-4-8
 
 The pipeline ([`lib/pipeline.ts`](lib/pipeline.ts)) is a chain of typed contract hand-offs. Each stage consumes and produces a value validated against the shared [Zod schema contract](lib/schemas/index.ts), so stages are built and tested in isolation:
 
-1. **Digester** ([`lib/agents/digester.ts`](lib/agents/digester.ts)) — links commits ↔ PRs ↔ tickets and normalizes them into a deduplicated `ChangeSet`. Every change carries non-empty `sourceIds` (grounding by construction). Artifacts with no linked ticket are surfaced as `unlinkedArtifactIds`, not hidden.
+1. **Digester** ([`lib/agents/digester.ts`](lib/agents/digester.ts)) — links commits ↔ PRs ↔ tickets and normalizes them into a deduplicated `ChangeSet`. Every change carries non-empty `sourceIds` (grounding by construction). Artifacts with no linked ticket are surfaced as `unlinkedArtifactIds`, not hidden. Each commit/PR's `files` now carry the harvested unified-diff `patch` and line counts, not just paths, so the changelog can show real diffs.
 2. **Planner** ([`lib/agents/planner.ts`](lib/agents/planner.ts)) — groups changes into themes, infers affected systems, computes **explainable risk** (a level plus the concrete reasons), and accounts for **ticket coverage**.
-3. **Release Writer** ([`lib/agents/writer.ts`](lib/agents/writer.ts)) — writes the changelog and the internal/customer release notes, each item citing its sources.
-4. **Documentation Reviewer** ([`lib/agents/docReviewer.ts`](lib/agents/docReviewer.ts)) — retrieves relevant existing-doc sections and suggests section-level updates.
+3. **Release Writer** ([`lib/agents/writer.ts`](lib/agents/writer.ts)) — writes the changelog and the internal/customer release notes, each item citing its sources. In the dashboard each changelog entry expands to its changed files' real unified diffs (colored +/− with per-file counts and a GitHub link).
+4. **Documentation Reviewer** ([`lib/agents/docReviewer.ts`](lib/agents/docReviewer.ts)) — retrieves relevant existing-doc sections and suggests section-level updates, each shown as a before→after suggested-edit diff of the current section against a proposed version.
 
 **Hybrid RAG** ([`lib/rag`](lib/rag/index.ts)): docs are chunked, indexed with both **BM25** (lexical) and **dense embeddings** (FNV-1a hashing by default — also lexical; a neural/semantic model is env-gated via `RAG_EMBEDDINGS=transformers`), and the two rankings are fused with **reciprocal-rank fusion**. The Documentation Reviewer queries this retriever so its suggestions are anchored to real doc sections.
 
@@ -97,9 +97,9 @@ Where to find each grading criterion. All paths are confirmed to exist in this r
 | Criterion | Where to look |
 |---|---|
 | **Engineering — code quality & architecture** | Shared Zod **contract** that every stage codes against: [`lib/schemas/index.ts`](lib/schemas/index.ts). Hexagonal **ports/adapters**: the `LLMProvider` port + `getProvider()` ([`lib/llm`](lib/llm/index.ts)) and the `Connector` port + `getConnector()` ([`lib/connectors`](lib/connectors/index.ts)) — each a single swap-point. Orchestration: [`lib/pipeline.ts`](lib/pipeline.ts). |
-| **Engineering — maintainability & testing** | **180 tests** across [`lib/**/*.test.ts`](lib) (run `npm test`); pure-function metrics and agents tested in isolation against the schema contract. Production build is green (`npm run build`). |
+| **Engineering — maintainability & testing** | **183 tests** across [`lib/**/*.test.ts`](lib) (run `npm test`); pure-function metrics and agents tested in isolation against the schema contract. Production build is green (`npm run build`). |
 | **Product — handling incomplete info** | `findUnlinkedArtifactIds` ([`lib/connectors/connector.ts`](lib/connectors/connector.ts)) flags PRs/commits with no ticket; ticketless work is surfaced as a signal, not dropped. |
-| **Product — UX / review workflow** | The dashboard ([`app/page.tsx`](app/page.tsx), [`components/`](components)), inline editing + **approve/export** ([`components/ReviewBar.tsx`](components/ReviewBar.tsx)), and the approve endpoint that re-validates and stamps the package ([`app/api/approve/route.ts`](app/api/approve/route.ts)). |
+| **Product — UX / review workflow** | The dashboard ([`app/page.tsx`](app/page.tsx), [`components/`](components)), inline editing + **approve/export** ([`components/ReviewBar.tsx`](components/ReviewBar.tsx)), and the approve endpoint that re-validates and stamps the package ([`app/api/approve/route.ts`](app/api/approve/route.ts)). Review affordances: per-section empty states, an approve spinner + "export downloaded" confirmation, a jump-to-section nav in the sticky Review bar, and an edit-mode tint. |
 | **AI — prompt design** | Agent system prompts + per-call prompts in [`lib/agents/`](lib/agents) (e.g. `WRITER_SYSTEM` in [`writer.ts`](lib/agents/writer.ts)). |
 | **AI — retrieval** | Hybrid RAG (BM25 + embeddings + RRF) in [`lib/rag/`](lib/rag/index.ts). |
 | **AI — structured outputs** | The Zod output schemas in [`lib/schemas/index.ts`](lib/schemas/index.ts), enforced via the provider's `output_config.format` JSON-schema path in [`lib/llm/anthropic.ts`](lib/llm/anthropic.ts). |
