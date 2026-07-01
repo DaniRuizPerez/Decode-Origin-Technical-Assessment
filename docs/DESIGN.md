@@ -163,9 +163,9 @@ Verified offline baseline on the real data: hallucination **0.0%**, ticket cover
 - **Diffs are shown honestly, not fabricated.** Changelog per-file diffs are the *real*
   unified-diff patches harvested from GitHub, capped for snapshot size (no patch for
   >20-file PRs or single patches >8 KB — those degrade to a path + line counts + a
-  GitHub link). The doc "suggested edit" is a before→after diff whose offline form is a
-  grounded note inserted after the section heading (an honest addition, not a rewrite);
-  the full integrated rewrite is the keyed (`proposedText`) path. The diff itself is
+  GitHub link). The doc "suggested edit" is a before→after diff whose offline form weaves
+  the change's description into the section as documentation prose (a heuristic addition,
+  not a full rewrite); the fuller integrated rewrite is the keyed (`proposedText`) path. The diff itself is
   UI-only and not scored by the evaluator.
 
 ## Future improvements

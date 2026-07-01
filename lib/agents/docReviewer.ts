@@ -98,19 +98,17 @@ function suggestionFor(change: Change, chunk: RetrievedChunk): string {
 }
 
 /**
- * A concrete proposed edit of the section, for the before→after diff: insert a
- * grounded note right after the section heading, derived from the change (and
- * citing its PR). Offline this is the honest, deterministic "suggested addition";
- * the keyed path can replace it with an integrated rewrite. The note content comes
- * straight from the real change, so the added lines stay grounded.
+ * A concrete proposed edit of the section, for the before→after diff. The change's
+ * `details` (its behavior/identifiers) — or its `summary` as a fallback — are woven
+ * in as a new paragraph so the proposed section reads like updated documentation,
+ * not a change-log note: no "> Doc update:" marker and no inline PR citation
+ * (grounding lives on the DocUpdate's `sources[]`). The keyed path can replace this
+ * with a fuller integrated rewrite.
  */
 function proposeEdit(sectionText: string, change: Change): string {
-  const nl = sectionText.indexOf("\n");
-  const head = nl === -1 ? sectionText : sectionText.slice(0, nl);
-  const rest = nl === -1 ? "" : sectionText.slice(nl);
-  const pr = change.sourceIds.find((s) => s.startsWith("pr:"));
-  const cite = pr ? ` (PR #${pr.slice(3)})` : "";
-  return `${head}\n\n> **Doc update:** ${change.summary}${cite}.${rest}`;
+  const addition = (change.details || change.summary).trim();
+  const sentence = /[.!?]$/.test(addition) ? addition : `${addition}.`;
+  return `${sectionText.trimEnd()}\n\n${sentence}`;
 }
 
 /** Wrap the doc-updates list so the provider returns a single structured value. */

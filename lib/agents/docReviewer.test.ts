@@ -103,10 +103,11 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
     );
     // The suggestion is concrete ("Update the ...").
     expect(biggerApps!.suggestion).toMatch(/^Update the /);
-    // A concrete proposed edit (for the before→after diff) carrying a grounded note.
+    // A concrete proposed edit (for the before→after diff): the change woven in as
+    // documentation prose — no "> Doc update:" marker, no inline PR citation.
     expect(biggerApps!.proposedText).toBeTruthy();
-    expect(biggerApps!.proposedText!).toContain("> **Doc update:**");
-    expect(biggerApps!.proposedText!).toContain("PR #15745");
+    expect(biggerApps!.proposedText!).not.toContain("Doc update");
+    expect(biggerApps!.proposedText!).toContain("router.routes is now a tree");
   });
 
   it("grounds every DocUpdate: valid sources, real docPath, real retrieved chunk", async () => {
