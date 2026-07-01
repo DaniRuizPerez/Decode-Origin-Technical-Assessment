@@ -231,34 +231,6 @@ function extractDetails(body: string): string {
 }
 
 /* ============================================================================
- * Confidence scoring — lower when the underlying evidence is thin.
- * ========================================================================== */
-
-/**
- * A confidence in [0,1] reflecting how much evidence backs a Change.
- *
- * Starts at a high base for a ticket-linked, well-documented change and is
- * docked for each missing signal (no ticket, terse body, no changed files, no
- * commit). WHY: the spec asks the Digester to be honest about thin evidence so
- * the UI can flag low-confidence items rather than presenting everything as
- * equally certain.
- */
-function scoreConfidence(args: {
-  hasTicket: boolean;
-  bodyLength: number;
-  fileCount: number;
-  commitCount: number;
-}): number {
-  let score = 0.95;
-  if (!args.hasTicket) score -= 0.25; // no tracked intent
-  if (args.bodyLength < 200) score -= 0.15; // terse / template-only body
-  if (args.fileCount === 0) score -= 0.1; // can't see what it touched
-  if (args.commitCount === 0 && !args.hasTicket) score -= 0.05;
-  // Clamp into a sane band: even the thinnest real artifact keeps some weight.
-  return Math.max(0.3, Math.min(1, Number(score.toFixed(2))));
-}
-
-/* ============================================================================
  * Substantive-vs-noise classification.
  * ========================================================================== */
 
@@ -377,12 +349,6 @@ export function buildDeterministicChangeSet(input: ReleaseInput): ChangeSet {
       details: extractDetails(pr.body),
       components: inferComponents(pr.files),
       sourceIds,
-      confidence: scoreConfidence({
-        hasTicket,
-        bodyLength: pr.body.length,
-        fileCount: pr.files.length,
-        commitCount: prCommits.length,
-      }),
       isBreaking: looksBreaking(pr),
     });
   }
@@ -406,7 +372,6 @@ export function buildDeterministicChangeSet(input: ReleaseInput): ChangeSet {
       components: [],
       // Sample of real ids keeps this grounded; full set lives in unlinked below.
       sourceIds: noisePrIds.slice(0, SAMPLE),
-      confidence: 0.5, // low: aggregated, ticketless housekeeping
       isBreaking: false,
     });
   }

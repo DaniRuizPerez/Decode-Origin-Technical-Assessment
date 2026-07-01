@@ -34,7 +34,6 @@ export interface SpecOutput {
     section: string;
     suggestion: string;
     sources: string[];
-    is_possible_doc_debt: boolean;
   }>;
 }
 
@@ -65,7 +64,6 @@ export function toSpecOutput(artifacts: ReleaseArtifacts): SpecOutput {
       section: d.section,
       suggestion: d.suggestion,
       sources: d.sources,
-      is_possible_doc_debt: d.isPossibleDocDebt,
     })),
   };
 }

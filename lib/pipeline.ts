@@ -6,15 +6,11 @@
  *   ingest (connectors) → Digester → Planner → [build RAG index] →
  *   Release Writer ‖ Documentation Reviewer → assemble + annotate.
  *
- * Two coordinator-owned steps live here rather than in any single agent:
+ * One coordinator-owned step lives here rather than in any single agent:
  *  - **Observability trace.** Each stage is wall-clock timed and recorded as an
- *    `AgentCallTrace` (with the active provider name), so the UI can show the
- *    pipeline trace and so "mock vs anthropic" is visible at a glance.
- *  - **Doc-debt annotation.** The Documentation Reviewer can't see what the
- *    project actually changed (that would leak eval ground truth into
- *    generation). The pipeline cross-references its suggestions against the
- *    harvested `changedDocPaths`: a recommended doc the project did NOT touch is
- *    flagged `isPossibleDocDebt` — surfaced as a find, never hidden.
+ *    `AgentCallTrace` (with the active provider name + token usage), so the
+ *    exported package carries a per-stage record of how it was produced and which
+ *    provider ("mock" vs "anthropic") ran each stage.
  *
  * Offline (no ANTHROPIC_API_KEY) every agent's LLM call resolves to the
  * deterministic extractive baseline, so this whole function is deterministic and
@@ -22,7 +18,7 @@
  * the grounded verify→repair loop — no code change.
  */
 
-import { getConnector, loadGroundTruth } from "@/lib/connectors";
+import { getConnector } from "@/lib/connectors";
 import { getProvider } from "@/lib/llm";
 import { buildRetriever } from "@/lib/rag";
 import { digest, plan, write, reviewDocs } from "@/lib/agents";
@@ -106,14 +102,7 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
       (d) => `${d.updates.length} documentation updates`,
     ),
   ]);
-  const docUpdatesRaw = docReview.updates;
-
-  // Annotate possible documentation debt (coordinator step — see file header).
-  const changedDocs = new Set(loadGroundTruth().changedDocPaths);
-  const documentationUpdates = docUpdatesRaw.map((d) => ({
-    ...d,
-    isPossibleDocDebt: !changedDocs.has(d.docPath),
-  }));
+  const documentationUpdates = docReview.updates;
 
   // Resolve the DISTINCT ids cited across every artifact into a source index
   // (id → title + GitHub url) so the UI can render readable, clickable evidence

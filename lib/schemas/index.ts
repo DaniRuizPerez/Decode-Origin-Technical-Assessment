@@ -140,8 +140,6 @@ export const ChangeSchema = z.object({
    * Required and non-empty — the grounding guarantee.
    */
   sourceIds: z.array(z.string()).min(1),
-  /** Lower when the underlying evidence is thin (e.g. terse PR, no ticket). */
-  confidence: z.number().min(0).max(1).default(1),
   isBreaking: z.boolean().default(false),
 });
 export type Change = z.infer<typeof ChangeSchema>;
@@ -242,12 +240,6 @@ export const DocUpdateSchema = z.object({
   /** The retrieved chunk that grounds this suggestion, if any. */
   retrievedChunkId: z.string().nullable().default(null),
   sources: z.array(z.string()).default([]),
-  /**
-   * True when we recommend updating a doc the project did NOT touch in this
-   * release — surfaced as "possible documentation debt" rather than an error.
-   * (See DESIGN: changed-docs is a noisy proxy, not ground truth.)
-   */
-  isPossibleDocDebt: z.boolean().default(false),
 });
 export type DocUpdate = z.infer<typeof DocUpdateSchema>;
 

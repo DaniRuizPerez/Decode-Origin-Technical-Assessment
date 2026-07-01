@@ -44,7 +44,6 @@ describe("MockProvider", () => {
           details: "",
           components: ["llm"],
           sourceIds: ["pr:42"],
-          confidence: 1,
           isBreaking: false,
         },
       ],

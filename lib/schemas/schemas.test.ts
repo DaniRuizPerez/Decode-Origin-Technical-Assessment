@@ -42,7 +42,6 @@ describe("schema contract", () => {
       summary: "s",
       sourceIds: ["pr:42"],
     });
-    expect(ok.confidence).toBe(1);
     expect(ok.isBreaking).toBe(false);
   });
 
