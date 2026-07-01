@@ -182,11 +182,21 @@ async function main() {
   const pulls: any[] = [];
   for (const n of [...allPrNums].sort((a, b) => a - b)) {
     let pr: any = null;
-    let files: string[] = [];
+    // Changed files with their unified-diff patch + line counts. Caps keep the
+    // fixture lean: no patches for mega-PRs (>20 files, e.g. translations), and any
+    // single patch >8 KB (or binary/null) is dropped to a path-only entry.
+    let files: { path: string; patch: string | null; additions: number; deletions: number }[] = [];
     if (detailNums.has(n)) {
       pr = ghJsonSafe<any>(`repos/${REPO}/pulls/${n}`);
-      const prFiles = ghJsonSafe<any[]>(`repos/${REPO}/pulls/${n}/files?per_page=100`);
-      files = (prFiles ?? []).map((f) => f.filename);
+      const prFiles = ghJsonSafe<any[]>(`repos/${REPO}/pulls/${n}/files?per_page=100`) ?? [];
+      const tooMany = prFiles.length > 20;
+      files = prFiles.map((f) => ({
+        path: f.filename,
+        patch:
+          !tooMany && typeof f.patch === "string" && f.patch.length <= 8192 ? f.patch : null,
+        additions: f.additions ?? 0,
+        deletions: f.deletions ?? 0,
+      }));
     }
     pulls.push({
       id: `pr:${n}`,

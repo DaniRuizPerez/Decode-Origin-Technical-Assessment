@@ -68,7 +68,13 @@ export function buildSourceIndex(
           kind: "pr",
           title: pull.title,
           url: `https://github.com/${project}/pull/${pull.number}`,
-          files: pull.files.map((path) => ({ path, url: blobUrl(path) })),
+          files: pull.files.map((f) => ({
+            path: f.path,
+            url: blobUrl(f.path),
+            patch: f.patch,
+            additions: f.additions,
+            deletions: f.deletions,
+          })),
         };
         continue;
       }
@@ -81,7 +87,13 @@ export function buildSourceIndex(
           title: firstLine(commit.message),
           // Full sha in the url even though the id carries the 7-char short sha.
           url: `https://github.com/${project}/commit/${commit.sha}`,
-          files: commit.files.map((path) => ({ path, url: blobUrl(path) })),
+          files: commit.files.map((f) => ({
+            path: f.path,
+            url: blobUrl(f.path),
+            patch: f.patch,
+            additions: f.additions,
+            deletions: f.deletions,
+          })),
         };
         continue;
       }
