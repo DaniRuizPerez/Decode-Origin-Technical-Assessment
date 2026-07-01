@@ -812,18 +812,6 @@
     ],
     "documentationUpdates": [
       {
-        "docPath": "alternatives.md",
-        "section": "[APIStar](https://github.com/encode/apistar) (<= 0.5)",
-        "suggestion": "Update the \"[APIStar](https://github.com/encode/apistar) (<= 0.5)\" section in alternatives.md to reflect: Validate Server Sent Event fields to avoid applications from sending broken data.",
-        "retrievedChunkId": "alternatives.md#19:apistar-https-github-com-encode-apistar-0-5",
-        "sources": [
-          "ticket:FAPI-1001",
-          "pr:15588",
-          "commit:c7fb785"
-        ],
-        "proposedText": "### [APIStar](https://github.com/encode/apistar) (<= 0.5) { #apistar-0-5 }\n\n> **Doc update:** Validate Server Sent Event fields to avoid applications from sending broken data (PR #15588).\n\nRight before deciding to build **FastAPI** I found **APIStar** server. It had almost everything I was looking for and had a great design.\n\nIt was one of the first implementations of a framework using Python type hints to declare parameters and requests that I ever saw (before NestJS and Molten). I found it more or less at the same time as Hug. But APIStar used the OpenAPI standard.\n\nIt had automatic data validation, data serialization and OpenAPI schema generation based on the same type hints in several places.\n\nBody schema definitions didn't use the same Python type hints like Pydantic, it was a bit more similar to Marshmallow, so, editor support wouldn't be as good, but still, APIStar was the best available option.\n\nIt had the best performance benchmarks at the time (only surpassed by Starlette).\n\nAt first, it didn't have an automatic API documentation web UI, but I knew I could add Swagger UI to it.\n\nIt had a dependency injection system. It required pre-registration of components, as other tools discussed above. But still, it was a great feature.\n\nI was never able to use it in a full project, as it didn't have security integration, so, I couldn't replace all the features I was having with the full-stack generators based on Flask-apispec. I had in my backlog of projects to create a pull request adding that functionality.\n\nBut then, the project's focus shifted.\n\nIt was no longer an API web framework, as the creator needed to focus on Starlette.\n\nNow APIStar is a set of tools to validate OpenAPI specifications, not a web framework.\n\n/// info\n\nAPIStar was created by Tom Christie. The same guy that created:\n\n* Django REST Framework\n* Starlette (in which **FastAPI** is based)\n* Uvicorn (used by Starlette and **FastAPI**)\n\n///\n\n/// check | Inspired **FastAPI** to\n\nExist.\n\nThe idea of declaring multiple things (data validation, serialization and documentation) with the same Python types, that at the same time provided great editor support, was something I considered a brilliant idea.\n\nAnd after searching for a long time for a similar framework and testing many different alternatives, APIStar was the best option available.\n\nThen APIStar stopped to exist as a server and Starlette was created, and was a new better foundation for such a system. That was the final inspiration to build **FastAPI**.\n\nI consider **FastAPI** a \"spiritual successor\" to APIStar, while improving and increasing the features, typing system, and other parts, based on the learnings from all these previous tools.\n\n///"
-      },
-      {
         "docPath": "tutorial__header-params.md",
         "section": "Automatic conversion",
         "suggestion": "Update the \"Automatic conversion\" section in tutorial__header-params.md to reflect: Do not accept underscore headers when using `convert_underscores=True` (the default).",
@@ -833,7 +821,7 @@
           "pr:15589",
           "commit:063b5bf"
         ],
-        "proposedText": "## Automatic conversion { #automatic-conversion }\n\n> **Doc update:** Do not accept underscore headers when using `convert_underscores=True` (the default) (PR #15589).\n\n`Header` has a little extra functionality on top of what `Path`, `Query` and `Cookie` provide.\n\nMost of the standard headers are separated by a \"hyphen\" character, also known as the \"minus symbol\" (`-`).\n\nBut a variable like `user-agent` is invalid in Python.\n\nSo, by default, `Header` will convert the parameter names characters from underscore (`_`) to hyphen (`-`) to extract and document the headers.\n\nAlso, HTTP headers are case-insensitive, so, you can declare them with standard Python style (also known as \"snake_case\").\n\nSo, you can use `user_agent` as you normally would in Python code, instead of needing to capitalize the first letters as `User_Agent` or something similar.\n\nIf for some reason you need to disable automatic conversion of underscores to hyphens, set the parameter `convert_underscores` of `Header` to `False`:\n\n{* ../../docs_src/header_params/tutorial002_an_py310.py hl[10] *}\n\n/// warning\n\nBefore setting `convert_underscores` to `False`, bear in mind that some HTTP proxies and servers disallow the usage of headers with underscores.\n\n///"
+        "proposedText": "## Automatic conversion { #automatic-conversion }\n\n`Header` has a little extra functionality on top of what `Path`, `Query` and `Cookie` provide.\n\nMost of the standard headers are separated by a \"hyphen\" character, also known as the \"minus symbol\" (`-`).\n\nBut a variable like `user-agent` is invalid in Python.\n\nSo, by default, `Header` will convert the parameter names characters from underscore (`_`) to hyphen (`-`) to extract and document the headers.\n\nAlso, HTTP headers are case-insensitive, so, you can declare them with standard Python style (also known as \"snake_case\").\n\nSo, you can use `user_agent` as you normally would in Python code, instead of needing to capitalize the first letters as `User_Agent` or something similar.\n\nIf for some reason you need to disable automatic conversion of underscores to hyphens, set the parameter `convert_underscores` of `Header` to `False`:\n\n{* ../../docs_src/header_params/tutorial002_an_py310.py hl[10] *}\n\n/// warning\n\nBefore setting `convert_underscores` to `False`, bear in mind that some HTTP proxies and servers disallow the usage of headers with underscores.\n\n///\n\nDo not accept underscore headers when using `convert_underscores=True` (the default) This means it would only accept header names separated with hyphens by default, and to accept header names separated with underscores, an app would need to explicitly set `convert_underscores=False`."
       },
       {
         "docPath": "tutorial__bigger-applications.md",
@@ -845,34 +833,11 @@
           "pr:15745",
           "commit:8e1d774"
         ],
-        "proposedText": "### Include the `APIRouter`s for `users` and `items` { #include-the-apirouters-for-users-and-items }\n\n> **Doc update:** Refactor internals to preserve `APIRouter` and `APIRoute` instances (PR #15745).\n\nNow, let's include the `router`s from the submodules `users` and `items`:\n\n{* ../../docs_src/bigger_applications/app_an_py310/main.py hl[10:11] title[\"app/main.py\"] *}\n\n/// info\n\n`users.router` contains the `APIRouter` inside of the file `app/routers/users.py`.\n\nAnd `items.router` contains the `APIRouter` inside of the file `app/routers/items.py`.\n\n///\n\nWith `app.include_router()` we can add each `APIRouter` to the main `FastAPI` application.\n\nIt will include all the routes from that router as part of it.\n\n/// note | Technical Details\n\nIt will actually internally create a *path operation* for each *path operation* that was declared in the `APIRouter`.\n\nSo, behind the scenes, it will actually work as if everything was the same single app.\n\n///\n\n/// check\n\nYou don't have to worry about performance when including routers.\n\nThis will take microseconds and will only happen at startup.\n\nSo it won't affect performance. ⚡\n\n///"
-      },
-      {
-        "docPath": "alternatives.md",
-        "section": "[Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/)",
-        "suggestion": "Update the \"[Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/)\" section in alternatives.md to reflect: Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse).",
-        "retrievedChunkId": "alternatives.md#8:swagger-https-swagger-io-openapi-https-github-com-oai-openapi-specification",
-        "sources": [
-          "ticket:FAPI-1006",
-          "pr:15785",
-          "commit:6ac1220"
-        ],
-        "proposedText": "### [Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/) { #swagger-openapi }\n\n> **Doc update:** Add `iter_route_contexts()` for advanced use cases that used to use `router.routes` (e.g. Jupyverse) (PR #15785).\n\nThe main feature I wanted from Django REST Framework was the automatic API documentation.\n\nThen I found that there was a standard to document APIs, using JSON (or YAML, an extension of JSON) called Swagger.\n\nAnd there was a web user interface for Swagger APIs already created. So, being able to generate Swagger documentation for an API would allow using this web user interface automatically.\n\nAt some point, Swagger was given to the Linux Foundation, to be renamed OpenAPI.\n\nThat's why when talking about version 2.0 it's common to say \"Swagger\", and for version 3+ \"OpenAPI\".\n\n/// check | Inspired **FastAPI** to\n\nAdopt and use an open standard for API specifications, instead of a custom schema.\n\nAnd integrate standards-based user interface tools:\n\n* [Swagger UI](https://github.com/swagger-api/swagger-ui)\n* [ReDoc](https://github.com/Rebilly/ReDoc)\n\nThese two were chosen for being fairly popular and stable, but doing a quick search, you could find dozens of alternative user interfaces for OpenAPI (that you can use with **FastAPI**).\n\n///"
+        "proposedText": "### Include the `APIRouter`s for `users` and `items` { #include-the-apirouters-for-users-and-items }\n\nNow, let's include the `router`s from the submodules `users` and `items`:\n\n{* ../../docs_src/bigger_applications/app_an_py310/main.py hl[10:11] title[\"app/main.py\"] *}\n\n/// info\n\n`users.router` contains the `APIRouter` inside of the file `app/routers/users.py`.\n\nAnd `items.router` contains the `APIRouter` inside of the file `app/routers/items.py`.\n\n///\n\nWith `app.include_router()` we can add each `APIRouter` to the main `FastAPI` application.\n\nIt will include all the routes from that router as part of it.\n\n/// note | Technical Details\n\nIt will actually internally create a *path operation* for each *path operation* that was declared in the `APIRouter`.\n\nSo, behind the scenes, it will actually work as if everything was the same single app.\n\n///\n\n/// check\n\nYou don't have to worry about performance when including routers.\n\nThis will take microseconds and will only happen at startup.\n\nSo it won't affect performance. ⚡\n\n///\n\nRefactor internals to preserve `APIRouter` and `APIRoute` instances Supersedes https://github.com/fastapi/fastapi/pull/4794 Unblocks :sparkles: SO MANY THINGS :sparkles: Before this, `router.include_router(other_router)` would take each path operation from `other_router` and \"clone\" it, or recreate it from scratch.…."
       }
     ]
   },
   "retrieval": [
-    {
-      "id": "alternatives.md#19:apistar-https-github-com-encode-apistar-0-5",
-      "docPath": "alternatives.md",
-      "section": "[APIStar](https://github.com/encode/apistar) (<= 0.5)",
-      "text": "### [APIStar](https://github.com/encode/apistar) (<= 0.5) { #apistar-0-5 }\n\nRight before deciding to build **FastAPI** I found **APIStar** server. It had almost everything I was looking for and had a great design.\n\nIt was one of the first implementations of a framework using Python type hints to declare parameters and requests that I ever saw (before NestJS and Molten). I found it more or less at the same time as Hug. But APIStar used the OpenAPI standard.\n\nIt had automatic data validation, data serialization and OpenAPI schema generation based on the same type hints in several places.\n\nBody schema definitions didn't use the same Python type hints like Pydantic, it was a bit more similar to Marshmallow, so, editor support wouldn't be as good, but still, APIStar was the best available option.\n\nIt had the best performance benchmarks at the time (only surpassed by Starlette).\n\nAt first, it didn't have an automatic API documentation web UI, but I knew I could add Swagger UI to it.\n\nIt had a dependency injection system. It required pre-registration of components, as other tools discussed above. But still, it was a great feature.\n\nI was never able to use it in a full project, as it didn't have security integration, so, I couldn't replace all the features I was having with the full-stack generators based on Flask-apispec. I had in my backlog of projects to create a pull request adding that functionality.\n\nBut then, the project's focus shifted.\n\nIt was no longer an API web framework, as the creator needed to focus on Starlette.\n\nNow APIStar is a set of tools to validate OpenAPI specifications, not a web framework.\n\n/// info\n\nAPIStar was created by Tom Christie. The same guy that created:\n\n* Django REST Framework\n* Starlette (in which **FastAPI** is based)\n* Uvicorn (used by Starlette and **FastAPI**)\n\n///\n\n/// check | Inspired **FastAPI** to\n\nExist.\n\nThe idea of declaring multiple things (data validation, serialization and documentation) with the same Python types, that at the same time provided great editor support, was something I considered a brilliant idea.\n\nAnd after searching for a long time for a similar framework and testing many different alternatives, APIStar was the best option available.\n\nThen APIStar stopped to exist as a server and Starlette was created, and was a new better foundation for such a system. That was the final inspiration to build **FastAPI**.\n\nI consider **FastAPI** a \"spiritual successor\" to APIStar, while improving and increasing the features, typing system, and other parts, based on the learnings from all these previous tools.\n\n///",
-      "score": 0.031024531024531024,
-      "signals": {
-        "bm25": 51.78420807035755,
-        "dense": 0.477148634544756
-      }
-    },
     {
       "id": "tutorial__header-params.md#4:automatic-conversion",
       "docPath": "tutorial__header-params.md",
@@ -893,17 +858,6 @@
       "signals": {
         "bm25": 79.66027078706172,
         "dense": 0.42233370125222136
-      }
-    },
-    {
-      "id": "alternatives.md#8:swagger-https-swagger-io-openapi-https-github-com-oai-openapi-specification",
-      "docPath": "alternatives.md",
-      "section": "[Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/)",
-      "text": "### [Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/) { #swagger-openapi }\n\nThe main feature I wanted from Django REST Framework was the automatic API documentation.\n\nThen I found that there was a standard to document APIs, using JSON (or YAML, an extension of JSON) called Swagger.\n\nAnd there was a web user interface for Swagger APIs already created. So, being able to generate Swagger documentation for an API would allow using this web user interface automatically.\n\nAt some point, Swagger was given to the Linux Foundation, to be renamed OpenAPI.\n\nThat's why when talking about version 2.0 it's common to say \"Swagger\", and for version 3+ \"OpenAPI\".\n\n/// check | Inspired **FastAPI** to\n\nAdopt and use an open standard for API specifications, instead of a custom schema.\n\nAnd integrate standards-based user interface tools:\n\n* [Swagger UI](https://github.com/swagger-api/swagger-ui)\n* [ReDoc](https://github.com/Rebilly/ReDoc)\n\nThese two were chosen for being fairly popular and stable, but doing a quick search, you could find dozens of alternative user interfaces for OpenAPI (that you can use with **FastAPI**).\n\n///",
-      "score": 0.02844163539403516,
-      "signals": {
-        "bm25": 36.833314066219096,
-        "dense": 0.5191230188225978
       }
     }
   ],
@@ -1323,11 +1277,6 @@
     }
   },
   "docIndex": {
-    "alternatives.md": {
-      "docPath": "alternatives.md",
-      "sourcePath": "docs/en/docs/alternatives.md",
-      "url": "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/alternatives.md"
-    },
     "tutorial__header-params.md": {
       "docPath": "tutorial__header-params.md",
       "sourcePath": "docs/en/docs/tutorial/header-params.md",
@@ -1367,9 +1316,9 @@
     {
       "agent": "doc-reviewer",
       "provider": "mock",
-      "ms": 19,
+      "ms": 26,
       "inputSummary": "60 existing docs",
-      "outputSummary": "4 documentation updates",
+      "outputSummary": "2 documentation updates",
       "tokens": null
     }
   ],

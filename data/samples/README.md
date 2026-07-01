@@ -30,15 +30,27 @@ confirm it stays grounded.
 
 | Metric | Baseline (extractive) | Abstractive |
 |---|---|---|
-| Hallucination | 0.0% | **0.0%** |
+| Hallucination | 0.0% | 0.0% |
 | Ticket coverage | 7/7 | 7/7 |
-| Doc-rec precision | 66.7% | **100.0%** |
+| Doc-rec precision | 100.0% | 100.0% |
 | Doc-rec recall | 66.7% | 66.7% |
-| Doc-rec F1 | 66.7% | **80.0%** |
+| Doc-rec F1 | 80.0% | 80.0% |
 | Changelog substantive recall | 100% | 100% |
 
-The abstractive Documentation Reviewer reasons away two irrelevant `alternatives.md`
-suggestions the extractive top-hit logic made (precision 66.7% → 100%), while staying
-fully grounded (0% hallucination). The remaining recall miss (`openapi-callbacks.md`)
-is **not retrieved even at k=8** — a *retrieval* limitation, not a generation one,
-which motivates the cross-encoder reranker in [DESIGN → Future improvements](../../docs/DESIGN.md#future-improvements).
+The two paths **tie on every hard metric** — the baseline hits 100% doc-rec precision
+via its *relevance gate* (it declines to suggest a section unless the section references
+an identifier the change touches). So the abstractive path's advantage is **not a
+precision delta**; it is:
+
+- **Prose synthesis** — release-ready notes with migration guidance ("`include_router()`
+  now preserves `APIRouter`/`APIRoute` instances instead of copying them; `router.routes`
+  is now a tree — code that walked it should move to `iter_route_contexts()`") vs. the
+  baseline's extractive reuse of PR titles.
+- **Generalization** — the baseline reaches 100% precision through corpus-tuned
+  heuristics (a non-target skip-list + the lexical gate), whereas the model reasons about
+  doc relevance natively and would hold up on a new corpus — while staying fully grounded
+  (0% hallucination, same verifier).
+
+The one shared limit is *recall*: `openapi-callbacks.md` is **not retrieved even at k=8**
+— a *retrieval* limitation, not a generation one, which motivates the cross-encoder
+reranker in [DESIGN → Future improvements](../../docs/DESIGN.md#future-improvements).

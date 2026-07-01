@@ -804,17 +804,6 @@
   },
   "retrieval": [
     {
-      "id": "alternatives.md#19:apistar-https-github-com-encode-apistar-0-5",
-      "docPath": "alternatives.md",
-      "section": "[APIStar](https://github.com/encode/apistar) (<= 0.5)",
-      "text": "### [APIStar](https://github.com/encode/apistar) (<= 0.5) { #apistar-0-5 }\n\nRight before deciding to build **FastAPI** I found **APIStar** server. It had almost everything I was looking for and had a great design.\n\nIt was one of the first implementations of a framework using Python type hints to declare parameters and requests that I ever saw (before NestJS and Molten). I found it more or less at the same time as Hug. But APIStar used the OpenAPI standard.\n\nIt had automatic data validation, data serialization and OpenAPI schema generation based on the same type hints in several places.\n\nBody schema definitions didn't use the same Python type hints like Pydantic, it was a bit more similar to Marshmallow, so, editor support wouldn't be as good, but still, APIStar was the best available option.\n\nIt had the best performance benchmarks at the time (only surpassed by Starlette).\n\nAt first, it didn't have an automatic API documentation web UI, but I knew I could add Swagger UI to it.\n\nIt had a dependency injection system. It required pre-registration of components, as other tools discussed above. But still, it was a great feature.\n\nI was never able to use it in a full project, as it didn't have security integration, so, I couldn't replace all the features I was having with the full-stack generators based on Flask-apispec. I had in my backlog of projects to create a pull request adding that functionality.\n\nBut then, the project's focus shifted.\n\nIt was no longer an API web framework, as the creator needed to focus on Starlette.\n\nNow APIStar is a set of tools to validate OpenAPI specifications, not a web framework.\n\n/// info\n\nAPIStar was created by Tom Christie. The same guy that created:\n\n* Django REST Framework\n* Starlette (in which **FastAPI** is based)\n* Uvicorn (used by Starlette and **FastAPI**)\n\n///\n\n/// check | Inspired **FastAPI** to\n\nExist.\n\nThe idea of declaring multiple things (data validation, serialization and documentation) with the same Python types, that at the same time provided great editor support, was something I considered a brilliant idea.\n\nAnd after searching for a long time for a similar framework and testing many different alternatives, APIStar was the best option available.\n\nThen APIStar stopped to exist as a server and Starlette was created, and was a new better foundation for such a system. That was the final inspiration to build **FastAPI**.\n\nI consider **FastAPI** a \"spiritual successor\" to APIStar, while improving and increasing the features, typing system, and other parts, based on the learnings from all these previous tools.\n\n///",
-      "score": 0.031024531024531024,
-      "signals": {
-        "bm25": 51.78420807035755,
-        "dense": 0.477148634544756
-      }
-    },
-    {
       "id": "tutorial__header-params.md#4:automatic-conversion",
       "docPath": "tutorial__header-params.md",
       "section": "Automatic conversion",
@@ -834,17 +823,6 @@
       "signals": {
         "bm25": 79.66027078706172,
         "dense": 0.42233370125222136
-      }
-    },
-    {
-      "id": "alternatives.md#8:swagger-https-swagger-io-openapi-https-github-com-oai-openapi-specification",
-      "docPath": "alternatives.md",
-      "section": "[Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/)",
-      "text": "### [Swagger](https://swagger.io/) / [OpenAPI](https://github.com/OAI/OpenAPI-Specification/) { #swagger-openapi }\n\nThe main feature I wanted from Django REST Framework was the automatic API documentation.\n\nThen I found that there was a standard to document APIs, using JSON (or YAML, an extension of JSON) called Swagger.\n\nAnd there was a web user interface for Swagger APIs already created. So, being able to generate Swagger documentation for an API would allow using this web user interface automatically.\n\nAt some point, Swagger was given to the Linux Foundation, to be renamed OpenAPI.\n\nThat's why when talking about version 2.0 it's common to say \"Swagger\", and for version 3+ \"OpenAPI\".\n\n/// check | Inspired **FastAPI** to\n\nAdopt and use an open standard for API specifications, instead of a custom schema.\n\nAnd integrate standards-based user interface tools:\n\n* [Swagger UI](https://github.com/swagger-api/swagger-ui)\n* [ReDoc](https://github.com/Rebilly/ReDoc)\n\nThese two were chosen for being fairly popular and stable, but doing a quick search, you could find dozens of alternative user interfaces for OpenAPI (that you can use with **FastAPI**).\n\n///",
-      "score": 0.02844163539403516,
-      "signals": {
-        "bm25": 36.833314066219096,
-        "dense": 0.5191230188225978
       }
     }
   ],
@@ -1217,11 +1195,6 @@
       "docPath": "tutorial__bigger-applications.md",
       "sourcePath": "docs/en/docs/tutorial/bigger-applications.md",
       "url": "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/bigger-applications.md"
-    },
-    "alternatives.md": {
-      "docPath": "alternatives.md",
-      "sourcePath": "docs/en/docs/alternatives.md",
-      "url": "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/alternatives.md"
     }
   },
   "trace": [

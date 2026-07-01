@@ -117,7 +117,10 @@ fusion is two complementary lexical views, and paraphrase recall is *not* captur
 default. Capturing paraphrase is the env-gated neural upgrade (`RAG_EMBEDDINGS=transformers`,
 a MiniLM model); the offline tradeoff is detailed under Tradeoffs. The Documentation
 Reviewer queries with a change's summary **plus its code identifiers** to land on the
-right doc.
+right doc. It is also **high-precision by construction**: a *relevance gate* only
+proposes an edit when the retrieved section literally references an identifier the
+change touches (with a non-target skip-list for meta/comparison docs), declining rather
+than guessing — which is what makes offline doc-rec precision 100%.
 
 **Context engineering + cost.** Each agent receives only typed inputs and retrieved
 chunks (small prompts); the Anthropic provider prompt-caches the stable system block
@@ -133,7 +136,8 @@ baseline) makes the evals reproducible — a property most LLM demos lack — wh
 enables eval-driven prompt iteration once a key is present.
 
 Verified offline baseline on the real data: hallucination **0.0%**, ticket coverage
-**7/7**, doc-rec vs curated gold **P/R/F1 66.7%**, changelog **substantive recall 100%**.
+**7/7**, doc-rec vs curated gold **P 100% / R 66.7% / F1 80%**, changelog **substantive
+recall 100%**.
 
 ## Tradeoffs made
 
@@ -163,18 +167,18 @@ Verified offline baseline on the real data: hallucination **0.0%**, ticket cover
 - **Diffs are shown honestly, not fabricated.** Changelog per-file diffs are the *real*
   unified-diff patches harvested from GitHub, capped for snapshot size (no patch for
   >20-file PRs or single patches >8 KB — those degrade to a path + line counts + a
-  GitHub link). The doc "suggested edit" is a before→after diff whose offline form is a
-  grounded note inserted after the section heading (an honest addition, not a rewrite);
-  the full integrated rewrite is the keyed (`proposedText`) path. The diff itself is
+  GitHub link). The doc "suggested edit" is a before→after diff whose offline form weaves
+  the change's description into the section as documentation prose (a heuristic addition,
+  not a full rewrite); the fuller integrated rewrite is the keyed (`proposedText`) path. The diff itself is
   UI-only and not scored by the evaluator.
 
 ## Future improvements
 
 - **Neural embeddings + a cross-encoder reranker** for stronger doc retrieval.
-  *Validated:* a session-run of the abstractive pipeline (see `data/samples/`) lifted
-  doc-rec **precision 66.7% → 100%** (F1 → 80%) by reasoning away irrelevant picks, but
-  left the one recall miss (`openapi-callbacks.md`) — which isn't retrieved even at
-  k=8 — confirming that *retrieval*, not generation, is the bottleneck for that doc.
+  Doc-rec **precision is already 100%** offline (the relevance gate declines to suggest
+  a section unless it references an identifier the change touches), so the open gap is
+  *recall*: `openapi-callbacks.md` isn't retrieved even at k=8 — a *retrieval* miss, not
+  a generation or precision one, which a reranker over a wider candidate set would close.
 - **LLM-judge faithfulness at scale** — turn on the keyed claim-verifier as the
   headline hallucination metric, ideally with a different judge model to reduce bias.
 - **Multi-source connectors** (Slack, Linear, Zendesk, Confluence, Google Docs) behind

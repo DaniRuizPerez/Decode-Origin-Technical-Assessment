@@ -107,9 +107,9 @@ function RetrievalEvidence({
 
 /**
  * Before→after diff of a suggested doc edit: the current section text vs the
- * proposed version. Offline the proposal is the current section with a grounded
- * note inserted (a "suggested addition", not a full rewrite); a keyed run would
- * integrate the change into the prose.
+ * proposed version. Offline the change is woven into the section as documentation
+ * prose (a heuristic addition, not a full rewrite); a keyed run integrates it more
+ * fluently.
  */
 function SuggestedEdit({ before, after }: { before: string; after: string }) {
   const [open, setOpen] = useState(false);
