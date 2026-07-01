@@ -103,6 +103,10 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
     );
     // The suggestion is concrete ("Update the ...").
     expect(biggerApps!.suggestion).toMatch(/^Update the /);
+    // A concrete proposed edit (for the before→after diff) carrying a grounded note.
+    expect(biggerApps!.proposedText).toBeTruthy();
+    expect(biggerApps!.proposedText!).toContain("> **Doc update:**");
+    expect(biggerApps!.proposedText!).toContain("PR #15745");
   });
 
   it("grounds every DocUpdate: valid sources, real docPath, real retrieved chunk", async () => {

@@ -253,6 +253,12 @@ export const DocUpdateSchema = z.object({
   /** The retrieved chunk that grounds this suggestion, if any. */
   retrievedChunkId: z.string().nullable().default(null),
   sources: z.array(z.string()).default([]),
+  /**
+   * A concrete proposed new version of the section, for a before→after diff.
+   * Offline: the current section with a grounded note inserted; keyed: Claude's
+   * integrated rewrite. Null when not produced. UI-only — eval does not score it.
+   */
+  proposedText: z.string().nullable().default(null),
 });
 export type DocUpdate = z.infer<typeof DocUpdateSchema>;
 
