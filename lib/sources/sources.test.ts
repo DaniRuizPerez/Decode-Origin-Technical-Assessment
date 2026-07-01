@@ -54,6 +54,7 @@ describe("buildSourceIndex", () => {
       kind: "other",
       title: "chunk:does-not-exist",
       url: null,
+      files: [],
     });
     // A namespaced-but-missing PR also degrades rather than throwing.
     expect(index["pr:000000"].kind).toBe("other");
@@ -68,6 +69,23 @@ describe("buildSourceIndex", () => {
   it("tolerates duplicate cited ids", () => {
     const index = buildSourceIndex(input, ["pr:15745", "pr:15745"]);
     expect(Object.keys(index)).toEqual(["pr:15745"]);
+  });
+
+  it("attaches changed files (as GitHub blob urls at the release ref) to a PR", () => {
+    // A substantive PR whose file list was harvested.
+    const pull = input.pullRequests.find((p) => p.files.length > 0);
+    expect(pull, "expected at least one harvested PR with files").toBeDefined();
+    const ref = buildSourceIndex(input, [pull!.id])[pull!.id];
+    expect(ref.files.map((f) => f.path)).toEqual(pull!.files);
+    const f0 = ref.files[0];
+    expect(f0.url).toBe(
+      `https://github.com/fastapi/fastapi/blob/${input.release.headRef}/${f0.path}`,
+    );
+  });
+
+  it("gives tickets an empty files list", () => {
+    const ref = buildSourceIndex(input, ["ticket:FAPI-1003"])["ticket:FAPI-1003"];
+    expect(ref.files).toEqual([]);
   });
 });
 

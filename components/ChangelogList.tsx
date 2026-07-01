@@ -9,8 +9,11 @@
  * any the pipeline emits later — rather than a precomputed structure.
  */
 
+import { useState } from "react";
+
 import type { ChangelogEntry } from "@/lib/schemas";
 import { SourceEvidence } from "./SourceEvidence";
+import { useSourceIndex } from "./SourceIndexContext";
 import { Panel } from "./ui";
 
 /**
@@ -28,6 +31,68 @@ function groupByCategory(
     else map.set(entry.category, [{ entry, index }]);
   });
   return Array.from(map, ([category, items]) => ({ category, items }));
+}
+
+/**
+ * Collapsible "N files changed" for a changelog entry: the union of the files its
+ * cited PRs/commits touched (resolved via the package's `sourceIndex`), each linked
+ * to the file on GitHub at the release ref — a concrete "view the actual changes"
+ * affordance alongside the source link. Renders nothing when no file data is
+ * available (an entry citing only tickets, or PRs whose files weren't harvested).
+ */
+function ChangedFiles({ sources }: { sources: string[] }) {
+  const [open, setOpen] = useState(false);
+  const sourceIndex = useSourceIndex();
+
+  // Union across the entry's sources, deduped by path (a PR and its commits often
+  // report overlapping files).
+  const byPath = new Map<string, string>();
+  for (const id of sources) {
+    for (const f of sourceIndex[id]?.files ?? []) {
+      if (!byPath.has(f.path)) byPath.set(f.path, f.url);
+    }
+  }
+  const files = [...byPath.entries()];
+  if (files.length === 0) return null;
+
+  return (
+    <span className="inline-block align-middle">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-medium text-violet-700 ring-1 ring-inset ring-violet-600/20 transition hover:bg-violet-100"
+        title="Show the files this change touched"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          className={`h-3 w-3 transition-transform ${open ? "rotate-90" : ""}`}
+          fill="currentColor"
+          aria-hidden
+        >
+          <path d="M6 4l4 4-4 4V4z" />
+        </svg>
+        {files.length} file{files.length === 1 ? "" : "s"} changed
+      </button>
+
+      {open ? (
+        <span className="mt-1.5 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 p-2">
+          {files.map(([path, url]) => (
+            <a
+              key={path}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="truncate font-mono text-[11px] text-indigo-700 underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              title={path}
+            >
+              {path}
+            </a>
+          ))}
+        </span>
+      ) : null}
+    </span>
+  );
 }
 
 export function ChangelogList({
@@ -72,8 +137,9 @@ export function ChangelogList({
                       {entry.text}
                     </p>
                   )}
-                  <div className="mt-2">
+                  <div className="mt-2 flex flex-wrap items-start gap-2">
                     <SourceEvidence sources={entry.sources} />
+                    <ChangedFiles sources={entry.sources} />
                   </div>
                 </li>
               ))}
