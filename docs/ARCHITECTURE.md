@@ -151,7 +151,7 @@ actual public exports.
 
 | Module | Responsibility | Key public functions / exports |
 |---|---|---|
-| [`lib/schemas`](../lib/schemas/index.ts) | The single source of truth: every domain type as a zod schema, the inter-agent protocol, and the `LLMProvider`/`CompletionRequest`/`CompletionResult` port. | `ReleaseInputSchema`, `ChangeSetSchema`, `ReleasePlanSchema`, `ReleaseArtifactsSchema`, `RetrievedChunkSchema`, `ReleasePackageSchema`, `GroundTruthSchema`, `CuratedGoldSchema`, `AgentCallTraceSchema`; types `Change`, `ReleasePlan`, `ReleasePackage`, `LLMProvider`, … |
+| [`lib/schemas`](../lib/schemas/index.ts) | The single source of truth: every domain type as a zod schema, the inter-agent protocol, and the `LLMProvider`/`CompletionRequest`/`CompletionResult` port. Also defines `FileChange` (`{ path, patch, additions, deletions }`, carried on `Commit`/`PullRequest` `files`) and `DocUpdate.proposedText` (the before→after diff target). | `ReleaseInputSchema`, `FileChangeSchema`, `ChangeSetSchema`, `ReleasePlanSchema`, `ReleaseArtifactsSchema`, `RetrievedChunkSchema`, `ReleasePackageSchema`, `GroundTruthSchema`, `CuratedGoldSchema`, `AgentCallTraceSchema`; types `Change`, `FileChange`, `ReleasePlan`, `ReleasePackage`, `LLMProvider`, … |
 | [`lib/connectors`](../lib/connectors/connector.ts) | Ingestion port + offline adapter; reads and schema-validates `data/mocks/`. Pure helper for the incomplete-information signal. | `getConnector()`, `MockConnector` (`loadReleaseInput`, `loadDocs`, `loadGroundTruth`, `loadCuratedGold`), `findUnlinkedArtifactIds()`, `loadGroundTruth()`/`loadCuratedGold()` helpers; types `Connector`, `LoadedDoc` |
 | [`lib/llm`](../lib/llm/index.ts) | LLM provider port wiring + the two adapters + trace helper. | `getProvider()`, `MockProvider`, `AnthropicProvider`, `summarize()` |
 | [`lib/rag`](../lib/rag/index.ts) | Hybrid retrieval: chunk → BM25 + dense embed → RRF fusion → validated `RetrievedChunk`s. | `buildRetriever()`, `Retriever` (`create`, `index`, `retrieve`), `chunkDoc`/`chunkDocs`, `Bm25Index`, `tokenize`, `HashingEmbeddingProvider`, `defaultEmbeddingProvider`, `createEmbeddingProvider`, `cosineSimilarity`; types `Chunk`, `EmbeddingProvider`, `Retriever` |
@@ -164,6 +164,7 @@ actual public exports.
 | [`lib/pipeline.ts`](../lib/pipeline.ts) | The orchestration: chains the agents, builds the retriever, runs Writer ‖ Doc-Reviewer, owns the trace + retrieval evidence, validates the final `ReleasePackage`. | `runPipeline()`; type `PipelineOptions` |
 | [`lib/eval`](../lib/eval/index.ts) | Out-of-band evaluation: scores a `ReleasePackage` against curated gold + harvested ground truth; CLI printer. | `runEval()`, `hallucinationRate()`, `ticketCoverage()`, `docRecommendationAccuracy()`, `changelogRecall()`, `parsePrNumber`/`parseTicketKey`, `SUBSTANTIVE_CATEGORIES`, `main()`, `formatReport()` |
 | [`lib/export.ts`](../lib/export.ts) | Pure mapping from internal camelCase `ReleaseArtifacts` → the spec's snake_case output shape (preserving `sources`). | `toSpecOutput()`; type `SpecOutput` |
+| [`lib/diff.ts`](../lib/diff.ts) | `diffLines` — a minimal, zero-dependency line diff (common prefix/suffix strip → removed-then-added middle) powering the doc before→after view. | `diffLines()`; type `DiffRow` |
 
 ### `app/` (Next.js App Router)
 
@@ -180,10 +181,11 @@ actual public exports.
 |---|---|
 | [`Dashboard`](../components/Dashboard.tsx) | Client component owning the editable artifact draft + edit-mode state; passes values + typed `onEdit` callbacks to dumb leaf panels. The single seam between server-produced `pkg` and the UI. |
 | [`ReviewBar`](../components/ReviewBar.tsx) | Sticky approve/export control surface; builds the snake_case export from the current draft via `toSpecOutput` and downloads it client-side. |
-| [`ReleaseHeader`](../components/ReleaseHeader.tsx) | Minimal Release summary: project · version · tag window · change count; risk + affected systems now live inside the Internal Release Notes. |
-| [`ChangelogList`](../components/ChangelogList.tsx) | Changelog grouped by category; per-entry editable text + source-evidence chip + a per-entry "N files changed" view (files linked to GitHub, resolved via `sourceIndex`). |
-| [`NotesSections`](../components/NotesSections.tsx) | Internal vs customer notes in two visually distinct panels (the audience-split failure mode made obvious). |
-| [`DocumentationUpdates`](../components/DocumentationUpdates.tsx) | Doc update suggestions with the resolved retrieved-chunk evidence. |
+| [`ReleaseHeader`](../components/ReleaseHeader.tsx) | Minimal Release summary: project · version · tag window · change count + the generated Overview summary line (the "Overview" note, surfaced here); risk + affected systems now live inside the Internal Release Notes. |
+| [`ChangelogList`](../components/ChangelogList.tsx) | Changelog grouped by category; per-entry editable text + source-evidence chip + a per-entry "N files changed" view (files linked to GitHub, resolved via `sourceIndex`) + each file's per-file unified diff (`PatchView`). |
+| [`NotesSections`](../components/NotesSections.tsx) | Internal vs customer notes in two visually distinct panels (the audience-split failure mode made obvious); skips re-rendering the "Overview" note already shown in the header. |
+| [`DocumentationUpdates`](../components/DocumentationUpdates.tsx) | Doc update suggestions with the resolved retrieved-chunk evidence + a before→after suggested-edit diff (`LineDiff`) of the section vs `proposedText`. |
+| [`Diff`](../components/Diff.tsx) | Zero-dependency diff renderers: `PatchView` (colors a GitHub unified-diff patch) + `LineDiff` (renders a before→after line diff from `diffLines`). |
 | [`SourceEvidence`](../components/SourceEvidence.tsx) | The visible face of grounding: a chip that expands to the exact `sources[]` ids (classified by `commit:`/`pr:`/`ticket:`/`chunk:`), with a loud "no sources" state. |
 | [`ui.tsx`](../components/ui.tsx) | Stateless presentational primitives: `RiskBadge`, `Meter`, `CodeChip`, `Panel`. |
 
