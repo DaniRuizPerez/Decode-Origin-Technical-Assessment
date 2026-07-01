@@ -82,7 +82,7 @@ function RetrievalEvidence({
         >
           <path d="M6 4l4 4-4 4V4z" />
         </svg>
-        retrieved evidence · score {chunk.score.toFixed(2)}
+        retrieved evidence
       </button>
       {open ? (
         <blockquote className="mt-1.5 rounded-md border-l-2 border-gray-300 bg-gray-50 p-2 text-[13px] italic leading-snug text-gray-600">

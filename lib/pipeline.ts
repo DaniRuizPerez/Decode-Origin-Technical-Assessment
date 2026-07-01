@@ -24,7 +24,7 @@
 
 import { getConnector, loadGroundTruth } from "@/lib/connectors";
 import { getProvider } from "@/lib/llm";
-import { buildRetriever, chunkDocs } from "@/lib/rag";
+import { buildRetriever } from "@/lib/rag";
 import { digest, plan, write, reviewDocs } from "@/lib/agents";
 import { buildSourceIndex, buildDocIndex } from "@/lib/sources";
 import {
@@ -91,7 +91,7 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
 
   // 3 + 4. Generate artifacts. Writer and Documentation Reviewer are independent
   // given the plan, so run them concurrently.
-  const [writerOut, docUpdatesRaw] = await Promise.all([
+  const [writerOut, docReview] = await Promise.all([
     stage(
       "writer",
       `${changeSet.changes.length} changes, risk=${releasePlan.risk.level}`,
@@ -103,9 +103,10 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
       "doc-reviewer",
       `${docs.length} existing docs`,
       () => reviewDocs(changeSet, releasePlan, retriever, provider),
-      (d) => `${d.length} documentation updates`,
+      (d) => `${d.updates.length} documentation updates`,
     ),
   ]);
+  const docUpdatesRaw = docReview.updates;
 
   // Annotate possible documentation debt (coordinator step — see file header).
   const changedDocs = new Set(loadGroundTruth().changedDocPaths);
@@ -127,24 +128,18 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
   for (const d of documentationUpdates) for (const s of d.sources) citedIds.add(s);
   const sourceIndex = buildSourceIndex(input, citedIds);
 
-  // Retrieval evidence for the UI: resolve each suggestion's retrieved chunk by
-  // id. Chunk ids are deterministic, so they match the reviewer's references.
-  const chunkById = new Map(chunkDocs(docs).map((c) => [c.id, c]));
+  // Retrieval evidence for the UI: the actual chunks the Documentation Reviewer
+  // retrieved, carrying their real RRF scores + bm25/dense signals. Keyed by id so
+  // each surviving suggestion surfaces exactly the chunk it references (deduped).
+  const retrievedById = new Map(docReview.retrieved.map((c) => [c.id, c]));
   const retrieval: RetrievedChunk[] = [];
   const seen = new Set<string>();
   for (const d of documentationUpdates) {
     if (!d.retrievedChunkId || seen.has(d.retrievedChunkId)) continue;
-    const chunk = chunkById.get(d.retrievedChunkId);
+    const chunk = retrievedById.get(d.retrievedChunkId);
     if (!chunk) continue;
     seen.add(chunk.id);
-    retrieval.push({
-      id: chunk.id,
-      docPath: chunk.docPath,
-      section: chunk.section,
-      text: chunk.text,
-      score: 1,
-      signals: {},
-    });
+    retrieval.push(chunk);
   }
 
   // Resolve the DISTINCT docPaths referenced by the documentation updates and the

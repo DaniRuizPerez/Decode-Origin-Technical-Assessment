@@ -84,7 +84,7 @@ beforeAll(async () => {
 
 describe("reviewDocs (offline / MockProvider, real retriever over real docs)", () => {
   it("suggests an update to tutorial__bigger-applications.md for the routing refactor", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,
@@ -111,7 +111,7 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
   });
 
   it("grounds every DocUpdate: valid sources, real docPath, real retrieved chunk", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,
@@ -137,7 +137,7 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
   });
 
   it("deduplicates by docPath + section", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,
@@ -148,7 +148,7 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
   });
 
   it("does not generate suggestions from pure-docs changes", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,
