@@ -98,8 +98,11 @@ export function NotesSections({
   onEditInternal: (index: number, body: string) => void;
   onEditCustomer: (index: number, body: string) => void;
 }) {
+  // Stacked one below the other (like the other sections), not side-by-side. A
+  // fragment lets both panels participate directly in the dashboard's vertical
+  // rhythm so they read as two independent top-level sections.
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <>
       <NotesColumn
         audience="internal"
         title="Internal release notes"
@@ -114,6 +117,6 @@ export function NotesSections({
         editing={editing}
         onEditBody={onEditCustomer}
       />
-    </div>
+    </>
   );
 }

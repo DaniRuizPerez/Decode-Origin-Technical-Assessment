@@ -23,7 +23,6 @@ import { ReleaseHeader } from "./ReleaseHeader";
 import { ChangelogList } from "./ChangelogList";
 import { NotesSections } from "./NotesSections";
 import { DocumentationUpdates } from "./DocumentationUpdates";
-import { PipelineTrace } from "./PipelineTrace";
 import { ReviewBar } from "./ReviewBar";
 import { SourceIndexProvider } from "./SourceIndexContext";
 
@@ -122,8 +121,6 @@ export function Dashboard({ pkg }: { pkg: ReleasePackage }) {
             editing={editing}
             onEditSuggestion={editDocSuggestion}
           />
-
-          <PipelineTrace trace={pkg.trace} />
         </div>
       </main>
     </SourceIndexProvider>
