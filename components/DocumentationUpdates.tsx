@@ -126,6 +126,11 @@ export function DocumentationUpdates({
       title="Documentation updates"
       subtitle="Suggested edits to existing docs, grounded in retrieved sections."
     >
+      {updates.length === 0 ? (
+        <p className="text-sm text-gray-500">
+          No documentation updates were suggested for this release.
+        </p>
+      ) : (
       <ul className="space-y-4">
         {updates.map((u, index) => {
           const chunk = u.retrievedChunkId
@@ -157,7 +162,7 @@ export function DocumentationUpdates({
                   aria-label={`Edit suggestion for ${u.docPath}`}
                 />
               ) : (
-                <p className="mt-2 text-sm leading-relaxed text-gray-700">
+                <p className="mt-2 text-sm leading-relaxed text-gray-700 break-words">
                   {u.suggestion}
                 </p>
               )}
@@ -175,6 +180,7 @@ export function DocumentationUpdates({
           );
         })}
       </ul>
+      )}
     </Panel>
   );
 }

@@ -47,6 +47,12 @@ function NotesColumn({
   hideHeading?: string;
 }) {
   const accent = ACCENT[audience];
+  // Count sections that survive the hideHeading skip. WHY count separately: the
+  // render below maps over ALL sections (index-preserving so edit callbacks stay
+  // aligned), so we can't infer emptiness from the mapped output.
+  const hasVisibleSections = sections.some(
+    (section) => !(hideHeading && section.heading === hideHeading),
+  );
   return (
     <Panel title={title}>
       <span
@@ -54,6 +60,11 @@ function NotesColumn({
       >
         {accent.label}
       </span>
+      {!hasVisibleSections ? (
+        <p className="text-sm text-gray-500">
+          No {audience} notes were generated.
+        </p>
+      ) : (
       <div className="space-y-4">
         {sections.map((section, index) => {
           // Skip a hidden section (e.g. "Overview", surfaced in the header) while
@@ -89,6 +100,7 @@ function NotesColumn({
           );
         })}
       </div>
+      )}
     </Panel>
   );
 }

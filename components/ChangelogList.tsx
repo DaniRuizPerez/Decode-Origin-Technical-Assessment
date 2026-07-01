@@ -112,6 +112,11 @@ export function ChangelogList({
       title="Changelog"
       subtitle="Grouped by category. Expand any entry's chip to inspect the source evidence."
     >
+      {entries.length === 0 ? (
+        <p className="text-sm text-gray-500">
+          No changelog entries were generated for this release.
+        </p>
+      ) : (
       <div className="space-y-6">
         {groups.map(({ category, items }) => (
           <div key={category}>
@@ -133,7 +138,7 @@ export function ChangelogList({
                       aria-label={`Edit changelog entry in ${category}`}
                     />
                   ) : (
-                    <p className="text-sm leading-relaxed text-gray-800">
+                    <p className="text-sm leading-relaxed text-gray-800 break-words">
                       {entry.text}
                     </p>
                   )}
@@ -147,6 +152,7 @@ export function ChangelogList({
           </div>
         ))}
       </div>
+      )}
     </Panel>
   );
 }

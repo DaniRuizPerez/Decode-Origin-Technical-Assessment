@@ -67,6 +67,9 @@ export function ReviewBar({
   const [issues, setIssues] = useState<string[] | null>(null);
   // Disable the button while the approve request is in flight.
   const [submitting, setSubmitting] = useState(false);
+  // Transient "download happened" confirmation, shown briefly after a successful
+  // export (either the server-validated 200 path or the offline fallback).
+  const [exported, setExported] = useState(false);
 
   const filename = exportFilename(pkg.release);
 
@@ -104,11 +107,15 @@ export function ReviewBar({
       const data = (await res.json()) as { specOutput: SpecOutput };
       downloadSpec(data.specOutput, filename);
       setApprovedAt(new Date().toISOString());
+      setExported(true);
+      setTimeout(() => setExported(false), 4000);
     } catch {
       // Network error or non-2xx/non-422 response: fall back to building the
       // export client-side so approve still works offline.
       downloadSpec(toSpecOutput(pkg.artifacts), filename);
       setApprovedAt(new Date().toISOString());
+      setExported(true);
+      setTimeout(() => setExported(false), 4000);
     } finally {
       setSubmitting(false);
     }
@@ -154,6 +161,11 @@ export function ReviewBar({
           >
             {editing ? "Done editing" : "Edit"}
           </button>
+          {exported ? (
+            <span className="text-xs font-medium text-emerald-700">
+              ✓ Export downloaded
+            </span>
+          ) : null}
           <button
             type="button"
             onClick={handleApproveAndExport}
@@ -161,10 +173,47 @@ export function ReviewBar({
             aria-busy={submitting}
             className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting ? "Approving…" : "Approve & export JSON"}
+            {submitting ? (
+              <span className="inline-flex items-center gap-1.5">
+                <svg
+                  className="h-3.5 w-3.5 animate-spin"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z"
+                  />
+                </svg>
+                Approving…
+              </span>
+            ) : (
+              "Approve & export JSON"
+            )}
           </button>
         </div>
       </div>
+
+      <nav className="mt-2 flex gap-3 border-t border-gray-100 pt-2 text-xs text-gray-500">
+        <a href="#changelog" className="hover:text-indigo-600">
+          Changelog
+        </a>
+        <a href="#notes" className="hover:text-indigo-600">
+          Notes
+        </a>
+        <a href="#docs" className="hover:text-indigo-600">
+          Doc updates
+        </a>
+      </nav>
 
       {issues ? (
         <div
