@@ -72,4 +72,16 @@ describe("runPipeline", () => {
       "https://github.com/fastapi/fastapi/blob/0.136.0/docs/en/docs/tutorial/bigger-applications.md",
     );
   });
+
+  it("surfaces retrieval evidence with real RRF scores + signals (not the old hardcoded 1)", async () => {
+    const pkg = await runPipeline();
+    expect(pkg.retrieval.length).toBeGreaterThan(0);
+    for (const c of pkg.retrieval) {
+      // Real fused RRF score (~1/(k+rank)), not the previous hardcoded 1.
+      expect(c.score).toBeGreaterThan(0);
+      expect(c.score).not.toBe(1);
+      // At least one real signal carried through from the retriever.
+      expect(c.signals.bm25 != null || c.signals.dense != null).toBe(true);
+    }
+  });
 });

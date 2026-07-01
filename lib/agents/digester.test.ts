@@ -110,8 +110,7 @@ describe("digester", () => {
       const noise = changeSet.changes.filter((c) => c.id === "chg-internal-noise");
       expect(noise).toHaveLength(1);
       expect(noise[0].type).toBe("chore");
-      // Lower confidence than ticket-backed work, and still grounded.
-      expect(noise[0].confidence).toBeLessThan(0.7);
+      // Still grounded.
       expect(noise[0].sourceIds.length).toBeGreaterThanOrEqual(1);
       for (const id of noise[0].sourceIds) expect(validIds.has(id)).toBe(true);
     });
@@ -139,12 +138,17 @@ describe("digester", () => {
       expect(feature?.summary).not.toMatch(/^[^A-Za-z0-9]/);
     });
 
-    it("scores ticket-backed changes with high confidence", () => {
+    it("links ticket-backed changes to their PR/commit provenance", () => {
       const ticketed = changeSet.changes.filter((c) =>
         c.sourceIds.some((s) => s.startsWith("ticket:")),
       );
+      expect(ticketed.length).toBeGreaterThan(0);
+      // The linkage resolver ties a ticket to its PR + commits: a ticket-backed
+      // change always carries that code-side provenance too, not the ticket alone.
       for (const c of ticketed) {
-        expect(c.confidence).toBeGreaterThanOrEqual(0.7);
+        expect(
+          c.sourceIds.some((s) => s.startsWith("pr:") || s.startsWith("commit:")),
+        ).toBe(true);
       }
     });
   });

@@ -2,17 +2,12 @@
 
 /**
  * Documentation update suggestions: doc path → section → suggestion, each with
- * its grounding and a "possible doc debt" flag.
+ * its grounding and retrieval evidence.
  *
  * WHY surface the retrieved chunk: a doc suggestion is only trustworthy if it
  * points at real existing copy. We resolve `retrievedChunkId` against the
  * package's `retrieval[]` and let the reviewer expand the actual chunk text — so
  * the suggestion is grounded in retrieval evidence, not just asserted.
- *
- * WHY the doc-debt badge matters: `isPossibleDocDebt` means we recommend
- * updating a doc the release did NOT touch. That is a *suggestion*, not an error
- * (changed-docs is a noisy proxy), so it gets a distinct amber badge rather than
- * being hidden or treated as a defect.
  *
  * WHY the docPath is a link: each target doc file carries a flattened filename
  * (e.g. `tutorial__bigger-applications.md`). The package's `docIndex` resolves it
@@ -24,7 +19,7 @@
 import { useState } from "react";
 import type { DocRef, DocUpdate, RetrievedChunk } from "@/lib/schemas";
 import { SourceEvidence } from "./SourceEvidence";
-import { Panel, DocDebtBadge, CodeChip } from "./ui";
+import { Panel, CodeChip } from "./ui";
 
 /**
  * A target doc file. Renders the flattened docPath as a {@link CodeChip}; when the
@@ -87,7 +82,7 @@ function RetrievalEvidence({
         >
           <path d="M6 4l4 4-4 4V4z" />
         </svg>
-        retrieved evidence · score {chunk.score.toFixed(2)}
+        retrieved evidence
       </button>
       {open ? (
         <blockquote className="mt-1.5 rounded-md border-l-2 border-gray-300 bg-gray-50 p-2 text-[13px] italic leading-snug text-gray-600">
@@ -151,7 +146,6 @@ export function DocumentationUpdates({
                     {u.section}
                   </span>
                 </div>
-                {u.isPossibleDocDebt ? <DocDebtBadge /> : null}
               </div>
 
               {editing ? (

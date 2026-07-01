@@ -28,7 +28,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
         "include_router no longer flattens sub-routers; router.routes is now a tree.",
       components: ["routing", "applications"],
       sourceIds: ["ticket:FAPI-1003", "pr:15745", "commit:8e1d774"],
-      confidence: 0.95,
       isBreaking: true,
     },
     {
@@ -39,7 +38,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
       details: "Header params with underscores are no longer matched by default.",
       components: ["params"],
       sourceIds: ["ticket:FAPI-1002", "pr:15589", "commit:063b5bf"],
-      confidence: 0.8,
       isBreaking: false,
     },
     {
@@ -49,7 +47,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
       summary: "Add and update translations across the documentation",
       components: ["docs"],
       sourceIds: ["pr:15760"],
-      confidence: 0.6,
       isBreaking: false,
     },
   ],
@@ -84,7 +81,7 @@ beforeAll(async () => {
 
 describe("reviewDocs (offline / MockProvider, real retriever over real docs)", () => {
   it("suggests an update to tutorial__bigger-applications.md for the routing refactor", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,
@@ -106,12 +103,10 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
     );
     // The suggestion is concrete ("Update the ...").
     expect(biggerApps!.suggestion).toMatch(/^Update the /);
-    // Doc-debt classification is left to the coordinator.
-    expect(biggerApps!.isPossibleDocDebt).toBe(false);
   });
 
   it("grounds every DocUpdate: valid sources, real docPath, real retrieved chunk", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,
@@ -137,7 +132,7 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
   });
 
   it("deduplicates by docPath + section", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,
@@ -148,7 +143,7 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
   });
 
   it("does not generate suggestions from pure-docs changes", async () => {
-    const updates = await reviewDocs(
+    const { updates } = await reviewDocs(
       CHANGE_SET,
       PLAN,
       retriever,

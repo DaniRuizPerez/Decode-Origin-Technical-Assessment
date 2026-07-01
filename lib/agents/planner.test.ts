@@ -124,7 +124,6 @@ describe("planner", () => {
       details: "",
       components: ["routing"],
       sourceIds: ["pr:15763"],
-      confidence: 0.9,
       isBreaking: false,
     };
 

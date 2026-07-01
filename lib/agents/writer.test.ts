@@ -27,7 +27,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
         "include_router no longer flattens sub-routers; router.routes is now a tree.",
       components: ["routing", "applications"],
       sourceIds: ["ticket:FAPI-1003", "pr:15745", "commit:8e1d774"],
-      confidence: 0.95,
       isBreaking: true,
     },
     {
@@ -39,7 +38,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
       details: "Supported replacement for walking router.routes.",
       components: ["routing"],
       sourceIds: ["ticket:FAPI-1006", "pr:15785", "commit:6ac1220"],
-      confidence: 0.9,
       isBreaking: false,
     },
     {
@@ -50,7 +48,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
       details: "Header params with underscores are no longer matched by default.",
       components: ["params", "routing"],
       sourceIds: ["ticket:FAPI-1002", "pr:15589", "commit:063b5bf"],
-      confidence: 0.8,
       isBreaking: false,
     },
     {
@@ -59,7 +56,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
       summary: "Allow empty path in path operation in a prefixless router",
       components: ["routing"],
       sourceIds: ["ticket:FAPI-1004", "pr:15763", "commit:d8aad20"],
-      confidence: 0.85,
       isBreaking: false,
     },
     {
@@ -68,7 +64,6 @@ const CHANGE_SET = ChangeSetSchema.parse({
       summary: "Add and update translations across the documentation",
       components: ["docs"],
       sourceIds: ["pr:15760"],
-      confidence: 0.6,
       isBreaking: false,
     },
   ],

@@ -6,15 +6,11 @@
  *   ingest (connectors) → Digester → Planner → [build RAG index] →
  *   Release Writer ‖ Documentation Reviewer → assemble + annotate.
  *
- * Two coordinator-owned steps live here rather than in any single agent:
+ * One coordinator-owned step lives here rather than in any single agent:
  *  - **Observability trace.** Each stage is wall-clock timed and recorded as an
- *    `AgentCallTrace` (with the active provider name), so the UI can show the
- *    pipeline trace and so "mock vs anthropic" is visible at a glance.
- *  - **Doc-debt annotation.** The Documentation Reviewer can't see what the
- *    project actually changed (that would leak eval ground truth into
- *    generation). The pipeline cross-references its suggestions against the
- *    harvested `changedDocPaths`: a recommended doc the project did NOT touch is
- *    flagged `isPossibleDocDebt` — surfaced as a find, never hidden.
+ *    `AgentCallTrace` (with the active provider name + token usage), so the
+ *    exported package carries a per-stage record of how it was produced and which
+ *    provider ("mock" vs "anthropic") ran each stage.
  *
  * Offline (no ANTHROPIC_API_KEY) every agent's LLM call resolves to the
  * deterministic extractive baseline, so this whole function is deterministic and
@@ -22,9 +18,9 @@
  * the grounded verify→repair loop — no code change.
  */
 
-import { getConnector, loadGroundTruth } from "@/lib/connectors";
+import { getConnector } from "@/lib/connectors";
 import { getProvider } from "@/lib/llm";
-import { buildRetriever, chunkDocs } from "@/lib/rag";
+import { buildRetriever } from "@/lib/rag";
 import { digest, plan, write, reviewDocs } from "@/lib/agents";
 import { buildSourceIndex, buildDocIndex } from "@/lib/sources";
 import {
@@ -91,7 +87,7 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
 
   // 3 + 4. Generate artifacts. Writer and Documentation Reviewer are independent
   // given the plan, so run them concurrently.
-  const [writerOut, docUpdatesRaw] = await Promise.all([
+  const [writerOut, docReview] = await Promise.all([
     stage(
       "writer",
       `${changeSet.changes.length} changes, risk=${releasePlan.risk.level}`,
@@ -103,16 +99,10 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
       "doc-reviewer",
       `${docs.length} existing docs`,
       () => reviewDocs(changeSet, releasePlan, retriever, provider),
-      (d) => `${d.length} documentation updates`,
+      (d) => `${d.updates.length} documentation updates`,
     ),
   ]);
-
-  // Annotate possible documentation debt (coordinator step — see file header).
-  const changedDocs = new Set(loadGroundTruth().changedDocPaths);
-  const documentationUpdates = docUpdatesRaw.map((d) => ({
-    ...d,
-    isPossibleDocDebt: !changedDocs.has(d.docPath),
-  }));
+  const documentationUpdates = docReview.updates;
 
   // Resolve the DISTINCT ids cited across every artifact into a source index
   // (id → title + GitHub url) so the UI can render readable, clickable evidence
@@ -127,24 +117,18 @@ export async function runPipeline(options: PipelineOptions = {}): Promise<Releas
   for (const d of documentationUpdates) for (const s of d.sources) citedIds.add(s);
   const sourceIndex = buildSourceIndex(input, citedIds);
 
-  // Retrieval evidence for the UI: resolve each suggestion's retrieved chunk by
-  // id. Chunk ids are deterministic, so they match the reviewer's references.
-  const chunkById = new Map(chunkDocs(docs).map((c) => [c.id, c]));
+  // Retrieval evidence for the UI: the actual chunks the Documentation Reviewer
+  // retrieved, carrying their real RRF scores + bm25/dense signals. Keyed by id so
+  // each surviving suggestion surfaces exactly the chunk it references (deduped).
+  const retrievedById = new Map(docReview.retrieved.map((c) => [c.id, c]));
   const retrieval: RetrievedChunk[] = [];
   const seen = new Set<string>();
   for (const d of documentationUpdates) {
     if (!d.retrievedChunkId || seen.has(d.retrievedChunkId)) continue;
-    const chunk = chunkById.get(d.retrievedChunkId);
+    const chunk = retrievedById.get(d.retrievedChunkId);
     if (!chunk) continue;
     seen.add(chunk.id);
-    retrieval.push({
-      id: chunk.id,
-      docPath: chunk.docPath,
-      section: chunk.section,
-      text: chunk.text,
-      score: 1,
-      signals: {},
-    });
+    retrieval.push(chunk);
   }
 
   // Resolve the DISTINCT docPaths referenced by the documentation updates and the

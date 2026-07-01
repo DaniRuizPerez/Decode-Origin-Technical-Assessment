@@ -45,6 +45,10 @@ export function buildSourceIndex(
   citedIds: Iterable<string>,
 ): Record<string, SourceRef> {
   const project = input.release.project;
+  const ref = input.release.headRef;
+  // A GitHub blob URL for a repo-relative file path at the release ref, so each
+  // changed file a changelog entry cites can be opened at the released version.
+  const blobUrl = (path: string) => `https://github.com/${project}/blob/${ref}/${path}`;
 
   // Build id → artifact lookups once so resolution is O(cited), not O(cited × N).
   const pullById = new Map(input.pullRequests.map((p) => [p.id, p]));
@@ -64,6 +68,7 @@ export function buildSourceIndex(
           kind: "pr",
           title: pull.title,
           url: `https://github.com/${project}/pull/${pull.number}`,
+          files: pull.files.map((path) => ({ path, url: blobUrl(path) })),
         };
         continue;
       }
@@ -76,6 +81,7 @@ export function buildSourceIndex(
           title: firstLine(commit.message),
           // Full sha in the url even though the id carries the 7-char short sha.
           url: `https://github.com/${project}/commit/${commit.sha}`,
+          files: commit.files.map((path) => ({ path, url: blobUrl(path) })),
         };
         continue;
       }
@@ -88,13 +94,14 @@ export function buildSourceIndex(
           title: ticket.summary,
           // Reconstructed Jira-shaped ticket — no external GitHub URL.
           url: null,
+          files: [],
         };
         continue;
       }
     }
 
     // Unknown id, or a known prefix whose artifact isn't present: degrade.
-    index[id] = { id, kind: "other", title: id, url: null };
+    index[id] = { id, kind: "other", title: id, url: null, files: [] };
   }
 
   return index;

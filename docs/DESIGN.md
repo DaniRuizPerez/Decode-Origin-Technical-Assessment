@@ -87,8 +87,8 @@ that runs the pipeline at request time and a client dashboard for review/approve
 **Digester** (raw artifacts → grounded `ChangeSet`) → **Planner** (themes, affected
 systems, explainable risk, ticket coverage) → **Release Writer** (changelog +
 internal/customer notes) ‖ **Documentation Reviewer** (retrieval-driven doc-update
-suggestions). The pipeline orchestrates them, times each stage into an observability
-**trace**, and annotates documentation debt.
+suggestions). The pipeline orchestrates them and times each stage into an observability
+**trace**.
 
 **Grounding fought *in the loop*, not just measured.** The Writer and Documentation
 Reviewer run inside a **generate → verify → repair** loop (`lib/grounding`): the

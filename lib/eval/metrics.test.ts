@@ -182,7 +182,6 @@ describe("hallucinationRate", () => {
           suggestion: "update",
           retrievedChunkId: null,
           sources: ["ticket:T-1"],
-          isPossibleDocDebt: false,
         },
       ],
     };
@@ -287,7 +286,6 @@ describe("docRecommendationAccuracy", () => {
         suggestion: "update it",
         retrievedChunkId: null,
         sources: ["pr:1"],
-        isPossibleDocDebt: false,
       })),
     });
   }
@@ -334,8 +332,8 @@ describe("docRecommendationAccuracy", () => {
     const pkg = makePackage({
       ...EMPTY_ARTIFACTS,
       documentationUpdates: [
-        { docPath: "a.md", section: "S1", suggestion: "x", retrievedChunkId: null, sources: ["pr:1"], isPossibleDocDebt: false },
-        { docPath: "a.md", section: "S2", suggestion: "y", retrievedChunkId: null, sources: ["pr:1"], isPossibleDocDebt: false },
+        { docPath: "a.md", section: "S1", suggestion: "x", retrievedChunkId: null, sources: ["pr:1"] },
+        { docPath: "a.md", section: "S2", suggestion: "y", retrievedChunkId: null, sources: ["pr:1"] },
       ],
     });
     const result = docRecommendationAccuracy(pkg, curated, gt);
@@ -443,7 +441,7 @@ describe("runEval", () => {
       ...EMPTY_ARTIFACTS,
       changelog: [{ category: "Features", text: "Add X", sources: ["pr:200", "ticket:T-1"] }],
       documentationUpdates: [
-        { docPath: "a.md", section: "S", suggestion: "x", retrievedChunkId: null, sources: ["pr:200"], isPossibleDocDebt: false },
+        { docPath: "a.md", section: "S", suggestion: "x", retrievedChunkId: null, sources: ["pr:200"] },
       ],
     });
 
