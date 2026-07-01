@@ -49,15 +49,21 @@ const REVIEWABLE_TYPES = new Set<Change["type"]>([
 ]);
 
 /**
- * Docs we never *suggest editing* even when they rank highly. `release-notes.md`
- * is the project's own auto-generated changelog — it literally contains the text
- * of the very changes we're describing, so it dominates retrieval yet a
- * "update the release notes" suggestion is circular and useless. `_llm-test.md`
- * is a fixture/probe file, not real product documentation. Excluding these from
- * the *target* (not from the index) keeps suggestions actionable while leaving
- * the retriever's ranking untouched.
+ * Docs we never *suggest editing* even when they rank highly — meta/reference docs
+ * a release never updates. `release-notes.md` is the project's own auto-generated
+ * changelog (it contains the very changes we describe, so a "update the release
+ * notes" suggestion is circular). `alternatives.md` is FastAPI's "Alternatives,
+ * Inspiration & Comparisons" page — it documents *other* projects and is never a
+ * target for a code change, yet its comparison sections otherwise dominate lexical
+ * (non-semantic) retrieval and produce off-target picks. `_llm-test.md` is a
+ * fixture/probe file. Excluding these from the *target* (not the index) keeps
+ * suggestions actionable while leaving the retriever's ranking untouched.
  */
-const NON_TARGET_DOCS = new Set<string>(["release-notes.md", "_llm-test.md"]);
+const NON_TARGET_DOCS = new Set<string>([
+  "release-notes.md",
+  "alternatives.md",
+  "_llm-test.md",
+]);
 
 /**
  * How many chunks to pull per change. We retrieve a few because the single top
@@ -83,6 +89,37 @@ function queryForChange(change: Change): string {
   return [change.summary, change.details, ...change.components]
     .filter((part) => part.length > 0)
     .join(" ");
+}
+
+/**
+ * Code identifiers the change touches — backticked tokens plus snake_case/dotted
+ * names from its summary + details (e.g. `include_router`, `router.routes`,
+ * `convert_underscores`). These are the distinctive strings a *relevant* doc section
+ * would also contain.
+ */
+function changeIdentifiers(change: Change): string[] {
+  const text = `${change.summary} ${change.details}`;
+  const ids = new Set<string>();
+  for (const m of text.matchAll(/`([^`]+)`/g)) ids.add(m[1].toLowerCase());
+  for (const m of text.matchAll(/\b[a-zA-Z][a-zA-Z0-9]*[_.][a-zA-Z0-9_.]+\b/g)) {
+    ids.add(m[0].toLowerCase());
+  }
+  return [...ids];
+}
+
+/**
+ * Relevance gate: does the retrieved section actually reference something the change
+ * touches? Non-semantic (hashing) retrieval will always return *some* top hit, so we
+ * only propose an edit when the section literally contains one of the change's code
+ * identifiers. A change with no distinctive identifier (pure prose) can't be
+ * confidently grounded, so we decline — keeping doc suggestions high-precision
+ * ("say nothing" beats "edit the wrong doc").
+ */
+function mentionsChange(chunk: RetrievedChunk, change: Change): boolean {
+  const ids = changeIdentifiers(change);
+  if (ids.length === 0) return false;
+  const haystack = chunk.text.toLowerCase();
+  return ids.some((id) => haystack.includes(id));
 }
 
 /**
@@ -183,6 +220,11 @@ export async function reviewDocs(
     // emit a circular "edit the release notes" suggestion.
     const chunk = hits.find((h) => !NON_TARGET_DOCS.has(h.docPath));
     if (!chunk) continue;
+
+    // Relevance gate: only propose an edit when the section actually references an
+    // identifier the change touches — otherwise a non-semantic top hit is likely
+    // off-target. We'd rather say nothing than suggest editing the wrong doc.
+    if (!mentionsChange(chunk, change)) continue;
 
     const key = `${chunk.docPath} ${chunk.section}`;
     if (byDocSection.has(key)) continue;

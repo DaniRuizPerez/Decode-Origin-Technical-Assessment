@@ -162,6 +162,26 @@ describe("reviewDocs (offline / MockProvider, real retriever over real docs)", (
     expect(fromDocsChange).toHaveLength(0);
   });
 
+  it("declines to suggest when no doc section references the change (relevance gate)", async () => {
+    const cs = ChangeSetSchema.parse({
+      changes: [
+        {
+          id: "chg-madeup",
+          type: "feature",
+          summary: "Add `totally_made_up_symbol_xyz()`",
+          details: "Introduces `totally_made_up_symbol_xyz` for nothing real.",
+          components: ["nowhere"],
+          sourceIds: ["pr:99999"],
+          isBreaking: false,
+        },
+      ],
+      unlinkedArtifactIds: [],
+    });
+    const { updates } = await reviewDocs(cs, PLAN, retriever, new MockProvider());
+    // No doc section mentions the made-up identifier → no guess.
+    expect(updates).toHaveLength(0);
+  });
+
   it("is deterministic under MockProvider (same input → deeply-equal output)", async () => {
     const a = await reviewDocs(CHANGE_SET, PLAN, retriever, new MockProvider());
     const b = await reviewDocs(CHANGE_SET, PLAN, retriever, new MockProvider());
