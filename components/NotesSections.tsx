@@ -36,12 +36,15 @@ function NotesColumn({
   sections,
   editing,
   onEditBody,
+  hideHeading,
 }: {
   audience: Audience;
   title: string;
   sections: NoteSection[];
   editing: boolean;
   onEditBody: (index: number, body: string) => void;
+  /** Optionally skip rendering a section by heading (kept in data + edit indices). */
+  hideHeading?: string;
 }) {
   const accent = ACCENT[audience];
   return (
@@ -52,7 +55,11 @@ function NotesColumn({
         {accent.label}
       </span>
       <div className="space-y-4">
-        {sections.map((section, index) => (
+        {sections.map((section, index) => {
+          // Skip a hidden section (e.g. "Overview", surfaced in the header) while
+          // keeping its original index so edit callbacks stay aligned.
+          if (hideHeading && section.heading === hideHeading) return null;
+          return (
           <article
             key={index}
             className={`border-l-2 pl-3 ${accent.bar}`}
@@ -79,7 +86,8 @@ function NotesColumn({
               </div>
             ) : null}
           </article>
-        ))}
+          );
+        })}
       </div>
     </Panel>
   );
@@ -109,6 +117,7 @@ export function NotesSections({
         sections={internal}
         editing={editing}
         onEditBody={onEditInternal}
+        hideHeading="Overview"
       />
       <NotesColumn
         audience="customer"
